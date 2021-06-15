@@ -1,0 +1,22 @@
+{
+  "name": "discord-button-giveaways",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Assassin-1234/discord-button-giveaways.git"
+  },
+  "author": "AssassiN",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Assassin-1234/discord-button-giveaways/issues"
+  },
+  "homepage": "https://github.com/Assassin-1234/discord-button-giveaways#readme",
+  "dependencies": {
+    "discord-buttons": "^3.2.1"
+  }
+}
