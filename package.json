@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/Assassin-1234/discord-button-giveaways#readme",
   "dependencies": {
-    "discord-buttons": "^3.2.1"
+    "discord-buttons": "^3.2.1",
+    "discord.js": "^12.5.3",
+    "mongoose": "^5.12.14"
   }
 }

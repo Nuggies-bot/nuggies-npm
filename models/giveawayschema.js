@@ -31,9 +31,9 @@ const schema = new mongoose.Schema({
 	requirements: {
 		type: Object, default: { enabled: false },
 	},
-    clickers: {
-        type: Array, default: [],
-    },
+	clickers: {
+		type: Array, default: [],
+	},
 });
 
 module.exports = mongoose.model('giveaways', schema);
