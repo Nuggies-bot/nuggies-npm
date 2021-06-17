@@ -1,5 +1,6 @@
 const utils = require('../utils');
 const schema = require('../models/giveawayschema');
+const { MessageButton, MessageActionRow } = require('discord-buttons');
 const Discord = require('discord.js');
 const mongoose = require('mongoose');
 mongoose.set('useFindAndModify', false);
@@ -62,35 +63,40 @@ class giveaways {
 		const time = instant ? 0 : (data.endAt - Date.now());
 		setTimeout(async () => {
 			if ((await utils.getByMessageID(data.messageID)).ended) return 'ENDED';
-			const winners = await utils.choose(data.clickers, data.winners, data, message);
+			const winners = await utils.choose(data.winners, data.messageID);
 
 			if (!winners) {
-				message.channel.send('<@833713876628406363> won lol');
+				message.channel.send('not enough people participated in this giveaway!');
 				data.ended = true;
 				data.save();
 				const embed = msg.embeds[0];
-				embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.hoster.toString()}>\n⏲️ Winner(s): ${winners.map(winner => winner.toString()).join(', ')}`;
+				embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.hoster.toString()}>\n⏲️ Winner(s): ${winners.map(winner => `<@${winner}>`).join(', ')}`;
 				msg.edit('', { embed: embed });
-				this.editButtons(message.client, data);
+				utils.editButtons(message.client, data);
 				return 'NO_WINNERS';
 			}
 
-			message.channel.send(`${winners.map(winner => winner.toString()).join(', ')} you won ${data.prize} Congratulations! Hosted by ${message.guild.members.cache.get(data.hoster).toString()}`, { component: await this.gotoGiveaway(data), allowedMentions: { roles: [], users: winners.map(x => x.id), parse: [] } });
+			message.channel.send(`${winners.map(winner => `<@${winner}>`).join(', ')} you won ${data.prize} Congratulations! Hosted by ${message.guild.members.cache.get(data.hoster).toString()}`, { component: await this.gotoGiveaway(data) });
 			const dmEmbed = new Discord.MessageEmbed()
 				.setTitle('You won!')
 				.setDescription(`You have won a giveaway in **${msg.guild.name}**!\nPrize: [${data.prize}](https://discord.com/${msg.guild.id}/${msg.channel.id}/${data.messageID})`)
 				.setColor('RANDOM')
 				.setFooter('GG!');
 			winners.forEach((user) => {
-				user.send(dmEmbed);
+				message.guild.members.cache.get(user).send(dmEmbed);
 			});
 			const embed = msg.embeds[0];
-			embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.hoster.toString()}>\n⏲️ Winner(s): ${winners.map(winner => winner.toString()).join(', ')}`;
+			embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.hoster.toString()}>\n⏲️ Winner(s): ${winners.map(winner => `<@${winner}>`).join(', ')}`;
 			msg.edit('', { embed: embed });
 			data.ended = true;
 			data.save();
-			this.editButtons(message.client, data);
+			utils.editButtons(message.client, data);
 		}, time);
+	}
+	static async gotoGiveaway(data) {
+		const link = `https://discord.com/channels/${data.guildID}/${data.channelID}/${data.messageID}`;
+		const button = new MessageButton().setLabel('Giveaway').setStyle('url').setURL(link);
+		return button;
 	}
 	static async buttonclick(button) {
 		await button.clicker.fetch();
