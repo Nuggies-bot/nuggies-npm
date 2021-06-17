@@ -20,14 +20,17 @@ module.exports.giveawayButtons = (hoster, raw = false, emojiid) => {
 	return b;
 };
 
-module.exports.choose = (clickers, winners, data, message) => {
+module.exports.choose = async (winners, msgid) => {
+	const data = await this.getByMessageID(msgid);
+	console.log(data.clickers);
+	if(winners > data.clickers.length + 1) return null;
 	const final = [];
-	if (data.requirements.enabled == true) clickers = clickers.filter(x => this.checkRoles(x.id, data.requirements.roles, message));
+	// if (data.requirements.enabled == true) clickers = clickers.filter(x => this.checkRoles(x.id, data.requirements.roles, message));
 	for (let i = 0; i < winners; i++) {
-		if (!clickers[0]) return final[0] ? final : null;
-		const win = clickers.filter(x => !x.bot).random();
+		if (!data.clickers[0]) return final[0] ? final : null;
+		const win = data.clickers[Math.floor(Math.random() * data.clickers.length)];
+		console.log(win);
 		if (!win) return final[0] ? final : null;
-		clickers = clickers.filter(user => user.id !== win.id && !user.bot);
 		final.push(win);
 	}
 	return final[0] ? final : null;
@@ -48,4 +51,14 @@ module.exports.getByMessageID = async (messageID) => {
 
 	if (!doc) return;
 	return doc;
+};
+
+module.exports.editButtons = async (client, data) => {
+	const m = await client.guilds.cache.get(data.guildID).channels.cache.get(data.channelID).messages.fetch(data.messageID);
+	const buttons = await this.giveawayButtons(data.hoster, true);
+	buttons.find(x => x.label == 'End').setDisabled().setStyle('gray');
+	buttons.find(x => x.label == 'Enter').setDisabled().setStyle('gray');
+	buttons.find(x => x.label == 'Reroll').setDisabled(false).setStyle('green');
+	const row = new MessageActionRow().addComponents(buttons);
+	m.edit('', { components: [row], embed: m.embeds[0] }).catch((e) => { console.log('e' + e); });
 };
