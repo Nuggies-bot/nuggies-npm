@@ -28,7 +28,7 @@ yarn add nuggies
 # Giveaways
 ## [click here](https://github.com/Nuggies-bot/giveaways-example) for giveaways bot code using nuggies package
 # Preview <img src = "https://cdn.discordapp.com/emojis/546353169341349888.png?v=1" width = "40">
-<img src="MDfiles\dbPdcey4.gif">
+<img src="https://cdn.discordapp.com/attachments/788386910757584906/855532163091922985/dbPdcey4.gif">
 
  # Usage <img src = "https://cdn.discordapp.com/emojis/837910195450937384.png?v=1" alt = "hmmm" width=40>
 

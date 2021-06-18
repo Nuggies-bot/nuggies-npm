@@ -1,6 +1,6 @@
 {
   "name": "nuggies",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A npm package to manage giveaways easily for Discord Bot Developers",
   "main": "index.js",
   "scripts": {
