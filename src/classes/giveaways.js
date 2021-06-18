@@ -75,7 +75,7 @@ class giveaways {
 		await msg.fetch();
 		const time = instant ? 0 : (data.endAfter - Date.now());
 		setTimeout(async () => {
-			if ((await utils.getByMessageID(data.messageID)).ended) return 'ENDED';
+			if ((await this.getByMessageID(data.messageID)).ended) return 'ENDED';
 			const winners = await utils.choose(data.winners, data.messageID);
 
 			if (!winners) {
@@ -152,18 +152,17 @@ class giveaways {
 		if(!messageID) throw new Error('message ID not provided in button end');
 		if(!button) throw new Error('button not provided in button end');
 		await button.defer();
-		const data = await utils.getByMessageID(messageID);
+		const data = await this.getByMessageID(messageID);
 		const msg = await client.guilds.cache.get(data.guildID).channels.cache.get(data.channelID).messages.fetch(messageID);
 		const res = (await this.end(msg, data, msg));
 		if (res == 'ENDED') button.reply.send('The giveaway has already ended!', { ephemeral: true });
 	}
 
-	static async end(message, giveawaymsgid) {
+	static async end(message, data, giveawaymsgid) {
 		if(!message) throw new Error('message wasnt provided in end');
-		if(!giveawaymsgid) throw new Error('giveaway ID wasnt provided in end');
-		const data = await utils.getByMessageID(giveawaymsgid);
-		if(!data) message.channel.send('ID provided is not valid!');
-		if ((await utils.getByMessageID(data.messageID)).ended) return 'ENDED';
+		if(!data) throw new Error('data wasnt provided in end');
+		if(!data) throw new Error('data wasnt provided in end');
+		if ((await this.getByMessageID(data.messageID)).ended) return 'ENDED';
 		const winners = await utils.choose(data.winners, message.id);
 
 		if (!winners) {
@@ -209,6 +208,11 @@ class giveaways {
 			client.users.cache.get(user).send(dmEmbed);
 		});
 		return chosen;
+	}
+	static async getByMessageID(messageID) {
+		const doc = await schema.findOne({ messageID: messageID });
+		if (!doc) return;
+		return doc;
 	}
 }
 

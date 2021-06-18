@@ -47,12 +47,6 @@ module.exports.checkRole = (userID, roleIDs, message) => {
 	res = true;
 	return res;
 };
-module.exports.getByMessageID = async (messageID) => {
-	const doc = await schema.findOne({ messageID: messageID });
-
-	if (!doc) return;
-	return doc;
-};
 
 module.exports.editButtons = async (client, data) => {
 	const m = await client.guilds.cache.get(data.guildID).channels.cache.get(data.channelID).messages.fetch(data.messageID);
