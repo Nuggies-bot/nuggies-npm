@@ -133,7 +133,6 @@ class giveaways {
 				try {
 					button.defer();
 					win = await this.reroll(client, button.message.id);
-					console.log(button.message.id);
 				}
 				catch(err) {
 					console.log(err);

@@ -24,14 +24,12 @@ module.exports.giveawayButtons = (host, raw = false, emojiid) => {
 
 module.exports.choose = async (winners, msgid) => {
 	const data = await this.getByMessageID(msgid);
-	console.log(data.clickers);
 	if(winners > data.clickers.length + 1) return null;
 	const final = [];
 	// if (data.requirements.enabled == true) clickers = clickers.filter(x => this.checkRoles(x.id, data.requirements.roles, message));
 	for (let i = 0; i < winners; i++) {
 		if (!data.clickers[0]) return final[0] ? final : null;
 		const win = data.clickers[Math.floor(Math.random() * data.clickers.length)];
-		console.log(win);
 		if(final.includes(win)) return i - 1;
 		if (!win) return final[0] ? final : null;
 		final.push(win);
