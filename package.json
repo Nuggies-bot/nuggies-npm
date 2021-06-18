@@ -1,25 +1,28 @@
 {
-  "name": "Nuggies",
+  "name": "nuggies",
   "version": "1.0.0",
-  "description": "",
+  "description": "A npm package to make giveaways easier for other Discord Bot Developers",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Assassin-1234/discord-button-giveaways.git"
-  },
-  "author": "AssassiN",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Assassin-1234/discord-button-giveaways/issues"
-  },
-  "homepage": "https://github.com/Assassin-1234/discord-button-giveaways#readme",
   "dependencies": {
     "discord-buttons": "^3.2.1",
     "discord.js": "^12.5.3",
     "mongoose": "^5.12.14",
     "ms": "^2.1.2"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nuggies-bot/nuggies-npm.git"
+  },
+  "author": "Nuggies",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nuggies-bot/nuggies-npm/issues"
+  },
+  "homepage": "https://github.com/Nuggies-bot/nuggies-npm#readme"
 }
