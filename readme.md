@@ -1,6 +1,17 @@
-# NUGGIES
+# Nuggies
 
-A npm package to manage giveaways easily for Discord Bot Developers
+A utility package for Discord Bots!
+<div align="center">
+  <p>
+    <a href="https://nodei.co/npm/nuggies
+/"><img src="https://nodei.co/npm/nuggies.png?downloads=true&stars=true" alt="NPM Info" /></a>
+  </p>
+</div>
+
+<div align="center">
+ <p>
+ For errors and questions you can join <a href="https://discord.gg/Z4ebH8PXeA">our support server</a></p>
+</div>
 
 # Installation <img src = "https://cdn.discordapp.com/emojis/763159009686585354.gif?v=1" alt="download" width=40>
 
@@ -14,18 +25,31 @@ yarn:
 yarn add nuggies
  ```
 
+# Giveaways
+## [click here](https://github.com/Nuggies-bot/giveaways-example) for giveaways bot code using nuggies package
 # Preview <img src = "https://cdn.discordapp.com/emojis/546353169341349888.png?v=1" width = "40">
-<img src="MDfiles\test_gaw.png">
+<img src="MDfiles\dbPdcey4.gif">
 
  # Usage <img src = "https://cdn.discordapp.com/emojis/837910195450937384.png?v=1" alt = "hmmm" width=40>
 
+## connect
+
+You can connect to the mongoDB database
+
+```js
+const Nuggies = require('nuggies');
+Nuggies.giveaways.connect(mongURI);
+```
+
+### params
+mongoURI: the mongo URI
 ## Create
 
-Create is a function which will help you to create giveaways easily. <br><br>
+You can create giveaways with `.create`
+<br><br>
 Example code can be found below
  ```js
-const Nuggies = require('Nuggies')
-        Nuggies.giveaways.connect('MONGO URI');
+        const Nuggies = require('nuggies')
         Nuggies.giveaways.create({
             message: message,
             prize: 'test',
@@ -36,29 +60,97 @@ const Nuggies = require('Nuggies')
             channel: message.channel.id,
         });
  ```
+  > ### options
+ message: Discord Message
 
- ## End
+ prize: String, prize of the giveaway
+
+ host: the host of the giveaway
+
+ winners: Number, the winners count
+
+endAfter: String, The time after the giveaway will end
+
+requirements: Object, the requirements for the giveaway
+
+channel: the channel ID the embed will be sent to
+
+
+  ## End
 
  End is a function which will help you end giveaways easily <br> <br>
 
-You can simply use this function by writing a line of code.
+You can end giveaways with `.end`
  ```js
     async () => {   
-    await Nuggies.giveaways.end(msg, data, msg);
-    }
+    await Nuggies.giveaways.end(message, data, giveawaymsg);
+    }()
  ```
+ > ### params
+ message: Discord Message
+ 
+ data: data from the database, can be obtained by using the `.getByMessageID` property
+
+ giveawaymsg: fetched giveaway message
+ 
+ 
 ## Reroll
 
- Reroll is a function which will help you reroll giveaways easily <br> <br>
+ You can reroll giveaways easily with `.reroll` <br> <br>
 
 
 You can simply use this function by writing a line of code.
 
 ```js
     async () => {   
-    win = await Nuggies.giveaways.reroll(client, args[0]);
-    }
+    win = await Nuggies.giveaways.reroll(client, messageID);
+    }()
 
 ```
 
-<!-- dont touch without asking AssassiN#0002 -->
+> ### params
+
+client: The Discord Client
+
+messageID: The message ID of the giveaway
+
+## startTimer
+
+you can start the timer again after restart, note that it automatically starts the timer when the giveaway start.
+
+You can simply use this function by writing a line of code.
+
+```js
+    async () => {   
+    await Nuggies.giveaways.startTimer(message, data);
+    }()
+
+```
+> ### params
+
+message: Discord Message
+
+data: mongoose document, can be obtained by using `.getByMessageID`
+
+## GotoGiveaway
+
+returns a url button leading to the giveaway.
+
+```js
+    async () => {   
+    win = await Nuggies.giveaways.gotoGiveaway(data);
+    }()
+
+```
+### params:
+data: mongoose document, can be obtained by using `.getByMessageID`
+
+## getByMessageID
+This gets the mongoose document for the giveaway
+ ```js
+    async () => {   
+    await Nuggies.giveaways.getByMessageID(messageID);
+    }()
+ ```
+ ### params
+ messageID: the message ID of the giveaway
