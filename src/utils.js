@@ -68,3 +68,10 @@ module.exports.giveawayEmbed = async (client, { host, prize, endAfter, winners, 
 		.setTimestamp(Date.now() + ms(endAfter));
 	return embed;
 };
+
+module.exports.getByMessageID = async (messageID) => {
+	const doc = await schema.findOne({ messageID: messageID });
+
+	if (!doc) return;
+	return doc;
+};
