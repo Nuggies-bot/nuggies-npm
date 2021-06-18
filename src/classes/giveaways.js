@@ -158,7 +158,7 @@ class giveaways {
 		if (res == 'ENDED') button.reply.send('The giveaway has already ended!', { ephemeral: true });
 	}
 
-	static async end(message, data, giveawaymsgid) {
+	static async end(message, data, giveawaymsg) {
 		if(!message) throw new Error('message wasnt provided in end');
 		if(!data) throw new Error('data wasnt provided in end');
 		if(!data) throw new Error('data wasnt provided in end');
@@ -169,9 +169,9 @@ class giveaways {
 			message.channel.send('Not enough people participated in this giveaway.');
 			data.ended = true;
 			data.save();
-			const embed = giveawaymsgid.embeds[0];
+			const embed = giveawaymsg.embeds[0];
 			embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.host.toString()}>\n⏲️ Winner(s): none`;
-			giveawaymsgid.edit('', { embed: embed });
+			giveawaymsg.edit('', { embed: embed });
 			utils.editButtons(message.client, data);
 			return 'NO_WINNERS';
 		}
@@ -179,15 +179,15 @@ class giveaways {
 		message.channel.send(`${winners.map(winner => `<@${winner}>`).join(', ')} you won ${data.prize} Congratulations! Hosted by ${message.guild.members.cache.get(data.host).toString()}`, { component: await this.gotoGiveaway(data) });
 		const dmEmbed = new Discord.MessageEmbed()
 			.setTitle('You won!')
-			.setDescription(`You have won a giveaway in **${giveawaymsgid.guild.name}**!\nPrize: [${data.prize}](https://discord.com/${giveawaymsgid.guild.id}/${giveawaymsgid.channel.id}/${data.messageID})`)
+			.setDescription(`You have won a giveaway in **${giveawaymsg.guild.name}**!\nPrize: [${data.prize}](https://discord.com/${giveawaymsg.guild.id}/${giveawaymsg.channel.id}/${data.messageID})`)
 			.setColor('RANDOM')
 			.setFooter('GG!');
 		winners.forEach((user) => {
 			message.guild.members.cache.get(user).send(dmEmbed);
 		});
-		const embed = giveawaymsgid.embeds[0];
+		const embed = giveawaymsg.embeds[0];
 		embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.host.toString()}>\n⏲️ Winner(s): ${winners.map(winner => `<@${winner}>`).join(', ')}`;
-		giveawaymsgid.edit('', { embed: embed });
+		giveawaymsg.edit('', { embed: embed });
 		data.ended = true;
 		data.save();
 		utils.editButtons(message.client, data);
