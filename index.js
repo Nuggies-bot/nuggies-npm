@@ -1,1 +1,1 @@
-module.exports.giveaways = require('./classes/giveaways');
+module.exports.giveaways = require('./src/classes/giveaways');
