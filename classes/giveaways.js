@@ -69,6 +69,8 @@ class giveaways {
 
 
 	static async startTimer(message, data, instant = false) {
+		if(!message) throw new Error('message not provided while starting timer.');
+		if(!data) throw new Error('data not provided while starting timer');
 		const msg = await message.guild.channels.cache.get(data.channelID).messages.fetch(data.messageID);
 		await msg.fetch();
 		const time = instant ? 0 : (data.endAfter - Date.now());
@@ -106,11 +108,14 @@ class giveaways {
 		}, time);
 	}
 	static async gotoGiveaway(data) {
+		if(!data) throw new Error('data not provided');
 		const link = `https://discord.com/channels/${data.guildID}/${data.channelID}/${data.messageID}`;
 		const button = new MessageButton().setLabel('Giveaway').setStyle('url').setURL(link);
 		return button;
 	}
 	static async buttonclick(client, button) {
+		if(!client) throw new Error('client not provided');
+		if(!button) throw new Error('button not provided');
 		await button.clicker.fetch();
 		const id = button.id;
 		if(id.startsWith('giveaways')) {
@@ -127,6 +132,7 @@ class giveaways {
 			if(tag[1] === 'reroll') {
 				if(button.clicker.user.id !== tag[2]) return button.reply.send('You cannot end this giveaway as you didnt host it!', { ephemeral: true });
 				try {
+					button.defer();
 					win = await this.reroll(client, button.message.id);
 					console.log(button.message.id);
 				}
@@ -145,6 +151,9 @@ class giveaways {
 		}
 	}
 	static async endByButton(client, messageID, button) {
+		if(!client) throw new Error('client not provided in button end');
+		if(!messageID) throw new Error('message ID not provided in button end');
+		if(!button) throw new Error('button not provided in button end');
 		await button.defer();
 		const data = await utils.getByMessageID(messageID);
 		const msg = await client.guilds.cache.get(data.guildID).channels.cache.get(data.channelID).messages.fetch(messageID);
@@ -152,7 +161,10 @@ class giveaways {
 		if (res == 'ENDED') button.reply.send('The giveaway has already ended!', { ephemeral: true });
 	}
 
-	static async end(message, data, msg) {
+	static async end(message, data, giveawaymsgid) {
+		if(!message) throw new Error('message wasnt provided in end');
+		if(!data) throw new Error('data wasnt provided in end');
+		if(!data) throw new Error('data wasnt provided in end');
 		if ((await utils.getByMessageID(data.messageID)).ended) return 'ENDED';
 		const winners = await utils.choose(data.winners, message.id);
 
@@ -160,9 +172,9 @@ class giveaways {
 			message.channel.send('Not enough people participated in this giveaway.');
 			data.ended = true;
 			data.save();
-			const embed = msg.embeds[0];
+			const embed = giveawaymsgid.embeds[0];
 			embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.host.toString()}>\n⏲️ Winner(s): none`;
-			msg.edit('', { embed: embed });
+			giveawaymsgid.edit('', { embed: embed });
 			utils.editButtons(message.client, data);
 			return 'NO_WINNERS';
 		}
@@ -170,20 +182,22 @@ class giveaways {
 		message.channel.send(`${winners.map(winner => `<@${winner}>`).join(', ')} you won ${data.prize} Congratulations! Hosted by ${message.guild.members.cache.get(data.host).toString()}`, { component: await this.gotoGiveaway(data) });
 		const dmEmbed = new Discord.MessageEmbed()
 			.setTitle('You won!')
-			.setDescription(`You have won a giveaway in **${msg.guild.name}**!\nPrize: [${data.prize}](https://discord.com/${msg.guild.id}/${msg.channel.id}/${data.messageID})`)
+			.setDescription(`You have won a giveaway in **${giveawaymsgid.guild.name}**!\nPrize: [${data.prize}](https://discord.com/${giveawaymsgid.guild.id}/${giveawaymsgid.channel.id}/${data.messageID})`)
 			.setColor('RANDOM')
 			.setFooter('GG!');
 		winners.forEach((user) => {
 			message.guild.members.cache.get(user).send(dmEmbed);
 		});
-		const embed = msg.embeds[0];
+		const embed = giveawaymsgid.embeds[0];
 		embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.host.toString()}>\n⏲️ Winner(s): ${winners.map(winner => `<@${winner}>`).join(', ')}`;
-		msg.edit('', { embed: embed });
+		giveawaymsgid.edit('', { embed: embed });
 		data.ended = true;
 		data.save();
 		utils.editButtons(message.client, data);
 	}
 	static async reroll(client, messageID) {
+		if(!client) throw new Error('client wasnt provided in reroll');
+		if(!messageID)throw new Error('message ID was not provided in reroll');
 		const data = await utils.getByMessageID(messageID);
 		const msg = await client.guilds.cache.get(data.guildID).channels.cache.get(data.channelID).messages.fetch(messageID);
 		const chosen = await utils.choose(1, messageID);
