@@ -161,7 +161,7 @@ class giveaways {
 	static async end(message, data, giveawaymsg) {
 		if(!message) throw new Error('message wasnt provided in end');
 		if(!data) throw new Error('data wasnt provided in end');
-		if(!data) throw new Error('data wasnt provided in end');
+		if(!giveawaymsg) throw new Error('giveawaymsg wasnt provided in end');
 		if ((await this.getByMessageID(data.messageID)).ended) return 'ENDED';
 		const winners = await utils.choose(data.winners, message.id);
 
