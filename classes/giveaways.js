@@ -74,7 +74,6 @@ class giveaways {
 		const msg = await message.guild.channels.cache.get(data.channelID).messages.fetch(data.messageID);
 		await msg.fetch();
 		const time = instant ? 0 : (data.endAfter - Date.now());
-		console.log(time);
 		setTimeout(async () => {
 			if ((await utils.getByMessageID(data.messageID)).ended) return 'ENDED';
 			const winners = await utils.choose(data.winners, data.messageID);
@@ -140,7 +139,6 @@ class giveaways {
 					console.log(err);
 					return button.message.channel.send('unable to find the giveaway!');
 				}
-				console.log(win);
 				if(!win.length) return button.message.channel.send('There are not enough people in the giveaway!');
 				button.message.channel.send(`Rerolled! <@${win}> is the new winner of the giveaway!`, { component:  new MessageButton().setLabel('Giveaway').setURL(`https://discord.com/channels/${button.message.guild.id}/${button.message.channel.id}/${button.message.id}`).setStyle('url') });
 			}
