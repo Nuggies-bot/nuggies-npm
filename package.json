@@ -1,7 +1,7 @@
 {
   "name": "nuggies",
   "version": "1.0.0",
-  "description": "A npm package to make giveaways easier for other Discord Bot Developers",
+  "description": "A npm package to manage giveaways easily for Discord Bot Developers",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,14 +12,11 @@
     "mongoose": "^5.12.14",
     "ms": "^2.1.2"
   },
-  "directories": {
-    "test": "test"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Nuggies-bot/nuggies-npm.git"
   },
-  "author": "Nuggies",
+  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Nuggies-bot/nuggies-npm/issues"
