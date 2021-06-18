@@ -33,10 +33,10 @@ class giveaways {
 	 */
 
 	static async create({
-		message, prize, hoster, winners, endAt, requirements, channel, embed,
+		message, prize, hoster, winners, endAt, requirements, channel,
 	}) {
 		const msg = await message.guild.channels.cache.get(channel).send('', {
-			component: utils.giveawayButtons(hoster, false), embed: embed,
+			component: utils.giveawayButtons(hoster), embed: await utils.giveawayEmbed(message.client, { hoster, prize, endAt, winners, requirements }),
 		});
 		const data = await new schema({
 			messageID: msg.id,
@@ -71,7 +71,7 @@ class giveaways {
 				data.ended = true;
 				data.save();
 				const embed = msg.embeds[0];
-				embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.hoster.toString()}>\n⏲️ Winner(s): ${winners.map(winner => `<@${winner}>`).join(', ')}`;
+				embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.hoster.toString()}>\n⏲️ Winner(s): none`;
 				msg.edit('', { embed: embed });
 				utils.editButtons(message.client, data);
 				return 'NO_WINNERS';
@@ -149,7 +149,7 @@ class giveaways {
 			data.ended = true;
 			data.save();
 			const embed = msg.embeds[0];
-			embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.hoster.toString()}>\n⏲️ Winner(s): ${winners.map(winner => `<@${winner}>`).join(', ')}`;
+			embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.hoster.toString()}>\n⏲️ Winner(s): none`;
 			msg.edit('', { embed: embed });
 			utils.editButtons(message.client, data);
 			return 'NO_WINNERS';

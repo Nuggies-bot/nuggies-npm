@@ -1,5 +1,6 @@
 const { MessageButton, MessageActionRow } = require('discord-buttons');
 const schema = require('./models/giveawayschema');
+const Discord = require('discord.js');
 module.exports.giveawayButtons = (hoster, raw = false, emojiid) => {
 	const reroll = new MessageButton()
 		.setLabel('Reroll')
@@ -30,6 +31,7 @@ module.exports.choose = async (winners, msgid) => {
 		if (!data.clickers[0]) return final[0] ? final : null;
 		const win = data.clickers[Math.floor(Math.random() * data.clickers.length)];
 		console.log(win);
+		if(final.includes(win)) return i - 1;
 		if (!win) return final[0] ? final : null;
 		final.push(win);
 	}
@@ -61,4 +63,15 @@ module.exports.editButtons = async (client, data) => {
 	buttons.find(x => x.label == 'Reroll').setDisabled(false).setStyle('green');
 	const row = new MessageActionRow().addComponents(buttons);
 	m.edit('', { components: [row], embed: m.embeds[0] }).catch((e) => { console.log('e' + e); });
+};
+
+module.exports.giveawayEmbed = async (client, { hoster, prize, endAt, winners, requirements }) => {
+	const host = client.users.cache.get(hoster) || await client.users.fetch(hoster).catch();
+	const embed = new Discord.MessageEmbed()
+		.setTitle('Giveaway! <:blurpletada:843076397345144863>')
+		.setDescription(`**React with <:blurpletada:843076397345144863> to enter the giveaway!**\n🎁 Prize: **${prize}**\n🎊 Hosted by: ${host}\n⏲️ Winner(s): \`${winners}\`\n\nRequirements: ${requirements.enabled ? requirements.roles.map(x => `<@&${x}>`).join(', ') : 'None!'}`)
+		.setColor('RANDOM')
+		.setFooter('Ends', 'https://cdn.discordapp.com/emojis/843076397345144863.png?v=1')
+		.setTimestamp(endAt);
+	return embed;
 };
