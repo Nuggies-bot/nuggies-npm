@@ -158,10 +158,11 @@ class giveaways {
 		if (res == 'ENDED') button.reply.send('The giveaway has already ended!', { ephemeral: true });
 	}
 
-	static async end(message, data, giveawaymsgid) {
+	static async end(message, giveawaymsgid) {
 		if(!message) throw new Error('message wasnt provided in end');
-		if(!data) throw new Error('data wasnt provided in end');
-		if(!data) throw new Error('data wasnt provided in end');
+		if(!giveawaymsgid) throw new Error('giveaway ID wasnt provided in end');
+		const data = await utils.getByMessageID(giveawaymsgid);
+		if(!data) message.channel.send('ID provided is not valid!');
 		if ((await utils.getByMessageID(data.messageID)).ended) return 'ENDED';
 		const winners = await utils.choose(data.winners, message.id);
 
