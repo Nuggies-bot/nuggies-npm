@@ -3,6 +3,7 @@ const schema = require('../models/giveawayschema');
 const { MessageButton } = require('discord-buttons');
 const Discord = require('discord.js');
 const mongoose = require('mongoose');
+const ms = require('ms');
 mongoose.set('useFindAndModify', false);
 let connection;
 let win;
@@ -33,20 +34,29 @@ class giveaways {
 	 */
 
 	static async create({
-		message, prize, hoster, winners, endAt, requirements, channel,
+		message, prize, host, winners, endAfter, requirements, channel,
 	}) {
+		if(!message) throw new Error('message wasnt provided while creating giveaway!');
+		if(!prize) throw new Error('prize wasnt provided while creating giveaway!');
+		if(typeof prize !== 'string') throw new TypeError('prize should be a string');
+		if(!host) throw new Error('host wasnt provided while creating giveaway');
+		if(!winners) throw new Error('winner count wasnt provided while creating giveaway');
+		if(isNaN(winners)) throw new TypeError('winners should be a Number');
+		if(!endAfter) throw new Error('end time wasnt provided while creating giveaway');
+		if(typeof endAfter !== 'string') throw new TypeError('endAfter should be a string');
+		if(!channel) throw new Error('channel wasnt provided while creating giveaway');
 		const msg = await message.guild.channels.cache.get(channel).send('', {
-			component: utils.giveawayButtons(hoster), embed: await utils.giveawayEmbed(message.client, { hoster, prize, endAt, winners, requirements }),
+			component: utils.giveawayButtons(host), embed: await utils.giveawayEmbed(message.client, { host, prize, endAfter, winners, requirements }),
 		});
 		const data = await new schema({
 			messageID: msg.id,
 			channelID: channel,
 			guildID: msg.guild.id,
-			hoster: hoster,
+			host: host,
 			winners: winners,
 			prize: prize,
 			startAt: Date.now(),
-			endAt: endAt,
+			endAfter: Date.now() + ms(endAfter),
 			requirements: requirements,
 		}).save();
 		await this.startTimer(message, data);
@@ -61,7 +71,8 @@ class giveaways {
 	static async startTimer(message, data, instant = false) {
 		const msg = await message.guild.channels.cache.get(data.channelID).messages.fetch(data.messageID);
 		await msg.fetch();
-		const time = instant ? 0 : (data.endAt - Date.now());
+		const time = instant ? 0 : (data.endAfter - Date.now());
+		console.log(time);
 		setTimeout(async () => {
 			if ((await utils.getByMessageID(data.messageID)).ended) return 'ENDED';
 			const winners = await utils.choose(data.winners, data.messageID);
@@ -71,13 +82,13 @@ class giveaways {
 				data.ended = true;
 				data.save();
 				const embed = msg.embeds[0];
-				embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.hoster.toString()}>\n⏲️ Winner(s): none`;
+				embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.host.toString()}>\n⏲️ Winner(s): none`;
 				msg.edit('', { embed: embed });
 				utils.editButtons(message.client, data);
 				return 'NO_WINNERS';
 			}
 
-			message.channel.send(`${winners.map(winner => `<@${winner}>`).join(', ')} you won ${data.prize} Congratulations! Hosted by ${message.guild.members.cache.get(data.hoster).toString()}`, { component: await this.gotoGiveaway(data) });
+			message.channel.send(`${winners.map(winner => `<@${winner}>`).join(', ')} you won ${data.prize} Congratulations! Hosted by ${message.guild.members.cache.get(data.host).toString()}`, { component: await this.gotoGiveaway(data) });
 			const dmEmbed = new Discord.MessageEmbed()
 				.setTitle('You won!')
 				.setDescription(`You have won a giveaway in **${msg.guild.name}**!\nPrize: [${data.prize}](https://discord.com/${msg.guild.id}/${msg.channel.id}/${data.messageID})`)
@@ -87,7 +98,7 @@ class giveaways {
 				message.guild.members.cache.get(user).send(dmEmbed);
 			});
 			const embed = msg.embeds[0];
-			embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.hoster.toString()}>\n⏲️ Winner(s): ${winners.map(winner => `<@${winner}>`).join(', ')}`;
+			embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.host.toString()}>\n⏲️ Winner(s): ${winners.map(winner => `<@${winner}>`).join(', ')}`;
 			msg.edit('', { embed: embed });
 			data.ended = true;
 			data.save();
@@ -116,19 +127,20 @@ class giveaways {
 			if(tag[1] === 'reroll') {
 				if(button.clicker.user.id !== tag[2]) return button.reply.send('You cannot end this giveaway as you didnt host it!', { ephemeral: true });
 				try {
-					win = this.reroll(client, button.message.id);
-
+					win = await this.reroll(client, button.message.id);
+					console.log(button.message.id);
 				}
 				catch(err) {
 					console.log(err);
 					return button.message.channel.send('unable to find the giveaway!');
 				}
-				if(!win[0]) return button.message.channel.send('There are not enough people in the giveaway!');
-				button.message.channel.send(`Rerolled! ${win} is the new winner of the giveaway!`, { component:  new MessageButton().setLabel('Giveaway').setURL(`https://discord.com/channels/${button.message.guild.id}/${button.message.channel.id}/${button.message.id}`).setStyle('url') });
+				console.log(win);
+				if(!win.length) return button.message.channel.send('There are not enough people in the giveaway!');
+				button.message.channel.send(`Rerolled! <@${win}> is the new winner of the giveaway!`, { component:  new MessageButton().setLabel('Giveaway').setURL(`https://discord.com/channels/${button.message.guild.id}/${button.message.channel.id}/${button.message.id}`).setStyle('url') });
 			}
 			if(tag[1] === 'end') {
 				if(button.clicker.user.id !== tag[2]) return button.reply.send('You cannot end this giveaway as you didnt host it!', { ephemeral: true });
-				this.endByButton(client, button.message.id, button);
+				await this.endByButton(client, button.message.id, button);
 			}
 		}
 	}
@@ -149,13 +161,13 @@ class giveaways {
 			data.ended = true;
 			data.save();
 			const embed = msg.embeds[0];
-			embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.hoster.toString()}>\n⏲️ Winner(s): none`;
+			embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.host.toString()}>\n⏲️ Winner(s): none`;
 			msg.edit('', { embed: embed });
 			utils.editButtons(message.client, data);
 			return 'NO_WINNERS';
 		}
 
-		message.channel.send(`${winners.map(winner => `<@${winner}>`).join(', ')} you won ${data.prize} Congratulations! Hosted by ${message.guild.members.cache.get(data.hoster).toString()}`, { component: await this.gotoGiveaway(data) });
+		message.channel.send(`${winners.map(winner => `<@${winner}>`).join(', ')} you won ${data.prize} Congratulations! Hosted by ${message.guild.members.cache.get(data.host).toString()}`, { component: await this.gotoGiveaway(data) });
 		const dmEmbed = new Discord.MessageEmbed()
 			.setTitle('You won!')
 			.setDescription(`You have won a giveaway in **${msg.guild.name}**!\nPrize: [${data.prize}](https://discord.com/${msg.guild.id}/${msg.channel.id}/${data.messageID})`)
@@ -165,7 +177,7 @@ class giveaways {
 			message.guild.members.cache.get(user).send(dmEmbed);
 		});
 		const embed = msg.embeds[0];
-		embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.hoster.toString()}>\n⏲️ Winner(s): ${winners.map(winner => `<@${winner}>`).join(', ')}`;
+		embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.host.toString()}>\n⏲️ Winner(s): ${winners.map(winner => `<@${winner}>`).join(', ')}`;
 		msg.edit('', { embed: embed });
 		data.ended = true;
 		data.save();

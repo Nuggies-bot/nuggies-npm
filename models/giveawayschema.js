@@ -10,10 +10,10 @@ const schema = new mongoose.Schema({
 	messageID: {
 		type: String, required: true,
 	},
-	hoster: {
+	host: {
 		type: String, required: true,
 	},
-	endAt: {
+	endAfter: {
 		type: Date, required: true,
 	},
 	startAt: {
