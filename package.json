@@ -1,7 +1,7 @@
 {
   "name": "nuggies",
-  "version": "1.0.2",
-  "description": "A npm package to manage giveaways easily for Discord Bot Developers",
+  "version": "1.0.3",
+  "description": "A utility package for Discord Bots!",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
