@@ -214,6 +214,19 @@ class giveaways {
 		if (!doc) return;
 		return doc;
 	}
+	static async startAgain(client) {
+		await schema.find({ ended: false }, async (err, data) => {
+			setTimeout(async () => {
+				if (err) throw err;
+
+				for (let i = 0; i < data.length; i++) {
+					const msg = await ((await client.guilds.fetch(data[i].guildID)).channels.cache.get(data[i].channelID)).messages.fetch(data[i].messageID);
+					this.startTimer(msg, data[i]);
+				}
+
+			}, 10000);
+		});
+	}
 }
 
 module.exports = giveaways;

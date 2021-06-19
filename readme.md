@@ -162,3 +162,12 @@ This gets the mongoose document for the giveaway
  ```
  ### params
  messageID: the message ID of the giveaway
+
+ ## startAgain
+
+starts the giveaway again after restart, put this in ready event to start All the giveaways again.
+ ```js
+ Nuggies.giveaways.startAgain(client)
+ ```
+ ### params
+ client: Discord Client
