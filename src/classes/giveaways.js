@@ -121,8 +121,14 @@ class giveaways {
 			const tag = id.split('-');
 			if(tag[1] === 'enter') {
 				const data = await schema.findOne({ messageID: button.message.id });
-				if(data.clickers.includes(button.clicker.user.id)) {return button.reply.send('you already entered this giveaway!', true);}
-				else if(!data.clickers.includes(button.clicker.user.id)) {
+				if(data.requirements.enabled == true) {
+					if(data.clickers.includes(button.clicker.user.id)) {return button.reply.send('you already entered this giveaway!', true);}
+					const roles = data.requirements.roles.map(x => button.message.guild.members.cache.get(button.clicker.user.id).roles.cache.get(x));
+					if(!roles[0]) {
+						return button.reply.send(`You do not have the required role(s)\n${button.message.guild.roles.cache.filter(x => data.requirements.roles.includes(x.id)).filter(x => !button.message.guild.members.cache.get(button.clicker.user.id).roles.cache.get(x.id)).array().map(x => `\`${x.name}\``).join(', ')}\n for the giveaway!`, true);
+					}
+				}
+				if(!data.clickers.includes(button.clicker.user.id)) {
 					data.clickers.push(button.clicker.user.id);
 					data.save();
 					return button.reply.send('You have entered this giveaway! best of luck :)', true);
