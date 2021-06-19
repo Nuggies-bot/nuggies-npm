@@ -71,7 +71,7 @@ Example code can be found below
 
 endAfter: String, The time after the giveaway will end
 
-requirements: Object, the requirements for the giveaway
+requirements: Object, the requirements for the giveaway. example: `requirements: {enabled: true, roles: ['role']}`
 
 channel: the channel ID the embed will be sent to
 
