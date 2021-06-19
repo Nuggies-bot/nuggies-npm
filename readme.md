@@ -75,7 +75,15 @@ requirements: Object, the requirements for the giveaway
 
 channel: the channel ID the embed will be sent to
 
+  ## buttonclick
+   <span style="color: red;">IMPORTANT. THIS HANDLES THE BUTTONS IN YOUR GIVEAWAY, WITHOUT THIS THE BUTTONS WONT WORK!</span>
 
+   handles the buttons in your code, can be put in ` clickButton ` event
+   ```js
+    client.on('clickButton', button => {
+    Nuggies.giveaways.buttonclick(client, button);
+});
+   ```
   ## End
 
  End is a function which will help you end giveaways easily <br> <br>
