@@ -61,8 +61,8 @@ module.exports.editButtons = async (client, data) => {
 module.exports.giveawayEmbed = async (client, { host, prize, endAfter, winners, requirements }) => {
 	const hoster = client.users.cache.get(host) || await client.users.fetch(host).catch();
 	const embed = new Discord.MessageEmbed()
-		.setTitle('Giveaway! <:blurpletada:843076397345144863>')
-		.setDescription(`**React with <:blurpletada:843076397345144863> to enter the giveaway!**\n🎁 Prize: **${prize}**\n🎊 Hosted by: ${hoster}\n⏲️ Winner(s): \`${winners}\`\n\nRequirements: ${requirements.enabled ? requirements.roles.map(x => `<@&${x}>`).join(', ') : 'None!'}`)
+		.setTitle('Giveaway! 🎉')
+		.setDescription(`**Click the enter button to enter the giveaway!**\n🎁 Prize: **${prize}**\n🎊 Hosted by: ${hoster}\n⏲️ Winner(s): \`${winners}\`\n\nRequirements: ${requirements.enabled ? requirements.roles.map(x => `<@&${x}>`).join(', ') : 'None!'}`)
 		.setColor('RANDOM')
 		.setFooter('Ends', 'https://cdn.discordapp.com/emojis/843076397345144863.png?v=1')
 		.setTimestamp(Date.now() + ms(endAfter));
