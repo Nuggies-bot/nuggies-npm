@@ -2,7 +2,7 @@ const { MessageButton, MessageActionRow } = require('discord-buttons');
 const schema = require('./models/giveawayschema');
 const Discord = require('discord.js');
 const ms = require('ms');
-module.exports.giveawayButtons = (host, raw = false, emojiid) => {
+module.exports.giveawayButtons = (host, emojiid) => {
 	const reroll = new MessageButton()
 		.setLabel('Reroll')
 		.setStyle('gray')
@@ -18,7 +18,7 @@ module.exports.giveawayButtons = (host, raw = false, emojiid) => {
 		.setStyle('green')
 		.setEmoji(emojiid)
 		.setID(`giveaways-enter-${host}`);
-	const b = raw ? [end, enter, reroll] : new MessageActionRow().addComponents([end, enter, reroll]);
+	const b = new MessageActionRow().addComponents([end, enter, reroll]);
 	return b;
 };
 
