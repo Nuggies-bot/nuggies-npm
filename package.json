@@ -1,6 +1,6 @@
 {
   "name": "nuggies",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "A utility package for Discord Bots!",
   "main": "index.js",
   "scripts": {
