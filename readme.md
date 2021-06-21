@@ -90,9 +90,7 @@ channel: the channel ID the embed will be sent to
 
 You can end giveaways with `.end`
  ```js
-    async () => {   
-    await Nuggies.giveaways.end(message, data, giveawaymsg);
-    }()
+    Nuggies.giveaways.end(message, data, giveawaymsg);
  ```
  > ### params
  message: Discord Message
@@ -110,8 +108,8 @@ You can end giveaways with `.end`
 You can simply use this function by writing a line of code.
 
 ```js
-    async () => {   
-    win = await Nuggies.giveaways.reroll(client, messageID);
+    (async () => {   
+    const win = await Nuggies.giveaways.reroll(client, messageID);
     }()
 
 ```
@@ -129,10 +127,7 @@ you can start the timer again after restart, note that it automatically starts t
 You can simply use this function by writing a line of code.
 
 ```js
-    async () => {   
     await Nuggies.giveaways.startTimer(message, data);
-    }()
-
 ```
 > ### params
 
@@ -145,8 +140,8 @@ data: mongoose document, can be obtained by using `.getByMessageID`
 returns a url button leading to the giveaway.
 
 ```js
-    async () => {   
-    win = await Nuggies.giveaways.gotoGiveaway(data);
+    (async () => {   
+    const button = await Nuggies.giveaways.gotoGiveaway(data);
     }()
 
 ```
@@ -156,8 +151,8 @@ data: mongoose document, can be obtained by using `.getByMessageID`
 ## getByMessageID
 This gets the mongoose document for the giveaway
  ```js
-    async () => {   
-    await Nuggies.giveaways.getByMessageID(messageID);
+    (async () => {   
+    const doc = await Nuggies.giveaways.getByMessageID(messageID);
     }()
  ```
  ### params

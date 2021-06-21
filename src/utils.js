@@ -2,7 +2,7 @@ const { MessageButton, MessageActionRow } = require('discord-buttons');
 const schema = require('./models/giveawayschema');
 const Discord = require('discord.js');
 const ms = require('ms');
-module.exports.giveawayButtons = (host, raw = false, emojiid) => {
+module.exports.giveawayButtons = (host, emojiid) => {
 	const reroll = new MessageButton()
 		.setLabel('Reroll')
 		.setStyle('gray')
@@ -18,10 +18,28 @@ module.exports.giveawayButtons = (host, raw = false, emojiid) => {
 		.setStyle('green')
 		.setEmoji(emojiid)
 		.setID(`giveaways-enter-${host}`);
-	const b = raw ? [end, enter, reroll] : new MessageActionRow().addComponents([end, enter, reroll]);
+	const b = new MessageActionRow().addComponents([end, enter, reroll]);
 	return b;
 };
 
+module.exports.getButtons = (host) => {
+	const reroll = new MessageButton()
+		.setLabel('Reroll')
+		.setStyle('gray')
+		.setID(`giveaways-reroll-${host}`)
+		.setDisabled(true);
+	const end = new MessageButton()
+		.setLabel('End')
+		.setStyle('red')
+		.setID(`giveaways-end-${host}`);
+
+	const enter = new MessageButton()
+		.setLabel('Enter')
+		.setStyle('green')
+		.setID(`giveaways-enter-${host}`);
+	const b = [end, enter, reroll];
+	return b;
+}
 module.exports.choose = async (winners, msgid) => {
 	const data = await this.getByMessageID(msgid);
 	if(winners > data.clickers.length + 1) return null;
@@ -50,7 +68,7 @@ module.exports.checkRole = (userID, roleIDs, message) => {
 
 module.exports.editButtons = async (client, data) => {
 	const m = await client.guilds.cache.get(data.guildID).channels.cache.get(data.channelID).messages.fetch(data.messageID);
-	const buttons = await this.giveawayButtons(data.host, true);
+	const buttons = await this.getButtons(data.host);
 	buttons.find(x => x.label == 'End').setDisabled().setStyle('gray');
 	buttons.find(x => x.label == 'Enter').setDisabled().setStyle('gray');
 	buttons.find(x => x.label == 'Reroll').setDisabled(false).setStyle('green');
