@@ -14,7 +14,10 @@ A utility package for Discord Bots!
 </div>
 
 # Installation <img src = "https://cdn.discordapp.com/emojis/763159009686585354.gif?v=1" alt="download" width=40>
-
+# Table of content:
+## - [installation](https://github.com/Nuggies-Bot/nuggies-npm#installation-)
+## - [Giveaways](https://github.com/Nuggies-Bot/nuggies-npm#giveaways)
+## - [Button Roles]()
 npm:
 ```powershell
 npm i nuggies
@@ -24,8 +27,7 @@ yarn:
 ```powershell
 yarn add nuggies
  ```
-
-# Giveaways
+# __Giveaways__
 ## [click here](https://github.com/Nuggies-bot/giveaways-example) for giveaways bot code using nuggies package
 # Preview <img src = "https://cdn.discordapp.com/emojis/546353169341349888.png?v=1" width = "40">
 <img src="https://cdn.discordapp.com/attachments/788386910757584906/855532163091922985/dbPdcey4.gif">
@@ -166,3 +168,48 @@ starts the giveaway again after restart, put this in ready event to start All th
  ```
  ### params
  client: Discord Client
+<br> <br>
+ # __Button Roles__
+
+ ## buttonroles
+ ### [click here]()
+ constructor. use .setrole() on it to create buttons
+ ```js
+ const something = new Nuggies.buttonroles().addrole({color: 'red', label: 'test', role: '781061040514269185'});
+ ```
+
+ ### options
+
+ color: the button color. Optional. Defaults to gray
+ 
+ label: Button label
+
+ role: role that would be added on click
+
+ emoji: ID of the emoji on the button, optional.
+
+ ## create
+
+ creates the button roles
+
+ ```js
+ Nuggies.buttonroles.create({ message: message, role: something, content: new Discord.MessageEmbed().setTitle('xd').setDescription('xdxd') });
+ ```
+ 
+ ### options
+
+ message: Discord Message
+
+ role: The object recieved from the buttonroles constructor.
+
+ content: content, can be a string or a Discord Embed
+
+ ## buttonclick
+
+ handles the buttons in button-roles
+
+   <span style="color: red;">IMPORTANT. THIS HANDLES THE BUTTONS IN YOUR GIVEAWAY, WITHOUT THIS THE BUTTONS WONT WORK!</span>
+  
+ ```js
+Nuggies.buttonroles.buttonclick(client, button);
+ ```
