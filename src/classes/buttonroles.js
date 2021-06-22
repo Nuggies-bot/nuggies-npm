@@ -8,34 +8,36 @@ class buttonroles {
 	}
 
 	/**
-     *
-     * @param {String} color - Button Color [optional]
-     * @param {String} label - Button label
-     * @param {String} emoji - The emoji id [optional]
-     * @param {String} role - The role id
-     */
+	 *
+	 * @param {String} color - Button Color [optional]
+	 * @param {String} label - Button label
+	 * @param {String} emoji - The emoji id [optional]
+	 * @param {String} role - The role id
+	 */
 	addrole({ color, label, emoji, role }) {
-		if(!color) color = 'gray';
-		if(!label) throw new Error('please provide the button label!');
-		if(!emoji) emoji = null;
-		if(!role) throw new Error('please provide a role!');
+		if (!color) color = 'gray';
+		if (!label) throw new Error('please provide the button label!');
+		if (!emoji) emoji = null;
+		if (!role) throw new Error('please provide a role!');
 		this.roles.push({ color: color, label: label, emoji: emoji, role: role });
 		return this;
 	}
-	toJSON() { return { roles: this.roles };}
+	toJSON() { return { roles: this.roles }; }
 
 	static async create({ message, embed, role }) {
 		const buttons = [];
 		const rows = [];
-		let final;
 		// Promise.resolve(role).then(console.log);
-		for(const buttonObject of role.roles) {
+		for (const buttonObject of role.roles) {
 			buttons.push(new MessageButton().setStyle(buttonObject.color).setEmoji(buttonObject.emoji).setLabel(buttonObject.label).setID(`br-${buttonObject.role}`));
 		}
-		buttons.map(x => {
-			final = rows.reverse()[0].components.length == 5 ? rows.push(new MessageActionRow().addComponent(x)) : !rows.reverse()[0] ? rows.push(new MessageActionRow().addComponent(x)) : rows.reverse()[0].addComponent(x);
+		for (let i = 0; i < Math.ceil(role.roles.length / 5); i++) {
+			rows.push(new MessageActionRow());
+		}
+		rows.forEach((row, i) => {
+			row.addComponents(buttons.slice(0 + (i * 5), 5 + (i * 5)));
 		});
-		message.channel.send({ embed: embed, compoonents: final });
+		message.channel.send({ embed: embed, compoonents: rows });
 	}
 }
 
