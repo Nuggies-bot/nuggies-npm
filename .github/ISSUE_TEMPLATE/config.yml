@@ -1,0 +1,8 @@
+blank_issue_enabled: true
+contact_links:
+  - name: 🦸‍♂️ Get coding help
+    url: https://discord.gg/NAgu2FXJtn
+    about: We help everyone in our support server. Join us to seek some help
+  - name: 🍗 Invite Nuggies
+    url: https://discord.com/oauth2/authorize?client_id=779741162465525790&permissions=1609952503&scope=bot%20applications.commands
+    about: Invite Nuggies and benefit from all of it's features

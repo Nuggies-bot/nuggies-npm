@@ -39,7 +39,7 @@ module.exports.getButtons = (host) => {
 		.setID(`giveaways-enter-${host}`);
 	const b = [end, enter, reroll];
 	return b;
-}
+};
 module.exports.choose = async (winners, msgid) => {
 	const data = await this.getByMessageID(msgid);
 	if(winners > data.clickers.length + 1) return null;

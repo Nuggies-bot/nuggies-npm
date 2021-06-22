@@ -46,7 +46,7 @@ class giveaways {
 		if (typeof endAfter !== 'string') throw new TypeError('endAfter should be a string');
 		if (!channel) throw new Error('channel wasnt provided while creating giveaway');
 		const msg = await message.guild.channels.cache.get(channel).send('', {
-			component: utils.giveawayButtons(host), embed: await utils.giveawayEmbed(message.client, { host, prize, endAfter, winners, requirements }),
+			buttons: utils.getButtons(host), embed: await utils.giveawayEmbed(message.client, { host, prize, endAfter, winners, requirements }),
 		});
 		const data = await new schema({
 			messageID: msg.id,
