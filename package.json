@@ -28,7 +28,9 @@
     "giveaways",
     "discord-buttons",
     "buttons",
-    "buttons-discord"
+    "buttons-discord",
+    "button-roles",
+    "discord-button-roles"
   ],
   "homepage": "https://github.com/Nuggies-bot/nuggies-npm#readme"
 }
