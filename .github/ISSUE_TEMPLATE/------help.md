@@ -9,6 +9,5 @@ assignees: ''
 
 # Requirements
 - [] Is the issue related to this package
-- [] Have you done all the steps given [here](https://github.com/Nuggies-bot/Nuggies#readme)
 # Description
 Describe the problem faced
