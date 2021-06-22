@@ -37,7 +37,7 @@ class buttonroles {
 		rows.forEach((row, i) => {
 			row.addComponents(buttons.slice(0 + (i * 5), 5 + (i * 5)));
 		});
-		message.channel.send({ embed: embed, compoonents: rows });
+		message.channel.send({ embed: embed, components: rows });
 	}
 }
 
