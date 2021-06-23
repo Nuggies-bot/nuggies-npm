@@ -15,9 +15,9 @@ A utility package for Discord Bots!
 
 # Installation <img src = "https://cdn.discordapp.com/emojis/763159009686585354.gif?v=1" alt="download" width=40>
 # Table of content:
-## - [installation](https://github.com/Nuggies-Bot/nuggies-npm#installation-)
-## - [Giveaways](https://github.com/Nuggies-Bot/nuggies-npm#giveaways)
-## - [Button Roles]()
+## - [installation](https://www.npmjs.com/package/nuggies#installation-)
+## - [Giveaways](https://www.npmjs.com/package/nuggies#giveaways)
+## - [Button Roles](https://www.npmjs.com/package/nuggies#button-roles)
 npm:
 ```powershell
 npm i nuggies
