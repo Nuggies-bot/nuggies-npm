@@ -177,7 +177,11 @@ starts the giveaway again after restart, put this in ready event to start All th
 
  constructor. use .setrole() on it to create buttons
  ```js
- const something = new Nuggies.buttonroles().addrole({color: 'red', label: 'test', role: '781061040514269185'});
+ const something = new Nuggies.buttonroles().addrole({
+   color: 'red', 
+   label: 'test', 
+   role: '781061040514269185',
+   });
  ```
 
  ### options
@@ -195,7 +199,10 @@ starts the giveaway again after restart, put this in ready event to start All th
  creates the button roles
 
  ```js
- Nuggies.buttonroles.create({ message: message, role: something, content: new Discord.MessageEmbed().setTitle('xd').setDescription('xdxd') });
+ Nuggies.buttonroles.create({ 
+   message: message, 
+   role: something, 
+   content: new Discord.MessageEmbed().setTitle('xd').setDescription('xdxd') });
  ```
  
  ### options
