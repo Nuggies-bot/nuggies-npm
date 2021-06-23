@@ -170,9 +170,11 @@ starts the giveaway again after restart, put this in ready event to start All th
  client: Discord Client
 <br> <br>
  # __Button Roles__
+  ### [click here for fully functional button-roles bot](https://github.com/Nuggies-bot/buttonroles-example)
+<image src = 'https://cdn.discordapp.com/attachments/801132115755270164/857108297688285204/TBbPNb4S7a.gif'>
 
  ## buttonroles
- ### [click here]()
+
  constructor. use .setrole() on it to create buttons
  ```js
  const something = new Nuggies.buttonroles().addrole({color: 'red', label: 'test', role: '781061040514269185'});
