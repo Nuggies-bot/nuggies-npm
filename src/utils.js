@@ -86,10 +86,46 @@ module.exports.giveawayEmbed = async (client, { host, prize, endAfter, winners, 
 		.setTimestamp(Date.now() + ms(endAfter));
 	return embed;
 };
-
+module.exports.dropEmbed = async (client, { prize, host }) => {
+	const hoster = client.users.cache.get(host) || await client.users.fetch(host).catch();
+	const embed = new Discord.MessageEmbed()
+		.setTitle('Giveaway drop! 🎉')
+		.setDescription(`**first to click the button wins!**\n🎁 Prize: **${prize}**\n🎊 Hosted by: ${hoster}\n`)
+		.setColor('RANDOM')
+		.setFooter('winner: none');
+	return embed;
+};
 module.exports.getByMessageID = async (messageID) => {
 	const doc = await schema.findOne({ messageID: messageID });
 
 	if (!doc) return;
 	return doc;
+};
+
+module.exports.editDropButtons = async (client, button) => {
+	const m = await client.guilds.cache.get(button.guild.id).channels.cache.get(button.channel.id).messages.fetch(button.message.id);
+	const buttons = await this._dropButtons('xd');
+	buttons.setDisabled().setStyle('gray');
+	const row = new MessageActionRow().addComponents(buttons);
+	const embed = m.embeds[0];
+	embed.footer = `s`;
+
+	m.edit('', { components: [row], embed: embed }).catch((e) => { console.log('e' + e); });
+};
+
+module.exports.dropButtons = async (prize) => {
+	const enter = new MessageButton()
+		.setLabel('Enter')
+		.setStyle('green')
+		.setID(`giveaways-drop-${prize}`);
+	const b = new MessageActionRow().addComponent(enter);
+	return b;
+};
+
+module.exports._dropButtons = async () => {
+	const enter = new MessageButton()
+		.setLabel('Enter')
+		.setStyle('green')
+		.setID('giveaways-drop');
+	return enter;
 };

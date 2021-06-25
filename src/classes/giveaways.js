@@ -15,7 +15,7 @@ class giveaways {
 	*/
 
 	static async connect(url) {
-		if (!url) throw new TypeError('You didn\'t provide a MongoDB connection string');
+		if (!url) throw new TypeError('NuggiesError: You didn\'t provide a MongoDB connection string');
 
 		connection = url;
 
@@ -36,15 +36,15 @@ class giveaways {
 	static async create({
 		message, prize, host, winners, endAfter, requirements, channel,
 	}) {
-		if (!message) throw new Error('message wasnt provided while creating giveaway!');
-		if (!prize) throw new Error('prize wasnt provided while creating giveaway!');
-		if (typeof prize !== 'string') throw new TypeError('prize should be a string');
-		if (!host) throw new Error('host wasnt provided while creating giveaway');
-		if (!winners) throw new Error('winner count wasnt provided while creating giveaway');
-		if (isNaN(winners)) throw new TypeError('winners should be a Number');
-		if (!endAfter) throw new Error('end time wasnt provided while creating giveaway');
-		if (typeof endAfter !== 'string') throw new TypeError('endAfter should be a string');
-		if (!channel) throw new Error('channel wasnt provided while creating giveaway');
+		if (!message) throw new Error('NuggiesError: message wasnt provided while creating giveaway!');
+		if (!prize) throw new Error('NuggiesError: prize wasnt provided while creating giveaway!');
+		if (typeof prize !== 'string') throw new TypeError('NuggiesError: prize should be a string');
+		if (!host) throw new Error('NuggiesError: host wasnt provided while creating giveaway');
+		if (!winners) throw new Error('NuggiesError: winner count wasnt provided while creating giveaway');
+		if (isNaN(winners)) throw new TypeError('NuggiesError: winners should be a Number');
+		if (!endAfter) throw new Error('NuggiesError:  time wasnt provided while creating giveaway');
+		if (typeof endAfter !== 'string') throw new TypeError('NuggiesError: endAfter should be a string');
+		if (!channel) throw new Error('NuggiesError: channel wasnt provided while creating giveaway');
 		const msg = await message.guild.channels.cache.get(channel).send('', {
 			buttons: utils.getButtons(host), embed: await utils.giveawayEmbed(message.client, { host, prize, endAfter, winners, requirements }),
 		});
@@ -69,8 +69,8 @@ class giveaways {
 
 
 	static async startTimer(message, data, instant = false) {
-		if (!message) throw new Error('message not provided while starting timer.');
-		if (!data) throw new Error('data not provided while starting timer');
+		if (!message) throw new Error('NuggiesError: message not provided while starting timer.');
+		if (!data) throw new Error('NuggiesError: data not provided while starting timer');
 		const msg = await message.guild.channels.cache.get(data.channelID).messages.fetch(data.messageID);
 		await msg.fetch();
 		const time = instant ? 0 : (data.endAfter - Date.now());
@@ -107,18 +107,23 @@ class giveaways {
 		}, time);
 	}
 	static async gotoGiveaway(data) {
-		if (!data) throw new Error('data not provided');
+		if (!data) throw new Error('NuggiesError: data not provided');
 		const link = `https://discord.com/channels/${data.guildID}/${data.channelID}/${data.messageID}`;
 		const button = new MessageButton().setLabel('Giveaway').setStyle('url').setURL(link);
 		return button;
 	}
 	static async buttonclick(client, button) {
-		if (!client) throw new Error('client not provided');
-		if (!button) throw new Error('button not provided');
+		if (!client) throw new Error('NuggiesError: client not provided');
+		if (!button) throw new Error('NuggiesError: button not provided');
 		await button.clicker.fetch();
 		const id = button.id;
 		if (id.startsWith('giveaways')) {
 			const tag = id.split('-');
+			// if(tag[1] === 'drop') {
+			// 	console.log('works till here');
+			// 	button.channel.send(`<@${button.clicker.user.id}> won the drop for **${tag.slice(2).join(' ')}**! congratulations!`);
+			// 	await utils.editDropButtons(client, button, tag.slice(2).join(' '));
+			// }
 			if (tag[1] === 'enter') {
 				const data = await schema.findOne({ messageID: button.message.id });
 				if (data.requirements.enabled == true) {
@@ -154,9 +159,9 @@ class giveaways {
 		}
 	}
 	static async endByButton(client, messageID, button) {
-		if (!client) throw new Error('client not provided in button end');
-		if (!messageID) throw new Error('message ID not provided in button end');
-		if (!button) throw new Error('button not provided in button end');
+		if (!client) throw new Error('NuggiesError: client not provided in button end');
+		if (!messageID) throw new Error('NuggiesError:  ID not provided in button end');
+		if (!button) throw new Error('NuggiesError: button not provided in button end');
 		await button.defer();
 		const data = await this.getByMessageID(messageID);
 		const msg = await client.guilds.cache.get(data.guildID).channels.cache.get(data.channelID).messages.fetch(messageID);
@@ -165,9 +170,9 @@ class giveaways {
 	}
 
 	static async end(message, data, giveawaymsg) {
-		if (!message) throw new Error('message wasnt provided in end');
-		if (!data) throw new Error('data wasnt provided in end');
-		if (!giveawaymsg) throw new Error('giveawaymsg wasnt provided in end');
+		if (!message) throw new Error('NuggiesError: message wasnt provided in end');
+		if (!data) throw new Error('NuggiesError: data wasnt provided in end');
+		if (!giveawaymsg) throw new Error('NuggiesError: giveawaymsg wasnt provided in end');
 		if ((await this.getByMessageID(data.messageID)).ended) return 'ENDED';
 		const winners = await utils.choose(data.winners, message.id);
 
@@ -199,8 +204,8 @@ class giveaways {
 		utils.editButtons(message.client, data);
 	}
 	static async reroll(client, messageID) {
-		if (!client) throw new Error('client wasnt provided in reroll');
-		if (!messageID) throw new Error('message ID was not provided in reroll');
+		if (!client) throw new Error('NuggiesError: client wasnt provided in reroll');
+		if (!messageID) throw new Error('NuggiesError: message ID was not provided in reroll');
 		const data = await utils.getByMessageID(messageID);
 		const msg = await client.guilds.cache.get(data.guildID).channels.cache.get(data.channelID).messages.fetch(messageID);
 		const chosen = await utils.choose(1, messageID);
@@ -231,6 +236,23 @@ class giveaways {
 				}
 
 			}, 10000);
+		});
+	}
+	static async drop({ message, channel, prize, host }) {
+		let ended = false;
+		if(!channel) throw new Error('NuggiesError: channel ID not provided');
+		if(!host) throw new Error('NuggiesError: host not provided');
+		if(!prize) throw new Error('NuggiesError: prize not provided');
+		if(!message) throw new Error('NuggiesError: message not provided');
+		const m = await message.client.channels.cache.get(channel).send({ embed: await utils.dropEmbed(message.client, { prize: prize, host: host }), component: await utils.dropButtons(prize) });
+		const filter = (button) => button.clicker.user.id === message.author.id;
+		const collector = await m.createButtonCollector(filter, { time: 90000, max: 1 });
+		collector.on('collect', async (b) => {
+			b.defer();
+			ended = true;
+			b.channel.send(`<@${b.clicker.user.id}> won the drop congratulations!!`);
+			await utils.editDropButtons(m.client, b);
+			return collector.stop('end');
 		});
 	}
 }
