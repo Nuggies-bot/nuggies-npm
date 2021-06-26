@@ -43,7 +43,7 @@ const Nuggies = require('nuggies');
 Nuggies.giveaways.connect(mongURI);
 ```
 
-### params
+> ### params
 mongoURI: the mongo URI
 ## Create
 
@@ -62,6 +62,7 @@ Example code can be found below
             channel: message.channel.id,
         });
  ```
+
   > ### options
  message: Discord Message
 
@@ -76,7 +77,27 @@ endAfter: String, The time after the giveaway will end
 requirements: Object, the requirements for the giveaway. example: `requirements: {enabled: true, roles: ['role']}`
 
 channel: the channel ID the embed will be sent to
+  ## drop
+  you can create drops with `.drop`, first to click the button gets the win!
 
+  example:
+
+  ```js
+  Nuggies.giveaways.drop({
+			message: message,
+			prize: 'test',
+			channel: message.channel.id,
+			host: message.author.id,
+		});
+  ```
+> ### options
+ message: Discord Message
+
+ prize: String, prize of the giveaway
+
+ host: the host of the giveaway
+
+ channel: The channel where the drop will be sent
   ## buttonclick
    <span style="color: red;">IMPORTANT. THIS HANDLES THE BUTTONS IN YOUR GIVEAWAY, WITHOUT THIS THE BUTTONS WONT WORK!</span>
 
@@ -147,7 +168,7 @@ returns a url button leading to the giveaway.
     }()
 
 ```
-### params:
+> ### params:
 data: mongoose document, can be obtained by using `.getByMessageID`
 
 ## getByMessageID
@@ -157,7 +178,7 @@ This gets the mongoose document for the giveaway
     const doc = await Nuggies.giveaways.getByMessageID(messageID);
     }()
  ```
- ### params
+ > ### params
  messageID: the message ID of the giveaway
 
  ## startAgain
@@ -166,7 +187,7 @@ starts the giveaway again after restart, put this in ready event to start All th
  ```js
  Nuggies.giveaways.startAgain(client)
  ```
- ### params
+ > ### params
  client: Discord Client
 <br> <br>
  # __Button Roles__
@@ -184,7 +205,7 @@ starts the giveaway again after restart, put this in ready event to start All th
    });
  ```
 
- ### options
+ > ### options
 
  color: the button color. Optional. Defaults to gray
  
@@ -205,7 +226,7 @@ starts the giveaway again after restart, put this in ready event to start All th
    content: new Discord.MessageEmbed().setTitle('xd').setDescription('xdxd') });
  ```
  
- ### options
+ > ### options
 
  message: Discord Message
 
