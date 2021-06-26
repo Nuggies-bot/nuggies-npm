@@ -108,7 +108,7 @@ module.exports.editDropButtons = async (client, button) => {
 	buttons.setDisabled().setStyle('gray');
 	const row = new MessageActionRow().addComponents(buttons);
 	const embed = m.embeds[0];
-	embed.footer = `s`;
+	embed.footer.text = `drop ended! ${button.clicker.user.tag} won!`;
 
 	m.edit('', { components: [row], embed: embed }).catch((e) => { console.log('e' + e); });
 };
