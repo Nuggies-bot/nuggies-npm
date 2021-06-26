@@ -13,7 +13,6 @@ class giveaways {
 	*
 	* @param {string} url - MongoDB connection URI.
 	*/
-
 	static async connect(url) {
 		if (!url) throw new TypeError('NuggiesError: You didn\'t provide a MongoDB connection string');
 
