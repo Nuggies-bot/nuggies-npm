@@ -24,12 +24,13 @@ class giveaways {
 		});
 	}
 	/**
-	 * @param {any} - The Discord Message
-	 * @param {String} - the giveaway prize
-	 * @param {String} - the giveaway host
-	 * @param {Number} - timestamp when the giveaway ends
-	 * @param {Object} - role requirements object
-	 * @param {String} - channel id of the giveaway channel
+	 * @param {any} message - The Discord Message
+	 * @param {String} prize - the giveaway prize
+	 * @param {String} host - the giveaway host
+	 * @param {Number} winners - number of winners
+	 * @param {String} endAfter - how much time the giveaway will end in
+	 * @param {Object} requirements - role requirements object
+	 * @param {String} channel - channel id of the giveaway channel
 	 */
 
 	static async create({
