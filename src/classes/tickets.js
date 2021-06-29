@@ -1,13 +1,23 @@
 const { MessageEmbed } = require('discord.js');
-const { MessageButton } = require('node');
+const { MessageButton } = require('discord-buttons');
 const schema = require('../models/ticketsschema');
+const mongoose = require('mongoose');
+mongoose.set('useFindAndModify', false);
+let connection;
 class tickets {
-	constructor(options) {
-		if(!options.setupembed) throw new Error('NuggiesError: SetupEmbed not provided!');
-		if(!options.ticketsEmbed) throw new Error('NuggiesError: ticketsEmbed not provided!');
-		if((options.setupembed instanceof MessageEmbed) == false) throw new Error('NuggiesError: setupEmbed should be an instance of MessageEmbed');
-		this.setupembed = options.setupembed;
-		this.ticketsembed = options.ticketsembed;
+	/**
+	*
+	* @param {string} url - MongoDB connection URI.
+	*/
+	static async connect(url) {
+		if (!url) throw new TypeError('NuggiesError: You didn\'t provide a MongoDB connection string');
+
+		connection = url;
+
+		return mongoose.connect(url, {
+			useNewUrlParser: true,
+			useUnifiedTopology: true,
+		});
 	}
 	/**
 	 * @param {String} message - The Discord Message
@@ -15,15 +25,15 @@ class tickets {
 	 * @param {String} channelID - Channel ID where the setupembed will be sent
 	 * @param {String} bypassRoleID - the role which will be able to see the ticket channels
 	 * @param {Boolean} pingRole - wheather to ping the bypass role when a new ticket is made
+	 * @param {Object} setupembed - SetupEmbed that will be sent to the setup channel with the buttons
 	 */
-
-	async setup({ message, categoryID, channelID, bypassRoleID, pingRole }) {
+	static async setup({ message, categoryID, channelID, bypassRoleID, pingRole, setupembed }) {
 		let data = await schema.findOne({ guildID: message.guild.id });
 		if(!data) {
 			data = new schema({
 				guildID: message.guild.id,
-				parentID: !categoryID ? null : categoryID,
-				bypassRoleID: !bypassRoleID ? null : bypassRoleID,
+				parentID: !categoryID ? 'null' : categoryID,
+				bypassRoleID: !bypassRoleID ? 'null' : bypassRoleID,
 				pingRole: !pingRole ? false : pingRole,
 			});
 		}
@@ -31,8 +41,10 @@ class tickets {
 			if(bypassRoleID) data.bypassroleID = bypassRoleID;
 			if(categoryID) data.parentID = categoryID;
 		}
-		const setupButton = new MessageButton().setStyle('green').setLabel('open a ticket').setEmoji('🎟️');
-		message.guild.channels.cache.get(channelID).send(this.setupembed, { button: setupButton });
+		data.save();
+		const setupButton = new MessageButton().setStyle('green').setLabel('open a ticket').setEmoji('🎟️').setID('tickets-create');
+		console.log(this.setupembed);
+		message.guild.channels.cache.get(channelID).send({ button: setupButton, embed: setupembed });
 	}
 }
 
