@@ -15,4 +15,4 @@ const schema = new mongoose.Schema({
 	},
 });
 
-module.exports = mongoose.model('giveaways', schema);
+module.exports = mongoose.model('tickets', schema);
