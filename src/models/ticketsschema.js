@@ -10,6 +10,9 @@ const schema = new mongoose.Schema({
 	bypassRoleID: {
 		type: String, required: true,
 	},
+	pingRole: {
+		type: Boolean, required: true,
+	},
 });
 
 module.exports = mongoose.model('giveaways', schema);

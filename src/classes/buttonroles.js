@@ -1,5 +1,5 @@
 const { MessageButton, MessageActionRow } = require('discord-buttons');
-const { MessageEmbed, Message, Channel } = require('discord.js');
+const { MessageEmbed, Message } = require('discord.js');
 class buttonroles {
 
 	constructor() {
