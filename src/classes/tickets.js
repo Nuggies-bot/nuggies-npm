@@ -1,4 +1,3 @@
-const { MessageEmbed } = require('discord.js');
 const { MessageButton } = require('discord-buttons');
 const schema = require('../models/ticketsschema');
 const mongoose = require('mongoose');

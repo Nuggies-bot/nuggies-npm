@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "discord-buttons": "^3.2.1",
+    "discord-buttons": "github:AngeloCore/discord-buttons#dev",
     "discord.js": "^12.5.3",
     "mongoose": "^5.12.14",
     "ms": "^2.1.2"
