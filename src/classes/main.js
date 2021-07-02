@@ -72,5 +72,25 @@ class main {
 			}
 		}
 	}
+	static async dropclick(client, menu) {
+		if (!client) throw new Error('NuggiesError: client not provided');
+		if (!menu) throw new Error('NuggiesError: button not provided');
+		await menu.clicker.fetch();
+		if(menu.id == 'dr') {
+			let member;
+			const fetchMem = await menu.guild.members.fetch(menu.clicker.member.id, false);
+			if (fetchMem) member = menu.guild.members.cache.get(menu.clicker.member.id);
+			await member.fetch(true);
+			const role = menu.values[0];
+			if (menu.clicker.member.roles.cache.has(role)) {
+				menu.clicker.member.roles.remove(role);
+				menu.reply.send(`I have removed the <@&${role}> role from you!`, true);
+			}
+			else {
+				menu.clicker.member.roles.add(role);
+				menu.reply.send(`I have added the <@&${role}> role to you!`, true);
+			}
+		}
+	}
 }
 module.exports = main;
