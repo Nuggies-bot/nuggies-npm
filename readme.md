@@ -16,8 +16,11 @@ A utility package for Discord Bots!
 # Installation <img src = "https://cdn.discordapp.com/emojis/763159009686585354.gif?v=1" alt="download" width=40>
 # Table of content:
 ## - [installation](https://www.npmjs.com/package/nuggies#installation-)
+## - [database connect](https://www.npmjs.com/package/nuggies#connect-to-database)
 ## - [Giveaways](https://www.npmjs.com/package/nuggies#giveaways)
 ## - [Button Roles](https://www.npmjs.com/package/nuggies#button-roles)
+## - [Dropdown Roles](https://www.npmjs.com/package/nuggies#dropdown-roles)
+## - [handle interactions](https://www.npmjs.com/package/nuggies#handle-interactions)
 npm:
 ```powershell
 npm i nuggies
@@ -27,6 +30,15 @@ yarn:
 ```powershell
 yarn add nuggies
  ```
+
+## connect to database
+features like giveaways require a database connection, you can connect to database using 
+```js
+Nuggies.connect(mongodburi)
+```
+> ### params
+uri - the mongoDB connection string
+
 # __Giveaways__
 ## [click here](https://github.com/Nuggies-bot/giveaways-example) for giveaways bot code using nuggies package
 # Preview <img src = "https://cdn.discordapp.com/emojis/546353169341349888.png?v=1" width = "40">
@@ -40,7 +52,7 @@ You can connect to the mongoDB database
 
 ```js
 const Nuggies = require('nuggies');
-Nuggies.giveaways.connect(mongURI);
+Nuggies.connect(mongURI);
 ```
 
 > ### params
@@ -98,15 +110,7 @@ channel: the channel ID the embed will be sent to
  host: the host of the giveaway
 
  channel: The channel where the drop will be sent
-  ## buttonclick
-   <span style="color: red;">IMPORTANT. THIS HANDLES THE BUTTONS IN YOUR GIVEAWAY, WITHOUT THIS THE BUTTONS WONT WORK!</span>
 
-   handles the buttons in your code, can be put in ` clickButton ` event
-   ```js
-    client.on('clickButton', button => {
-    Nuggies.giveaways.buttonclick(client, button);
-});
-   ```
   ## End
 
  End is a function which will help you end giveaways easily <br> <br>
@@ -194,7 +198,7 @@ starts the giveaway again after restart, put this in ready event to start All th
   ### [click here for fully functional button-roles bot](https://github.com/Nuggies-bot/buttonroles-example)
 <image src = 'https://cdn.discordapp.com/attachments/801132115755270164/857108297688285204/TBbPNb4S7a.gif'>
 
- ## buttonroles
+ ## __constructor__
 
  constructor. use .setrole() on it to create buttons
  ```js
@@ -222,7 +226,7 @@ starts the giveaway again after restart, put this in ready event to start All th
  ```js
  Nuggies.buttonroles.create({ 
    message: message, 
-   role: something, 
+   role: something,  /*buttonroles constructor*/ 
    content: new Discord.MessageEmbed().setTitle('xd').setDescription('xdxd') });
  ```
  
@@ -234,17 +238,65 @@ starts the giveaway again after restart, put this in ready event to start All th
 
  content: content, can be a string or a Discord Embed
 
- ## buttonclick
+ # __dropdown roles__
 
- handles the buttons in button-roles
-
-   <span style="color: red;">IMPORTANT. THIS HANDLES THE BUTTONS IN YOUR GIVEAWAY, WITHOUT THIS THE BUTTONS WONT WORK!</span>
-  
+ constructor. use .setrole() on it to create buttons
  ```js
-Nuggies.buttonroles.buttonclick(client, button);
+ const something = new Nuggies.dropdownroles().addrole({ 
+   label: 'test', 
+   role: 'roleID',
+   emoji: 'emojiID'
+   });
  ```
-  
-  ### License
+
+ > ### options
+ 
+ label: dropdown option label
+
+ role: role that would be added on click
+
+ emoji: ID of the emoji on the dropdown option, optional.
+
+ ## create
+
+ creates the dropdown roles
+
+ ```js
+ Nuggies.dropdown.create({ 
+   message: message, 
+   role: role, /*dropdownroles constructor*/ 
+   content: new Discord.MessageEmbed().setTitle('xd').setDescription('xdxd') });
+ ```
+
+# __handle interactions__
+
+### features including buttons and dropdown menus require certain functions to handle the interaction
+
+
+## buttonclick
+handles all the button interactions
+```js
+client.on('clickButton', button => {
+	Nuggies.buttonclick(client, button);
+});
+```
+> ### params
+client: the discord client
+button: the button callback from the clickButton event
+
+## dropclick
+handles all the dropdown interactions
+```js
+client.on('clickMenu', async (menu) => {
+	Nuggies.dropclick(client, menu);
+});
+```
+> ### params
+client: the discord client
+menu: the menu callback from the clickMenu event
+
+
+### License
 Nuggies npm licensed under the terms of [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://github.com/Nuggies-bot/nuggies-npm/blob/main/license) ("CC-BY-NC-SA-4.0"). Commercial use is not allowed under this license. This includes any kind of revenue made with or based upon the software, even donations.
 
 The CC-BY-NC-SA-4.0 allows you to:
