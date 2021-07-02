@@ -197,7 +197,7 @@ starts the giveaway again after restart, put this in ready event to start All th
   ### [click here for fully functional button-roles bot](https://github.com/Nuggies-bot/buttonroles-example)
 <image src = 'https://cdn.discordapp.com/attachments/801132115755270164/857108297688285204/TBbPNb4S7a.gif'>
 
- ## __buttonroles__
+ ## __constructor__
 
  constructor. use .setrole() on it to create buttons
  ```js
@@ -261,22 +261,11 @@ starts the giveaway again after restart, put this in ready event to start All th
  creates the dropdown roles
 
  ```js
- Nuggies.buttonroles.create({ 
+ Nuggies.dropdown.create({ 
    message: message, 
    role: role, /*dropdownroles constructor*/ 
    content: new Discord.MessageEmbed().setTitle('xd').setDescription('xdxd') });
  ```
-  ## dropclick
-
-  handles the dropdown selection
-
- > ### options
-
- message: Discord Message
-
- role: The object recieved from the buttonroles constructor.
-
- content: content, can be a string or a Discord Embed
 
 # __handle interactions__
 
