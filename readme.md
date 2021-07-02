@@ -16,10 +16,11 @@ A utility package for Discord Bots!
 # Installation <img src = "https://cdn.discordapp.com/emojis/763159009686585354.gif?v=1" alt="download" width=40>
 # Table of content:
 ## - [installation](https://www.npmjs.com/package/nuggies#installation-)
-## - [database connect](https://www.npmjs.com/package/nuggies#installation-)
+## - [database connect](https://www.npmjs.com/package/nuggies#connect-to-database)
 ## - [Giveaways](https://www.npmjs.com/package/nuggies#giveaways)
 ## - [Button Roles](https://www.npmjs.com/package/nuggies#button-roles)
-## - [Dropdown Roles](https://www.npmjs.com/package/nuggies#button-roles)
+## - [Dropdown Roles](https://www.npmjs.com/package/nuggies#dropdown-roles)
+## - [handle interactions](https://www.npmjs.com/package/nuggies#handle-interactions)
 npm:
 ```powershell
 npm i nuggies
@@ -237,7 +238,7 @@ starts the giveaway again after restart, put this in ready event to start All th
 
  content: content, can be a string or a Discord Embed
 
- ## __dropdown roles__
+ # __dropdown roles__
 
  constructor. use .setrole() on it to create buttons
  ```js
