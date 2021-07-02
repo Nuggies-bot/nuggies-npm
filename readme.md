@@ -240,7 +240,7 @@ starts the giveaway again after restart, put this in ready event to start All th
 
  # __dropdown roles__
 
-<img src="https://cdn.discordapp.com/attachments/801132115755270164/860525451570970634/pdWo9SQ0.gif">
+<img src="https://cdn.discordapp.com/attachments/801132115755270164/860549628075835413/v3gHFgjz.gif">
 
  constructor. use .setrole() on it to create dropdown options
  ```js
