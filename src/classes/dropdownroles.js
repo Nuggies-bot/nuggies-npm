@@ -8,7 +8,7 @@ class dropdownroles {
 
 	/**
 	 *
-	 * @param {String} label - Button label
+	 * @param {String} label - dropdown label
 	 * @param {String} emoji - The emoji id [optional]
 	 * @param {String} role - The role id
 	 */
@@ -22,11 +22,12 @@ class dropdownroles {
 	toJSON() { return { roles: this.roles }; }
 
 	/**
-	 * @param {Message} message - The Discord Message
-	 * @param {MessageEmbed} embed - The Discord Embed
-	 * @param {buttonroles} role - The created object using .buttonroles().addrole()
-	 * @param {String} channelID - the id of the channel you want to send the message to.
-	 */
+ *
+ * @param {Message} message - The Discord Message
+ * @param {String} content - The Discord send data, can be an embed or string
+ * @param {String} role - The role ID of the role
+ * @param {String} channelID - The channel ID that will be recieving the dropdown
+ */
 	static async create({ message, content, role, channelID }) {
 		if((message instanceof Message) == false) throw new TypeError('please provide the Discord Message');
 		if(!content) throw new Error('please provide content!');
@@ -43,7 +44,7 @@ class dropdownroles {
 		dropdown.options = dropdownsOptions;
 		// console.log(dropdown);
 		const row = new MessageActionRow().addComponent(dropdown);
-		content instanceof MessageEmbed ? message.client.channels.cache.get(channelID).send({ embed: content, component: [row] }) : message.client.channels.cache.get(channelID).send(content, { components: [row] });
+		content instanceof MessageEmbed ? message.client.channels.cache.get(channelID).send({ embed: content, components: [row] }) : message.client.channels.cache.get(channelID).send(content, { components: [row] });
 	}
 }
 
