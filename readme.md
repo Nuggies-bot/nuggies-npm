@@ -264,7 +264,7 @@ starts the giveaway again after restart, put this in ready event to start All th
  creates the dropdown roles
 
  ```js
- Nuggies.dropdown.create({ 
+ Nuggies.dropdownroles.create({ 
    message: message, 
    role: role, /*dropdownroles constructor*/ 
    content: new Discord.MessageEmbed().setTitle('xd').setDescription('xdxd') });
