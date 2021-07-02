@@ -242,7 +242,7 @@ starts the giveaway again after restart, put this in ready event to start All th
 
 <img src="https://cdn.discordapp.com/attachments/801132115755270164/860525451570970634/pdWo9SQ0.gif">
 
- constructor. use .setrole() on it to create buttons
+ constructor. use .setrole() on it to create dropdown options
  ```js
  const something = new Nuggies.dropdownroles().addrole({ 
    label: 'test', 
