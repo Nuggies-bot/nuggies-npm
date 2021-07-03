@@ -37,6 +37,9 @@ class main {
 					data.save();
 					return button.reply.send('You have entered this giveaway! best of luck :)', true);
 				}
+				if (data.clickers.includes(button.clicker.user.id)) {
+					return button.reply.send('you already entered this giveaway!', true);
+				}
 			}
 			if (tag[1] === 'reroll') {
 				if (button.clicker.user.id !== tag[2]) return button.reply.send('You cannot end this giveaway as you didnt host it!', { ephemeral: true });
