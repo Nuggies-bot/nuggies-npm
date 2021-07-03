@@ -96,6 +96,51 @@ class giveaways {
 		const button = new MessageButton().setLabel('Giveaway').setStyle('url').setURL(link);
 		return button;
 	}
+	static async endByButton(client, messageID, button) {
+		if (!client) throw new Error('NuggiesError: client not provided in button end');
+		if (!messageID) throw new Error('NuggiesError:  ID not provided in button end');
+		if (!button) throw new Error('NuggiesError: button not provided in button end');
+		await button.defer();
+		const data = await this.getByMessageID(messageID);
+		const msg = await client.guilds.cache.get(data.guildID).channels.cache.get(data.channelID).messages.fetch(messageID);
+		const res = (await this.end(msg, data, msg));
+		if (res == 'ENDED') button.reply.send('The giveaway has already ended!', { ephemeral: true });
+	}
+
+	static async end(message, data, giveawaymsg) {
+		if (!message) throw new Error('NuggiesError: message wasnt provided in end');
+		if (!data) throw new Error('NuggiesError: data wasnt provided in end');
+		if (!giveawaymsg) throw new Error('NuggiesError: giveawaymsg wasnt provided in end');
+		if ((await this.getByMessageID(data.messageID)).ended) return 'ENDED';
+		const winners = await utils.choose(data.winners, message.id);
+
+		if (!winners) {
+			message.channel.send('Not enough people participated in this giveaway.');
+			data.ended = true;
+			data.save();
+			const embed = giveawaymsg.embeds[0];
+			embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.host.toString()}>\n⏲️ Winner(s): none`;
+			giveawaymsg.edit('', { embed: embed });
+			utils.editButtons(message.client, data);
+			return 'NO_WINNERS';
+		}
+
+		message.channel.send(`${winners.map(winner => `<@${winner}>`).join(', ')} you won ${data.prize} Congratulations! Hosted by ${message.guild.members.cache.get(data.host).toString()}`, { component: await this.gotoGiveaway(data) });
+		const dmEmbed = new Discord.MessageEmbed()
+			.setTitle('You won!')
+			.setDescription(`You have won a giveaway in **${giveawaymsg.guild.name}**!\nPrize: [${data.prize}](https://discord.com/${giveawaymsg.guild.id}/${giveawaymsg.channel.id}/${data.messageID})`)
+			.setColor('RANDOM')
+			.setFooter('GG!');
+		winners.forEach((user) => {
+			message.guild.members.cache.get(user).send(dmEmbed);
+		});
+		const embed = giveawaymsg.embeds[0];
+		embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.host.toString()}>\n⏲️ Winner(s): ${winners.map(winner => `<@${winner}>`).join(', ')}`;
+		giveawaymsg.edit('', { embed: embed });
+		data.ended = true;
+		data.save();
+		utils.editButtons(message.client, data);
+	}
 	static async reroll(client, messageID) {
 		if (!client) throw new Error('NuggiesError: client wasnt provided in reroll');
 		if (!messageID) throw new Error('NuggiesError: message ID was not provided in reroll');
