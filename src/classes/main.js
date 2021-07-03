@@ -44,7 +44,7 @@ class main {
 			if (tag[1] === 'reroll') {
 				if (button.clicker.user.id !== tag[2]) return button.reply.send('You cannot end this giveaway as you didnt host it!', { ephemeral: true });
 				try {
-					button.defer();
+					button.reply.send('rerolled!', true);
 					win = await giveaways.reroll(client, button.message.id);
 				}
 				catch (err) {
@@ -55,7 +55,7 @@ class main {
 				button.message.channel.send(`Rerolled! <@${win}> is the new winner of the giveaway!`, { component: new MessageButton().setLabel('Giveaway').setURL(`https://discord.com/channels/${button.message.guild.id}/${button.message.channel.id}/${button.message.id}`).setStyle('url') });
 			}
 			if (tag[1] === 'end') {
-				await button.defer()
+				button.reply.send('ended!', true);
 				if (button.clicker.user.id !== tag[2]) return button.reply.send('You cannot end this giveaway as you didnt host it!', { ephemeral: true });
 				await giveaways.endByButton(client, button.message.id, button);
 			}
