@@ -100,7 +100,6 @@ class giveaways {
 		if (!client) throw new Error('NuggiesError: client not provided in button end');
 		if (!messageID) throw new Error('NuggiesError:  ID not provided in button end');
 		if (!button) throw new Error('NuggiesError: button not provided in button end');
-		await button.defer();
 		const data = await this.getByMessageID(messageID);
 		const msg = await client.guilds.cache.get(data.guildID).channels.cache.get(data.channelID).messages.fetch(messageID);
 		const res = (await this.end(msg, data, msg));
