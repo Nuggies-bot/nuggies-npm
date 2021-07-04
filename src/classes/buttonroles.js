@@ -31,7 +31,7 @@ class buttonroles {
 	 * @param {String} channelID - the id of the channel you want to send the message to.
 	 */
 	static async create({ message, content, role, channelID }) {
-		if((message instanceof Message) == false) throw new TypeError('please provide the Discord Message');
+		if(!message) throw new TypeError('please provide the Discord Message');
 		if(!content) throw new Error('please provide content!');
 		if(!role) throw new Error('role not provided!');
 		if(!channelID) throw new Error('channelID not provided!');
