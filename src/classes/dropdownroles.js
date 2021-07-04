@@ -40,11 +40,11 @@ class dropdownroles {
 			dropdownsOptions.push(new MessageMenuOption().setEmoji(buttonObject.emoji).setLabel(buttonObject.label).setValue(buttonObject.role).setDescription(`click this to get the ${message.guild.roles.cache.get(buttonObject.role).name} role!`));
 		}
 
-		const dropdown = new MessageMenu().addOptions(dropdownsOptions).setID('dr');
+		const dropdown = new MessageMenu().setID('dr');
 		dropdown.options = dropdownsOptions;
 		// console.log(dropdown);
 		const row = new MessageActionRow().addComponent(dropdown);
-		content instanceof MessageEmbed ? message.client.channels.cache.get(channelID).send({ embed: content, components: [row] }) : message.client.channels.cache.get(channelID).send(content, { components: [row] });
+		content instanceof MessageEmbed ? message.client.channels.cache.get(channelID).send({ embed: content, component: row }) : message.client.channels.cache.get(channelID).send(content, { components: [row] });
 	}
 }
 
