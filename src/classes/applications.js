@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const { MessageActionRow, MessageMenu, MessageMenuOption } = require('discord-buttons');
 const schema = require('../models/applictionsschema');
 
@@ -61,8 +62,12 @@ class applications {
 	}
 	static async getDropdownComponent({ guildID }) {
 		if(!guildID) throw new Error('NuggiesError: GuildID not provided');
+		const options = [];
 		const data = schema.findOne({ guildID: guildID });
-		if(data.applications);
+		if(!data || !data.applications[0]) return null;
+		data.applications.forEach(app => {
+			// to be continued
+		});
 	}
 }
 
