@@ -66,8 +66,11 @@ class applications {
 		const data = schema.findOne({ guildID: guildID });
 		if(!data || !data.applications[0]) return null;
 		data.applications.forEach(app => {
-			// to be continued
+			if(app.emoji == 'null') app.emoji = null;
+			options.push(new MessageMenuOption().setLabel(app.name).setEmoji(app.emoji).setValue(app.name).setDescription(`apply for ${app.name}`));
 		});
+		const dropdown = new MessageMenu().addOptions(options);
+		return dropdown ? dropdown : null;
 	}
 }
 
