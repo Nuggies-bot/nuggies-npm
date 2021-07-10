@@ -76,7 +76,7 @@ class giveaways {
 			message.channel.send(`${winners.map(winner => `<@${winner}>`).join(', ')} you won ${data.prize} Congratulations! Hosted by ${message.guild.members.cache.get(data.host).toString()}`, { component: await this.gotoGiveaway(data) });
 			const dmEmbed = new Discord.MessageEmbed()
 				.setTitle('You won!')
-				.setDescription(`You have won a giveaway in **${msg.guild.name}**!\nPrize: [${data.prize}](https://discord.com/${msg.guild.id}/${msg.channel.id}/${data.messageID})`)
+				.setDescription(`You have won a giveaway in **${msg.guild.name}**!\nPrize: [${data.prize}](https://discord.com/channels/${msg.guild.id}/${msg.channel.id}/${data.messageID})`)
 				.setColor('RANDOM')
 				.setFooter('GG!');
 			winners.forEach((user) => {
@@ -105,7 +105,7 @@ class giveaways {
 		if (!chosen) return [];
 		const dmEmbed = new Discord.MessageEmbed()
 			.setTitle('You won!')
-			.setDescription(`You have won a giveaway in **${msg.guild.name}**!\nPrize: [${data.prize}](https://discord.com/${msg.guild.id}/${msg.channel.id}/${messageID})`)
+			.setDescription(`You have won a giveaway in **${msg.guild.name}**!\nPrize: [${data.prize}](https://discord.com/channels/${msg.guild.id}/${msg.channel.id}/${messageID})`)
 			.setColor('RANDOM')
 			.setFooter('GG!');
 		chosen.forEach((user) => {
