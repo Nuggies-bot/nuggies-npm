@@ -5,7 +5,6 @@ const Discord = require('discord.js');
 const mongoose = require('mongoose');
 const ms = require('ms');
 mongoose.set('useFindAndModify', false);
-let win;
 
 class giveaways {
 	/**
@@ -43,7 +42,7 @@ class giveaways {
 			endAfter: Date.now() + ms(endAfter),
 			requirements: requirements,
 		}).save();
-		await this.startTimer(message, data);
+		await this.startTimer(msg, data);
 	}
 
 	/**
@@ -132,7 +131,6 @@ class giveaways {
 		});
 	}
 	static async drop({ message, channel, prize, host }) {
-		let ended = false;
 		if(!channel) throw new Error('NuggiesError: channel ID not provided');
 		if(!host) throw new Error('NuggiesError: host not provided');
 		if(!prize) throw new Error('NuggiesError: prize not provided');
@@ -142,7 +140,6 @@ class giveaways {
 		const collector = await m.createButtonCollector(filter, { time: 90000, max: 1 });
 		collector.on('collect', async (b) => {
 			b.defer();
-			ended = true;
 			b.channel.send(`<@${b.clicker.user.id}> won the drop congratulations!!`);
 			await utils.editDropButtons(m.client, b);
 			return collector.stop('end');
