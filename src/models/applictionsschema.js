@@ -10,6 +10,7 @@ const schema = new mongoose.Schema({
 	responses: {
 		type: Array, required: true,
 	},
+	channelID: String,
 });
 
 module.exports = mongoose.model('applicationsSchema', schema);

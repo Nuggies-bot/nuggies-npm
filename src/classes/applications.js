@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 const { MessageActionRow, MessageMenu, MessageMenuOption } = require('discord-buttons');
+const { DiscordAPIError, MessageEmbed, Message } = require('discord.js');
 const schema = require('../models/applictionsschema');
 
 class applications {
@@ -12,7 +13,7 @@ class applications {
      * @param {String} description - the description of the dropdown
      * @param {String} label - The dropdown label
      */
-	static async create({ guildID, questions, name, emoji, channel, description, label }) {
+	static async addApplication({ guildID, questions, name, emoji, channel, description, label }) {
 		if(!guildID) throw new Error('NuggiesError: guildID not provided');
 		if(!questions) throw new Error('NuggiesError: questions Array not provided');
 		if(!name) throw new Error('NuggiesError: name not provided');
@@ -69,8 +70,16 @@ class applications {
 			if(app.emoji == 'null') app.emoji = null;
 			options.push(new MessageMenuOption().setLabel(app.name).setEmoji(app.emoji).setValue(app.name).setDescription(`apply for ${app.name}`));
 		});
-		const dropdown = new MessageMenu().addOptions(options);
+		const dropdown = new MessageMenu().addOptions(options).setID();
 		return dropdown ? dropdown : null;
+	}
+	static async create({ guildID, content, client }) {
+		if(!guildID) throw new Error('NuggiesError: GuildID not provided');
+		if(!content) throw new Error('NuggiesError: content not provided');
+
+		const data = await schema.findOne({ guildID: guildID });
+		if(!data.channelID || data.channelID == 'null') throw new Error('channelID not present in the data.');
+		content instanceof MessageEmbed ? client.channels.cache.get(data.channelID).send({ embed: content, component: await this.getDropdownComponent(guildID) }) : client.channels.cache.get(data.channel);
 	}
 }
 
