@@ -29,7 +29,7 @@ class dropdownroles {
  * @param {String} channelID - The channel ID that will be recieving the dropdown
  */
 	static async create({ message, content, role, channelID }) {
-		if((message instanceof Message) == false) throw new TypeError('please provide the Discord Message');
+		if(!message) throw new TypeError('please provide the Discord Message');
 		if(!content) throw new Error('please provide content!');
 		if(!role) throw new Error('role not provided!');
 		if(!channelID) throw new Error('channelID not provided!');
@@ -40,11 +40,11 @@ class dropdownroles {
 			dropdownsOptions.push(new MessageMenuOption().setEmoji(buttonObject.emoji).setLabel(buttonObject.label).setValue(buttonObject.role).setDescription(`click this to get the ${message.guild.roles.cache.get(buttonObject.role).name} role!`));
 		}
 
-		const dropdown = new MessageMenu().addOptions(dropdownsOptions).setID('dr');
+		const dropdown = new MessageMenu().setID('dr');
 		dropdown.options = dropdownsOptions;
 		// console.log(dropdown);
 		const row = new MessageActionRow().addComponent(dropdown);
-		content instanceof MessageEmbed ? message.client.channels.cache.get(channelID).send({ embed: content, components: [row] }) : message.client.channels.cache.get(channelID).send(content, { components: [row] });
+		content instanceof MessageEmbed ? message.client.channels.cache.get(channelID).send({ embed: content, component: row }) : message.client.channels.cache.get(channelID).send(content, { components: [row] });
 	}
 }
 
