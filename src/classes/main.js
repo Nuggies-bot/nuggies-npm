@@ -1,11 +1,13 @@
 /* eslint-disable no-unused-vars */
 const mongoose = require('mongoose');
 mongoose.set('useFindAndModify', false);
+const application = require('./applications');
 let win;
 const schema = require('../models/giveawayschema');
 const { MessageButton } = require('discord-buttons');
 const giveaways = require('./giveaways');
 const Discord = require('discord.js');
+const applications = require('./applications');
 class main {
 /**
 	*
@@ -80,6 +82,21 @@ class main {
 		});
 		client.on('clickMenu', async menu => {
 			await menu.clicker.fetch();
+			if(menu.id == 'app') {
+				const app = menu.values[0];
+				const data = applications.getDataByGuild(menu.guild.id);
+				const index = await data.applications.find(function(array) {
+					return array.name === app;
+				});
+				const step = 0;
+				const msg = await menu.clicker.send(new Discord.MessageEmbed().setTitle(`Application: ${app} \n question: 1/${data.array.index}`));
+				const collector = msg.channel.createMessageCollector({ max: index.questions.length + 1 });
+				collector.on('collect', m => {
+					for(let i = 0; i < app.questions.length + 1; i++) {
+						// to be continued
+					}
+				});
+			}
 			if(menu.id == 'dr') {
 				let member;
 				const fetchMem = await menu.guild.members.fetch(menu.clicker.member.id, false);

@@ -53,6 +53,7 @@ class applications {
 		const data = await schema.findOne({ guildID: guildID });
 		if(!data) return false;
 		if(data) {
+			// eslint-disable-next-line no-shadow
 			const index = await data.applications.findIndex(function(array, index) {
 				return array.name === name;
 			});
@@ -70,7 +71,7 @@ class applications {
 			if(app.emoji == 'null') app.emoji = null;
 			options.push(new MessageMenuOption().setLabel(app.name).setEmoji(app.emoji).setValue(app.name).setDescription(`apply for ${app.name}`));
 		});
-		const dropdown = new MessageMenu().addOptions(options).setID();
+		const dropdown = new MessageMenu().addOptions(options).setID('app');
 		return dropdown ? dropdown : null;
 	}
 	static async create({ guildID, content, client }) {
@@ -80,6 +81,10 @@ class applications {
 		const data = await schema.findOne({ guildID: guildID });
 		if(!data.channelID || data.channelID == 'null') throw new Error('channelID not present in the data.');
 		content instanceof MessageEmbed ? client.channels.cache.get(data.channelID).send({ embed: content, component: await this.getDropdownComponent(guildID) }) : client.channels.cache.get(data.channel);
+	}
+	static async getDataByGuild(guildID) {
+		const data = await schema.findOne({ guildID: guildID });
+		return data;
 	}
 }
 
