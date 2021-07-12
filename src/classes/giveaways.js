@@ -5,9 +5,9 @@ const Discord = require('discord.js');
 const mongoose = require('mongoose');
 const ms = require('ms');
 mongoose.set('useFindAndModify', false);
-let win;
 
 class giveaways {
+
 	/**
 	 * @param {any} - The Discord Message
 	 * @param {String} - the giveaway prize
@@ -29,7 +29,7 @@ class giveaways {
 		if (!endAfter) throw new Error('NuggiesError:  time wasnt provided while creating giveaway');
 		if (typeof endAfter !== 'string') throw new TypeError('NuggiesError: endAfter should be a string');
 		if (!channel) throw new Error('NuggiesError: channel wasnt provided while creating giveaway');
-		const msg = await message.guild.channels.cache.get(channel).send('', {
+		const msg = await message.guild.channels.cache.get(channel).send(message.client.giveawayMessages.giveaway, {
 			buttons: utils.getButtons(host), embed: await utils.giveawayEmbed(message.client, { host, prize, endAfter, winners, requirements }),
 		});
 		const data = await new schema({
@@ -42,7 +42,7 @@ class giveaways {
 			startAt: Date.now(),
 			endAfter: Date.now() + ms(endAfter),
 			requirements: requirements,
-		}).save();
+		}).save()
 		await this.startTimer(message, data);
 	}
 
@@ -63,30 +63,37 @@ class giveaways {
 			const winners = await utils.choose(data.winners, data.messageID);
 
 			if (!winners) {
-				message.channel.send('not enough people participated in this giveaway!');
+				msg.channel.send(replacePlaceholders(message.client.giveawayMessages.noWinner, data, msg));
 				data.ended = true;
-				data.save();
+				data.save().then(() => {/* */}).catch((err) => {
+					console.log(err)
+				});
 				const embed = msg.embeds[0];
-				embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.host.toString()}>\n⏲️ Winner(s): none`;
+				embed.description = replacePlaceholders(message.client.giveawayMessages.endedGiveawayDescription, data, msg);
 				msg.edit('', { embed: embed });
 				utils.editButtons(message.client, data);
 				return 'NO_WINNERS';
 			}
-
-			message.channel.send(`${winners.map(winner => `<@${winner}>`).join(', ')} you won ${data.prize} Congratulations! Hosted by ${message.guild.members.cache.get(data.host).toString()}`, { component: await this.gotoGiveaway(data) });
-			const dmEmbed = new Discord.MessageEmbed()
-				.setTitle('You won!')
-				.setDescription(`You have won a giveaway in **${msg.guild.name}**!\nPrize: [${data.prize}](https://discord.com/${msg.guild.id}/${msg.channel.id}/${data.messageID})`)
-				.setColor('RANDOM')
-				.setFooter('GG!');
-			winners.forEach((user) => {
-				message.guild.members.cache.get(user).send(dmEmbed);
-			});
+			message.channel.send(replacePlaceholders(message.client.giveawayMessages.winMessage, data, msg, winners));
+			
+			if (message.client.giveawayMessages.dmWinner) {
+				const dmEmbed = new Discord.MessageEmbed()
+					.setTitle('You Won!')
+					.setDescription(replacePlaceholders(message.client.giveawayMessages.dmMessage, data, msg, winners))
+					.setColor('RANDOM')
+					.setThumbnail(msg.guild.iconURL({ dynamic: true }))
+					.setFooter('GG!');
+				winners.forEach((user) => {
+					message.guild.members.cache.get(user).send(dmEmbed);
+				});
+			}
 			const embed = msg.embeds[0];
-			embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.host.toString()}>\n⏲️ Winner(s): ${winners.map(winner => `<@${winner}>`).join(', ')}`;
-			msg.edit('', { embed: embed });
+			embed.description = replacePlaceholders(message.client.giveawayMessages.endedGiveawayDescription, data, msg, winners);
+			msg.edit('', { embed: embed }).catch((err) => console.log(err));
 			data.ended = true;
-			data.save();
+			data.save().then(() => {/* */}).catch((err) => {
+				console.log(err)
+			});
 			utils.editButtons(message.client, data);
 		}, time);
 	}
@@ -98,12 +105,12 @@ class giveaways {
 	}
 	static async endByButton(client, messageID, button) {
 		if (!client) throw new Error('NuggiesError: client not provided in button end');
-		if (!messageID) throw new Error('NuggiesError:  ID not provided in button end');
+		if (!messageID) throw new Error('NuggiesError: ID not provided in button end');
 		if (!button) throw new Error('NuggiesError: button not provided in button end');
 		const data = await this.getByMessageID(messageID);
 		const msg = await client.guilds.cache.get(data.guildID).channels.cache.get(data.channelID).messages.fetch(messageID);
 		const res = (await this.end(msg, data, msg));
-		if (res == 'ENDED') button.reply.send('The giveaway has already ended!', { ephemeral: true });
+		if (res == 'ENDED') button.reply.send(replacePlaceholders(client.giveawayMessages.alreadyEnded, data, msg), { ephemeral: true });
 	}
 
 	static async end(message, data, giveawaymsg) {
@@ -112,32 +119,37 @@ class giveaways {
 		if (!giveawaymsg) throw new Error('NuggiesError: giveawaymsg wasnt provided in end');
 		if ((await this.getByMessageID(data.messageID)).ended) return 'ENDED';
 		const winners = await utils.choose(data.winners, message.id);
+		const msg = await message.client.guilds.cache.get(data.guildID).channels.cache.get(data.channelID).messages.fetch(data.messageID);
 
 		if (!winners) {
-			message.channel.send('Not enough people participated in this giveaway.');
+			message.channel.send(replacePlaceholders(message.client.giveawayMessages.noWinner, data, msg));
 			data.ended = true;
-			data.save();
+			data.save()
 			const embed = giveawaymsg.embeds[0];
-			embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.host.toString()}>\n⏲️ Winner(s): none`;
-			giveawaymsg.edit('', { embed: embed });
+			embed.description = replacePlaceholders(message.client.giveawayMessages.endedGiveawayDescription, data, msg);
+			giveawaymsg.edit('', { embed: embed }).catch((err) => console.log(err));;
 			utils.editButtons(message.client, data);
 			return 'NO_WINNERS';
 		}
-
-		message.channel.send(`${winners.map(winner => `<@${winner}>`).join(', ')} you won ${data.prize} Congratulations! Hosted by ${message.guild.members.cache.get(data.host).toString()}`, { component: await this.gotoGiveaway(data) });
-		const dmEmbed = new Discord.MessageEmbed()
-			.setTitle('You won!')
-			.setDescription(`You have won a giveaway in **${giveawaymsg.guild.name}**!\nPrize: [${data.prize}](https://discord.com/${giveawaymsg.guild.id}/${giveawaymsg.channel.id}/${data.messageID})`)
-			.setColor('RANDOM')
-			.setFooter('GG!');
-		winners.forEach((user) => {
-			message.guild.members.cache.get(user).send(dmEmbed);
-		});
+		message.channel.send(replacePlaceholders(message.client.giveawayMessages.winMessage, data, msg, winners));
+		if (message.client.giveawayMessages.dmWinner) {
+			const dmEmbed = new Discord.MessageEmbed()
+				.setTitle('You Won!')
+				.setDescription(replacePlaceholders(message.client.giveawayMessages.dmMessage, data, msg, winners))
+				.setColor('RANDOM')
+				.setThumbnail(msg.guild.iconURL({ dynamic: true }))
+				.setFooter('GG!');
+			winners.forEach((user) => {
+				message.guild.members.cache.get(user).send(dmEmbed);
+			});
+		}
 		const embed = giveawaymsg.embeds[0];
-		embed.description = `🎁 Prize: **${data.prize}**\n🎊 Hosted by: <@${data.host.toString()}>\n⏲️ Winner(s): ${winners.map(winner => `<@${winner}>`).join(', ')}`;
-		giveawaymsg.edit('', { embed: embed });
+		embed.description = replacePlaceholders(message.client.giveawayMessages.endedGiveawayDescription, data, msg, winners);
+		giveawaymsg.edit('', { embed: embed }).catch((err) => console.log(err));;
 		data.ended = true;
-		data.save();
+		data.save().then(() => {/* */}).catch((err) => {
+			console.log(err)
+		});
 		utils.editButtons(message.client, data);
 	}
 	static async reroll(client, messageID) {
@@ -148,9 +160,10 @@ class giveaways {
 		const chosen = await utils.choose(1, messageID);
 		if (!chosen) return [];
 		const dmEmbed = new Discord.MessageEmbed()
-			.setTitle('You won!')
-			.setDescription(`You have won a giveaway in **${msg.guild.name}**!\nPrize: [${data.prize}](https://discord.com/${msg.guild.id}/${msg.channel.id}/${messageID})`)
+			.setTitle('You Won!')
+			.setDescription(replacePlaceholders(client.giveawayMessages.dmMessage, data, msg, chosen))
 			.setColor('RANDOM')
+			.setThumbnail(msg.guild.iconURL({ dynamic: true }))
 			.setFooter('GG!');
 		chosen.forEach((user) => {
 			client.users.cache.get(user).send(dmEmbed);
@@ -176,22 +189,24 @@ class giveaways {
 		});
 	}
 	static async drop({ message, channel, prize, host }) {
-		let ended = false;
-		if(!channel) throw new Error('NuggiesError: channel ID not provided');
-		if(!host) throw new Error('NuggiesError: host not provided');
-		if(!prize) throw new Error('NuggiesError: prize not provided');
-		if(!message) throw new Error('NuggiesError: message not provided');
+		if (!channel) throw new Error('NuggiesError: channel ID not provided');
+		if (!host) throw new Error('NuggiesError: host not provided');
+		if (!prize) throw new Error('NuggiesError: prize not provided');
+		if (!message) throw new Error('NuggiesError: message not provided');
 		const m = await message.client.channels.cache.get(channel).send({ embed: await utils.dropEmbed(message.client, { prize: prize, host: host }), component: await utils.dropButtons(prize) });
 		const filter = (button) => button.clicker.user.id === message.author.id;
 		const collector = await m.createButtonCollector(filter, { time: 90000, max: 1 });
 		collector.on('collect', async (b) => {
 			b.defer();
 			ended = true;
-			b.channel.send(`<@${b.clicker.user.id}> won the drop congratulations!!`);
+			b.channel.send(message.client.giveawayMessages.dropWin.replace(/{winner}/g, `<@${b.clicker.user.id}>`));
 			await utils.editDropButtons(m.client, b);
 			return collector.stop('end');
 		});
 	}
 }
-
+function replacePlaceholders(string, data, msg, winners = []) {
+	const newString = string.replace(/{guildName}/g, msg.guild.name).replace(/{prize}/g, data.prize).replace(/{giveawayURL}/g, `https://discord.com/${msg.guild.id}/${msg.channel.id}/${data.messageID}`).replace(/{hostedBy}/g, msg.guild.members.cache.get(data.host).toString()).replace(/{winners}/g, winners.length > 0 ? winners.map(winner => `<@${winner}>`).join(', ') : 'none' || 'none')
+	return newString;
+}
 module.exports = giveaways;

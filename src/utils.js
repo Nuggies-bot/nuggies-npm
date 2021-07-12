@@ -77,19 +77,20 @@ module.exports.editButtons = async (client, data) => {
 };
 
 module.exports.giveawayEmbed = async (client, { host, prize, endAfter, winners, requirements }) => {
-	const hoster = client.users.cache.get(host) || await client.users.fetch(host).catch();
+	const hostedBy = client.users.cache.get(host) || await client.users.fetch(host).catch();
+	const req = requirements.enabled ? requirements.roles.map(x => `<@&${x}>`).join(', ') : 'None!'
 	const embed = new Discord.MessageEmbed()
 		.setTitle('Giveaway! 🎉')
-		.setDescription(`**Click the enter button to enter the giveaway!**\n🎁 Prize: **${prize}**\n🎊 Hosted by: ${hoster}\n⏲️ Winner(s): \`${winners}\`\n\nRequirements: ${requirements.enabled ? requirements.roles.map(x => `<@&${x}>`).join(', ') : 'None!'}`)
+		.setDescription(`${client.giveawayMessages.toParticipate}\n${(client.giveawayMessages.giveawayDescription).replace(/{requirements}/g, req).replace(/{hostedBy}/g, hostedBy).replace(/{prize}/g, prize).replace(/{winners}/g, winners)}`)
 		.setColor('RANDOM')
-		.setFooter('Ends', 'https://cdn.discordapp.com/emojis/843076397345144863.png?v=1')
+		.setFooter('Ends', client.giveawayMessages.giveawayFooterImage)
 		.setTimestamp(Date.now() + ms(endAfter));
 	return embed;
 };
 module.exports.dropEmbed = async (client, { prize, host }) => {
 	const hoster = client.users.cache.get(host) || await client.users.fetch(host).catch();
 	const embed = new Discord.MessageEmbed()
-		.setTitle('Giveaway drop! 🎉')
+		.setTitle('Giveaway Drop! 🎉')
 		.setDescription(`**first to click the button wins!**\n🎁 Prize: **${prize}**\n🎊 Hosted by: ${hoster}\n`)
 		.setColor('RANDOM')
 		.setFooter('winner: none');
