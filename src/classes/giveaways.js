@@ -4,6 +4,25 @@ const { MessageButton } = require('discord-buttons');
 const Discord = require('discord.js');
 const mongoose = require('mongoose');
 const ms = require('ms');
+const merge = require('deepmerge');
+const defaultManagerOptions = {
+    dmWinner: true,
+    giveaway: '🎉🎉 **GIVEAWAY MOMENT** 🎉🎉',
+    giveawayDescription: '🎁 Prize: **${prize}**\n🎊 Hosted by: ${hostedBy}\n⏲️ Winner(s): \`{winners}\`\n\nRequirements: {requirements}',
+    endedGiveawayDescription : '🎁 Prize: **{prize}**\n🎊 Hosted by: ${hostedBy}\n⏲️ Winner(s): {winners}',
+    giveawayFooterImage: 'https://cdn.discordapp.com/emojis/843076397345144863.png',
+    winMessage: '{winners} you won {prize} Congratulations! Hosted by {hostedBy}',
+	rerolledMessage: 'Rerolled! {winner} is the new winner of the giveaway!', // only {winner} placeholder
+    toParticipate: '**Click the Enter button to enter the giveaway!**',
+	newParticipant: 'You have successfully entered for this giveaway', // no placeholders | ephemeral
+	alreadyParticipated: 'you already entered this giveaway!', // no placeholders | ephemeral
+	nonoParticipants: 'There are not enough people in the giveaway!', // no placeholders
+	nonoRole: 'You do not have the required role(s)\n{requiredRoles}\n for the giveaway!', // only {requiredRoles} | ephemeral
+    dmMessage: 'You have won a giveaway in **{guildName}**!\nPrize: [{prize}]({giveawayURL})',
+    noWinner: 'Not enough people participated in this giveaway.', // no {winner} placerholder
+    alreadyEnded: 'The giveaway has already ended!', // no {winner} placeholder
+    dropWin: '{winner} Won The Drop!!' // only {winner} placeholder
+}
 mongoose.set('useFindAndModify', false);
 
 class giveaways {
@@ -16,6 +35,10 @@ class giveaways {
 	 * @param {Object} - role requirements object
 	 * @param {String} - channel id of the giveaway channel
 	 */
+	static async baseOptions(client, options) {
+		this.client = client
+		client.giveawayMessages = merge(defaultManagerOptions, options);
+	}
 
 	static async create({
 		message, prize, host, winners, endAfter, requirements, channel,
@@ -65,7 +88,7 @@ class giveaways {
 			if (!winners) {
 				msg.channel.send(replacePlaceholders(message.client.giveawayMessages.noWinner, data, msg));
 				data.ended = true;
-				data.save().then(() => {/* */}).catch((err) => {
+				data.save().then(() => {/* */ }).catch((err) => {
 					console.log(err)
 				});
 				const embed = msg.embeds[0];
@@ -75,7 +98,7 @@ class giveaways {
 				return 'NO_WINNERS';
 			}
 			message.channel.send(replacePlaceholders(message.client.giveawayMessages.winMessage, data, msg, winners));
-			
+
 			if (message.client.giveawayMessages.dmWinner) {
 				const dmEmbed = new Discord.MessageEmbed()
 					.setTitle('You Won!')
@@ -91,7 +114,7 @@ class giveaways {
 			embed.description = replacePlaceholders(message.client.giveawayMessages.endedGiveawayDescription, data, msg, winners);
 			msg.edit('', { embed: embed }).catch((err) => console.log(err));
 			data.ended = true;
-			data.save().then(() => {/* */}).catch((err) => {
+			data.save().then(() => {/* */ }).catch((err) => {
 				console.log(err)
 			});
 			utils.editButtons(message.client, data);
@@ -147,7 +170,7 @@ class giveaways {
 		embed.description = replacePlaceholders(message.client.giveawayMessages.endedGiveawayDescription, data, msg, winners);
 		giveawaymsg.edit('', { embed: embed }).catch((err) => console.log(err));;
 		data.ended = true;
-		data.save().then(() => {/* */}).catch((err) => {
+		data.save().then(() => {/* */ }).catch((err) => {
 			console.log(err)
 		});
 		utils.editButtons(message.client, data);
