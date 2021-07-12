@@ -42,7 +42,7 @@ class giveaways {
 			startAt: Date.now(),
 			endAfter: Date.now() + ms(endAfter),
 			requirements: requirements,
-		}).save()
+		}).save();
 		await this.startTimer(message, data);
 	}
 
