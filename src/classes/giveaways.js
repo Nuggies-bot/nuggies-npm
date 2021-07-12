@@ -35,7 +35,7 @@ class giveaways {
 	 * @param {Object} - role requirements object
 	 * @param {String} - channel id of the giveaway channel
 	 */
-	static async GiveawayMessages(client, options) {
+	static async Messages(client, options) {
 		this.client = client
 		client.giveawayMessages = merge(defaultManagerOptions, options);
 	}
