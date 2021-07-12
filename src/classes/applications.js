@@ -65,11 +65,15 @@ class applications {
 	static async getDropdownComponent({ guildID }) {
 		if(!guildID) throw new Error('NuggiesError: GuildID not provided');
 		const options = [];
-		const data = schema.findOne({ guildID: guildID });
+		const data = await schema.findOne({ guildID: guildID });
 		if(!data || !data.applications[0]) return null;
 		data.applications.forEach(app => {
-			if(app.emoji == 'null') app.emoji = null;
-			options.push(new MessageMenuOption().setLabel(app.name).setEmoji(app.emoji).setValue(app.name).setDescription(`apply for ${app.name}`));
+			const menu = new MessageMenuOption().setLabel(app.name).setValue(app.name).setDescription(`apply for ${app.name}`);
+			if(app.emoji !== 'null') {
+				console.log(app.emoji);
+				menu.setEmoji(app.emoji);
+			}
+			options.push(menu);
 		});
 		const dropdown = new MessageMenu().addOptions(options).setID('app');
 		return dropdown ? dropdown : null;

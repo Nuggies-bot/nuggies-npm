@@ -84,16 +84,18 @@ class main {
 			await menu.clicker.fetch();
 			if(menu.id == 'app') {
 				const app = menu.values[0];
-				const data = applications.getDataByGuild(menu.guild.id);
+				const data = await applications.getDataByGuild(menu.guild.id);
+				console.log(data);
 				const index = await data.applications.find(function(array) {
 					return array.name === app;
 				});
 				const step = 0;
-				const msg = await menu.clicker.send(new Discord.MessageEmbed().setTitle(`Application: ${app} \n question: 1/${data.array.index}`));
+				const msg = await menu.clicker.user.send(new Discord.MessageEmbed().setTitle(`Application: ${app} \n question: 1/${index.questions.length}`));
 				const collector = msg.channel.createMessageCollector({ max: index.questions.length + 1 });
 				collector.on('collect', m => {
+					console.log(m);
 					for(let i = 0; i < app.questions.length + 1; i++) {
-						// to be continued
+						console.log(i);
 					}
 				});
 			}
