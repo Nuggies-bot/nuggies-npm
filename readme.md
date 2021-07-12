@@ -198,7 +198,7 @@ starts the giveaway again after restart, put this in ready event to start All th
  customize the messages that users see
  ```js
  const Nuggies = require('nuggies');
-  Nuggies.baseOptions(client, {
+  Nuggies.giveaways.GiveawayMessages(client, {
     dmWinner: true,
     giveaway: '🎉🎉 **GIVEAWAY MOMENT** 🎉🎉',
     giveawayDescription: '🎁 Prize: **${prize}**\n🎊 Hosted by: ${hostedBy}\n⏲️ Winner(s): \`{winners}\`\n\nRequirements: {requirements}',
