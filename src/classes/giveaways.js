@@ -123,7 +123,7 @@ class giveaways {
 			return 'NO_WINNERS';
 		}
 
-		message.channel.send(`${winners.map(winner => `<@${winner}>`).join(', ')} you won ${data.prize} Congratulations! Hosted by ${message.guild.members.cache.get(data.host).toString()}`, { component: await this.gotoGiveaway(data) });
+		message.channel.send(new Discord.MessageEmbed().setTitle('Giveaway ended!').setDescription(`${winners.map(winner => `total ${data.clickers.length} users entered the giveaway! \n <@${winner}>`).join(', ')} won ${data.prize} Congratulations! Hosted by ${message.guild.members.cache.get(data.host).toString()}`), { component: await this.gotoGiveaway(data) });
 		const dmEmbed = new Discord.MessageEmbed()
 			.setTitle('You won!')
 			.setDescription(`You have won a giveaway in **${giveawaymsg.guild.name}**!\nPrize: [${data.prize}](https://discord.com/${giveawaymsg.guild.id}/${giveawaymsg.channel.id}/${data.messageID})`)
