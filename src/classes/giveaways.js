@@ -89,7 +89,7 @@ class giveaways {
 			if (!winners) {
 				msg.channel.send(replacePlaceholders(message.client.giveawayMessages.noWinner, data, msg));
 				data.ended = true;
-				data.save().then(() => {/* */ }).catch((err) => {
+				data.save().catch((err) => {
 					console.log(err);
 				});
 				const embed = msg.embeds[0];
@@ -117,7 +117,7 @@ class giveaways {
 			embed.description = replacePlaceholders(message.client.giveawayMessages.endedGiveawayDescription, data, msg, winners);
 			msg.edit('', { embed: embed }).catch((err) => console.log(err));
 			data.ended = true;
-			data.save().then(() => {/* */ }).catch((err) => {
+			data.save().catch((err) => {
 				console.log(err);
 			});
 			utils.editButtons(message.client, data);
@@ -174,7 +174,7 @@ class giveaways {
 		embed.description = replacePlaceholders(message.client.giveawayMessages.endedGiveawayDescription, data, msg, winners);
 		giveawaymsg.edit('', { embed: embed }).catch((err) => console.log(err));
 		data.ended = true;
-		data.save().then(() => {/* */ }).catch((err) => {
+		data.save().catch((err) => {
 			console.log(err);
 		});
 		utils.editButtons(message.client, data);
