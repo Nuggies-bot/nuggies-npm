@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 const mongoose = require('mongoose');
 mongoose.set('useFindAndModify', false);
-const application = require('./applications');
+const applications = require('./applications');
 let win;
 const schema = require('../models/giveawayschema');
 const { MessageButton } = require('discord-buttons');
@@ -32,7 +32,7 @@ class main {
 					if (data.clickers.includes(button.clicker.user.id)) { return button.reply.send(client.giveawayMessages.alreadyParticipated, true); }
 					const roles = data.requirements.roles.map(x => button.message.guild.members.cache.get(button.clicker.user.id).roles.cache.get(x));
 					if (!roles[0]) {
-						const requiredRoles = button.message.guild.roles.cache.filter(x => data.requirements.roles.includes(x.id)).filter(x => !button.message.guild.members.cache.get(button.clicker.user.id).roles.cache.get(x.id)).array().map(x => `\`${x.name}\``).join(', ')
+						const requiredRoles = button.message.guild.roles.cache.filter(x => data.requirements.roles.includes(x.id)).filter(x => !button.message.guild.members.cache.get(button.clicker.user.id).roles.cache.get(x.id)).array().map(x => `\`${x.name}\``).join(', ');
 						return button.reply.send(client.giveawayMessages.nonoRole.replace(/{requiredRoles}/g, requiredRoles), true);
 					}
 				}
@@ -59,11 +59,11 @@ class main {
 				button.message.channel.send(client.giveawayMessages.rerolledMessage.replace(/{winner}/g, `<@${win}>`), { component: new MessageButton().setLabel('Giveaway').setURL(`https://discord.com/channels/${button.message.guild.id}/${button.message.channel.id}/${button.message.id}`).setStyle('url') });
 			}
 			if (tag[1] === 'end') {
-				button.reply.defer()
+				button.reply.defer();
 				if (button.clicker.user.id !== tag[2]) return button.reply.send('You Cannot End This Giveaway, Only Hoster Can', { ephemeral: true });
 				await giveaways.endByButton(client, button.message.id, button);
 			}
-		});
+		}
 		client.on('clickMenu', async menu => {
 			await menu.clicker.fetch();
 			if(menu.id == 'app') {

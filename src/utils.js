@@ -78,7 +78,7 @@ module.exports.editButtons = async (client, data) => {
 
 module.exports.giveawayEmbed = async (client, { host, prize, endAfter, winners, requirements }) => {
 	const hostedBy = client.users.cache.get(host) || await client.users.fetch(host).catch();
-	const req = requirements.enabled ? requirements.roles.map(x => `<@&${x}>`).join(', ') : 'None!'
+	const req = requirements.enabled ? requirements.roles.map(x => `<@&${x}>`).join(', ') : 'None!';
 	const embed = new Discord.MessageEmbed()
 		.setTitle('Giveaway! 🎉')
 		.setDescription(`${client.giveawayMessages.toParticipate}\n${(client.giveawayMessages.giveawayDescription).replace(/{requirements}/g, req).replace(/{hostedBy}/g, hostedBy).replace(/{prize}/g, prize).replace(/{winners}/g, winners)}`)
