@@ -4,14 +4,7 @@
   "description": "A utility package for Discord Bots!",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "dependencies": {
-    "discord-buttons": "^4.0.0",
-    "discord.js": "^12.5.3",
-    "eslint": "^7.30.0",
-    "mongoose": "^5.12.14",
-    "ms": "^2.1.2"
+    "test": "npm i && node index.test.js"
   },
   "repository": {
     "type": "git",
@@ -33,5 +26,14 @@
     "button-roles",
     "discord-button-roles"
   ],
-  "homepage": "https://github.com/Nuggies-bot/nuggies-npm#readme"
+  "homepage": "https://github.com/Nuggies-bot/nuggies-npm#readme",
+  "dependencies": {
+    "discord-buttons": "^4.0.0",
+    "discord.js": "^12.5.3",
+    "mongoose": "^5.12.14",
+    "ms": "^2.1.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.30.0"
+  }
 }
