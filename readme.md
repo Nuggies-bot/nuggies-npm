@@ -193,6 +193,65 @@ starts the giveaway again after restart, put this in ready event to start All th
  ```
  > ### params
  client: Discord Client
+
+ ## Customize Messages
+ customize the messages that users see
+ ```js
+ const Nuggies = require('nuggies');
+  Nuggies.giveaways.Messages(client, {
+    dmWinner: true,
+    giveaway: '🎉🎉 **GIVEAWAY MOMENT** 🎉🎉',
+    giveawayDescription: '🎁 Prize: **${prize}**\n🎊 Hosted by: ${hostedBy}\n⏲️ Winner(s): \`{winners}\`\n\nRequirements: {requirements}',
+    endedGiveawayDescription : '🎁 Prize: **{prize}**\n🎊 Hosted by: ${hostedBy}\n⏲️ Winner(s): {winners}',
+    giveawayFooterImage: 'https://cdn.discordapp.com/emojis/843076397345144863.png',
+    winMessage: '{winners} you won {prize} Congratulations! Hosted by {hostedBy}',
+	rerolledMessage: 'Rerolled! {winner} is the new winner of the giveaway!', // only {winner} placeholder
+    toParticipate: '**Click the Enter button to enter the giveaway!**',
+	newParticipant: 'You have successfully entered for this giveaway', // no placeholders | ephemeral
+	alreadyParticipated: 'you already entered this giveaway!', // no placeholders | ephemeral
+	nonoParticipants: 'There are not enough people in the giveaway!', // no placeholders
+	nonoRole: 'You do not have the required role(s)\n{requiredRoles}\n for the giveaway!', // only {requiredRoles} | ephemeral
+    dmMessage: 'You have won a giveaway in **{guildName}**!\nPrize: [{prize}]({giveawayURL})',
+    noWinner: 'Not enough people participated in this giveaway.', // no {winner} placerholder
+    alreadyEnded: 'The giveaway has already ended!', // no {winner} placeholder
+    dropWin: '{winner} Won The Drop!!' // only {winner} placeholder
+})
+ ```
+ > ### params
+  dmWinner - Boolean - If bot should dm the winners of giveaway 
+
+  giveaway - String - Title text of giveaway message
+
+  giveawayDescription - String - Giveaway embed description
+
+  endedGiveawayDescription - String - Ended giveaway embed description
+
+  giveawayFooterImage - String - Image/Gif in embed footer
+
+  winMessage - String - Message to send when winner is declared
+
+  rerolledMessage - String - Message to send when giveaway is rerolled
+
+  toParticipate - String - Instruction on how to participate the giveaway
+
+  newParticipant - String - Ephemeral message that participant sees when they participate
+
+  alreadyParticipated - String - Ephemeral message that participant sees if they have already participated
+
+  nonoParticipants - String - Message when there are not enough participants for giveaway
+
+  nonoRole - String - Ephemeral message when participants doesn't have required roles
+
+  dmMessage - String - Message to send to winners of giveaway (only works in dmWinner is `true`)
+
+  noWinner - String - Message when giveaway is ended/rerolled and there are not enough participants
+
+  alreadyEnded - String - If giveaway is already ended
+
+  dropWin - String -  Message sent when drop winner is declared
+
+  <b>Placeholders - {guildName}, {prize}, {giveawayURL}, {hostedBy}, {winners}, {requiredRoles}(only works for nonoRole)</b>
+
 <br> <br>
  # __Button Roles__
   ### [click here for fully functional button-roles bot](https://github.com/Nuggies-bot/buttonroles-example)
