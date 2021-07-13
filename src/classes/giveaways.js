@@ -66,7 +66,7 @@ class giveaways {
 			endAfter: Date.now() + ms(endAfter),
 			requirements: requirements,
 		}).save();
-		await this.startTimer(message, data);
+		await this.startTimer(msg, data);
 	}
 
 	/**
@@ -99,6 +99,7 @@ class giveaways {
 			}
 			message.channel.send(replacePlaceholders(message.client.giveawayMessages.winMessage, data, msg, winners));
 
+
 			if (message.client.giveawayMessages.dmWinner) {
 				const dmEmbed = new Discord.MessageEmbed()
 					.setTitle('You Won!')
@@ -110,6 +111,7 @@ class giveaways {
 					message.guild.members.cache.get(user).send(dmEmbed);
 				});
 			}
+
 			const embed = msg.embeds[0];
 			embed.description = replacePlaceholders(message.client.giveawayMessages.endedGiveawayDescription, data, msg, winners);
 			msg.edit('', { embed: embed }).catch((err) => console.log(err));
@@ -166,6 +168,7 @@ class giveaways {
 				message.guild.members.cache.get(user).send(dmEmbed);
 			});
 		}
+
 		const embed = giveawaymsg.embeds[0];
 		embed.description = replacePlaceholders(message.client.giveawayMessages.endedGiveawayDescription, data, msg, winners);
 		giveawaymsg.edit('', { embed: embed }).catch((err) => console.log(err));;
@@ -216,6 +219,7 @@ class giveaways {
 		if (!host) throw new Error('NuggiesError: host not provided');
 		if (!prize) throw new Error('NuggiesError: prize not provided');
 		if (!message) throw new Error('NuggiesError: message not provided');
+
 		const m = await message.client.channels.cache.get(channel).send({ embed: await utils.dropEmbed(message.client, { prize: prize, host: host }), component: await utils.dropButtons(prize) });
 		const filter = (button) => button.clicker.user.id === message.author.id;
 		const collector = await m.createButtonCollector(filter, { time: 90000, max: 1 });

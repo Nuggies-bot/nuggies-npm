@@ -1,10 +1,12 @@
+/* eslint-disable no-unused-vars */
 const mongoose = require('mongoose');
 mongoose.set('useFindAndModify', false);
+const application = require('./applications');
 let win;
 const schema = require('../models/giveawayschema');
 const { MessageButton } = require('discord-buttons');
 const giveaways = require('./giveaways');
-
+const Discord = require('discord.js');
 class main {
 /**
 	*
@@ -61,42 +63,42 @@ class main {
 				if (button.clicker.user.id !== tag[2]) return button.reply.send('You Cannot End This Giveaway, Only Hoster Can', { ephemeral: true });
 				await giveaways.endByButton(client, button.message.id, button);
 			}
-		}
-		if (button.id.startsWith('br')) {
-			let member;
-			const fetchMem = await button.guild.members.fetch(button.clicker.member.id, false);
-			if (fetchMem) member = button.guild.members.cache.get(button.clicker.member.id);
-			await member.fetch(true);
-			const role = id.split(':')[1];
-			if (button.clicker.member.roles.cache.has(role)) {
-				button.clicker.member.roles.remove(role);
-				button.reply.send(`I have removed the <@&${role}> role from you!`, true);
+		});
+		client.on('clickMenu', async menu => {
+			await menu.clicker.fetch();
+			if(menu.id == 'app') {
+				const app = menu.values[0];
+				const data = await applications.getDataByGuild(menu.guild.id);
+				console.log(data);
+				const index = await data.applications.find(function(array) {
+					return array.name === app;
+				});
+				const step = 0;
+				const msg = await menu.clicker.user.send(new Discord.MessageEmbed().setTitle(`Application: ${app} \n question: 1/${index.questions.length}`));
+				const collector = msg.channel.createMessageCollector({ max: index.questions.length + 1 });
+				collector.on('collect', m => {
+					console.log(m);
+					for(let i = 0; i < app.questions.length + 1; i++) {
+						console.log(i);
+					}
+				});
 			}
-			else {
-				button.clicker.member.roles.add(role);
-				button.reply.send(`I have added the <@&${role}> role to you!`, true);
+			if(menu.id == 'dr') {
+				let member;
+				const fetchMem = await menu.guild.members.fetch(menu.clicker.member.id, false);
+				if (fetchMem) member = menu.guild.members.cache.get(menu.clicker.member.id);
+				await member.fetch(true);
+				const role = menu.values[0];
+				if (menu.clicker.member.roles.cache.has(role)) {
+					menu.clicker.member.roles.remove(role);
+					menu.reply.send(`I have removed the <@&${role}> role from you!`, true);
+				}
+				else {
+					menu.clicker.member.roles.add(role);
+					menu.reply.send(`I have added the <@&${role}> role to you!`, true);
+				}
 			}
-		}
-	}
-	static async dropclick(client, menu) {
-		if (!client) throw new Error('NuggiesError: client not provided');
-		if (!menu) throw new Error('NuggiesError: button not provided');
-		await menu.clicker.fetch();
-		if(menu.id == 'dr') {
-			let member;
-			const fetchMem = await menu.guild.members.fetch(menu.clicker.member.id, false);
-			if (fetchMem) member = menu.guild.members.cache.get(menu.clicker.member.id);
-			await member.fetch(true);
-			const role = menu.values[0];
-			if (menu.clicker.member.roles.cache.has(role)) {
-				menu.clicker.member.roles.remove(role);
-				menu.reply.send(`I have removed the <@&${role}> role from you!`, true);
-			}
-			else {
-				menu.clicker.member.roles.add(role);
-				menu.reply.send(`I have added the <@&${role}> role to you!`, true);
-			}
-		}
+		});
 	}
 }
 module.exports = main;
