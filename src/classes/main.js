@@ -20,9 +20,8 @@ class main {
 		});
 	}
 	static async handleInteractions(client) {
+		if(!client) throw new Error('NuggiesError: client not provided');
 		client.on('clickButton', async button => {
-			if (!client) throw new Error('NuggiesError: client not provided');
-			if (!button) throw new Error('NuggiesError: button not provided');
 			await button.clicker.fetch();
 			const id = button.id;
 			if (id.startsWith('giveaways')) {
