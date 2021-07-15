@@ -1,10 +1,15 @@
 /* eslint-disable no-unused-vars */
+// Make sure you use `npm run test` when testing the package!
+
+require('dotenv').config();
 const Nuggies = require('./index.js');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 require('discord-buttons')(bot);
+Nuggies.connect(process.env.mongodb);
+bot.login(process.env.token);
 
-bot.login('totally-working-legit-token');
+bot.on('clickMenu', (menu) => Nuggies.menuclick(menu));
 
 bot.on('message', async (message) => {
 	if (message.author.bot || message.channel.type === 'dm') return;
@@ -18,12 +23,19 @@ bot.on('message', async (message) => {
 
 	if (!cmd) return;
 
-	if (cmd.toLowerCase() === 'test') {
+	if (cmd.toLowerCase() === 'buttonrole') {
 		const manager = new Nuggies.buttonroles().addrole({ color: 'red', label: 'test', role: '807978319894413352', emoji: null });
 		const msg = await Nuggies.buttonroles.create({ message, content: 'test', role: manager, channelID: message.channel.id });
 		manager.addrole({ color: 'grey', label: 'hi', role: '804978976904052757' });
 		// setTimeout(() => Nuggies.buttonroles.edit({ color: 'grey', label: 'haha', role: '739562964871304628' }), 5000)
 		setTimeout(() => Nuggies.buttonroles.delete(msg), 5000);
+	}
+	else if (cmd.toLowerCase() == 'test') {
+		const data = await Nuggies.applications.addApplication({
+			questions: ['test?', 'testtest?'], guildID: message.guild.id, name: 'testname', emoji: '😏', channel: message.channel.id, description: 'testdesc', label: 'label',
+		});
+
+		setTimeout(() => Nuggies.applications.create({ guildID: data.guildID, content: 'test hahahahahahaha', client: bot }), 2000);
 	}
 });
 

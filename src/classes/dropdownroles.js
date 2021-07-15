@@ -1,4 +1,5 @@
 const { MessageActionRow, MessageMenuOption, MessageMenu } = require('discord-buttons');
+// eslint-disable-next-line no-unused-vars
 const { MessageEmbed, Message } = require('discord.js');
 class dropdownroles {
 	constructor() {

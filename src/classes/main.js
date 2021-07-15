@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 const mongoose = require('mongoose');
 mongoose.set('useFindAndModify', false);
 const applications = require('./applications');
@@ -7,11 +6,12 @@ const schema = require('../models/giveawayschema');
 const { MessageButton } = require('discord-buttons');
 const giveaways = require('./giveaways');
 const Discord = require('discord.js');
+
 class main {
-/**
-	*
-	* @param {string} url - MongoDB connection URI.
-	*/
+	/**
+		*
+		* @param {string} url - MongoDB connection URI.
+		*/
 	static async connect(url) {
 		if (!url) throw new TypeError('NuggiesError: You didn\'t provide a MongoDB connection string');
 		return mongoose.connect(url, {
@@ -20,7 +20,7 @@ class main {
 		});
 	}
 	static async handleInteractions(client) {
-		if(!client) throw new Error('NuggiesError: client not provided');
+		if (!client) throw new Error('NuggiesError: client not provided');
 		client.on('clickButton', async button => {
 			await button.clicker.fetch();
 			const id = button.id;
@@ -81,24 +81,30 @@ class main {
 		});
 		client.on('clickMenu', async menu => {
 			await menu.clicker.fetch();
-			if(menu.id == 'app') {
+			if (menu.id == 'app') {
 				const app = menu.values[0];
 				const data = await applications.getDataByGuild(menu.guild.id);
-				console.log(data);
-				const index = await data.applications.find(function(array) {
-					return array.name === app;
+				const index = await data.applications.find((application) => {
+					return application.name === app;
 				});
-				const step = 0;
-				const msg = await menu.clicker.user.send(new Discord.MessageEmbed().setTitle(`Application: ${app} \n question: 1/${index.questions.length}`));
-				const collector = msg.channel.createMessageCollector({ max: index.questions.length + 1 });
+				let step = 0;
+				const embed = new Discord.MessageEmbed().setColor('RANDOM').setTitle(`Application: ${app}`).setFooter(`Question: 1/${index.questions.length}`);
+				const msg = await menu.clicker.user.send(embed.setDescription(index.questions[0]));
+				const collector = msg.channel.createMessageCollector(m => !m.author.bot, { max: index.questions.length });
+				data.responses.push({ userID: menu.clicker.user.id, answers: [] });
 				collector.on('collect', m => {
-					console.log(m);
-					for(let i = 0; i < app.questions.length + 1; i++) {
-						console.log(i);
+					if (!m.content) return collector.stop('ERROR');
+					data.responses.find(response => response.userID == menu.clicker.user.id).answers
+						.push({ question: index.questions[step], answer: m.content });
+					step++;
+					if (step == index.questions.length) {
+						m.channel.send('Your application has been completed!');
+						return collector.stop('DONE');
 					}
+					msg.channel.send(embed.setDescription(index.questions[step]).setFooter(`Question: ${step + 1}/${index.questions.length}`));
 				});
 			}
-			if(menu.id == 'dr') {
+			if (menu.id == 'dr') {
 				let member;
 				const fetchMem = await menu.guild.members.fetch(menu.clicker.member.id, false);
 				if (fetchMem) member = menu.guild.members.cache.get(menu.clicker.member.id);

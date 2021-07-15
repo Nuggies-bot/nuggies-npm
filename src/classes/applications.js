@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
-const { MessageActionRow, MessageMenu, MessageMenuOption } = require('discord-buttons');
-const { DiscordAPIError, MessageEmbed, Message } = require('discord.js');
+const { MessageMenu, MessageMenuOption } = require('discord-buttons');
+const { MessageEmbed } = require('discord.js');
 const schema = require('../models/applictionsschema');
 
 class applications {
@@ -22,7 +21,7 @@ class applications {
 		if(!description) throw new Error('NuggiesError: description not provided');
 		if(!label) throw new Error('NuggiesError: label not provided');
 		if(typeof guildID !== 'string') throw new Error('NuggiesError: guildID must be a string');
-		// if(!questions.isArray) throw new Error('NuggiesError: questions must be an array');
+		if(!Array.isArray(questions)) throw new Error('NuggiesError: questions must be an array');
 		if(typeof name !== 'string') throw new Error('NuggiesError: name must be a string');
 		if(typeof emoji !== 'string') throw new Error('NuggiesError: emoji must be a string');
 		if(typeof channel !== 'string') throw new Error('NuggiesError: channel must be a string');
@@ -40,10 +39,11 @@ class applications {
 		if(!data) {
 			data = new schema({
 				guildID: guildID,
+				channelID: channel,
 				applications: [object],
 			});
 		}
-		if(data) {
+		else if(data) {
 			data.applications.push(object);
 		}
 		data.save();
@@ -54,7 +54,7 @@ class applications {
 		if(!data) return false;
 		if(data) {
 			// eslint-disable-next-line no-shadow
-			const index = await data.applications.findIndex(function(array, index) {
+			const index = await data.applications.findIndex((array) => {
 				return array.name === name;
 			});
 			data.applications.splice(index, 1);
@@ -68,23 +68,30 @@ class applications {
 		const data = await schema.findOne({ guildID: guildID });
 		if(!data || !data.applications[0]) return null;
 		data.applications.forEach(app => {
-			const menu = new MessageMenuOption().setLabel(app.name).setValue(app.name).setDescription(`apply for ${app.name}`);
+			const menu = new MessageMenuOption()
+				.setLabel(app.name)
+				.setValue(app.name)
+				.setDescription(`apply for ${app.name}`);
 			if(app.emoji !== 'null') {
-				console.log(app.emoji);
 				menu.setEmoji(app.emoji);
 			}
 			options.push(menu);
 		});
 		const dropdown = new MessageMenu().addOptions(options).setID('app');
-		return dropdown ? dropdown : null;
+		return dropdown
+			? dropdown
+			: null;
 	}
 	static async create({ guildID, content, client }) {
 		if(!guildID) throw new Error('NuggiesError: GuildID not provided');
 		if(!content) throw new Error('NuggiesError: content not provided');
 
-		const data = await schema.findOne({ guildID: guildID });
+		const data = await this.getDataByGuild(guildID);
+		// if (!data) throw new Error('NuggiesError: Data not found in database');
 		if(!data.channelID || data.channelID == 'null') throw new Error('channelID not present in the data.');
-		content instanceof MessageEmbed ? client.channels.cache.get(data.channelID).send({ embed: content, component: await this.getDropdownComponent(guildID) }) : client.channels.cache.get(data.channel);
+		content instanceof MessageEmbed
+			? client.channels.cache.get(data.channelID).send({ embed: content, component: await this.getDropdownComponent({ guildID }) })
+			: client.channels.cache.get(data.channelID).send({ content, component: await this.getDropdownComponent({ guildID }) });
 	}
 	static async getDataByGuild(guildID) {
 		const data = await schema.findOne({ guildID: guildID });

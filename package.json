@@ -31,11 +31,11 @@
     "deepmerge": "^4.2.2",
     "discord-buttons": "^4.0.0",
     "discord.js": "^12.5.3",
-    "eslint": "^7.30.0",
     "mongoose": "^5.12.14",
     "ms": "^2.1.2"
   },
   "devDependencies": {
-    "eslint": "^7.30.0"
+    "eslint": "^7.30.0",
+    "dotenv": "^10.0.0"
   }
 }
