@@ -24,7 +24,9 @@
     "buttons",
     "buttons-discord",
     "button-roles",
-    "discord-button-roles"
+    "discord-button-roles",
+    "discord-dropdowns",
+    "discord-menu"
   ],
   "homepage": "https://github.com/Nuggies-bot/nuggies-npm#readme",
   "dependencies": {
