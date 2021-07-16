@@ -11,6 +11,9 @@ const schema = new mongoose.Schema({
 		type: Array, required: true,
 	},
 	channelID: String,
+	maxApplicationsFromUser: { type: Number, default: 1 },
+	// eslint-disable-next-line no-inline-comments
+	applicationCooldown: { type: Number, default: 3600000 }, // Or 1 hour
 });
 
 module.exports = mongoose.model('applicationsSchema', schema);

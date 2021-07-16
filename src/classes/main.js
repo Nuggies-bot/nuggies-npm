@@ -91,10 +91,10 @@ class main {
 				const embed = new Discord.MessageEmbed().setColor('RANDOM').setTitle(`Application: ${app}`).setFooter(`Question: 1/${index.questions.length}`);
 				const msg = await menu.clicker.user.send(embed.setDescription(index.questions[0]));
 				const collector = msg.channel.createMessageCollector(m => !m.author.bot, { max: index.questions.length });
-				data.responses.push({ userID: menu.clicker.user.id, answers: [] });
+				const res = { userID: menu.clicker.user.id, answers: [] };
 				collector.on('collect', m => {
 					if (!m.content) return collector.stop('ERROR');
-					data.responses.find(response => response.userID == menu.clicker.user.id).answers
+					res.answers
 						.push({ question: index.questions[step], answer: m.content });
 					step++;
 					if (step == index.questions.length) {
@@ -102,6 +102,16 @@ class main {
 						return collector.stop('DONE');
 					}
 					msg.channel.send(embed.setDescription(index.questions[step]).setFooter(`Question: ${step + 1}/${index.questions.length}`));
+				});
+				collector.on('end', async (msgs, reason) => {
+					if (reason == 'ERROR') {
+						return msg.channel.send('That is not a valid answer');
+					}
+					if (reason == 'DONE') {
+						const newdata = await schema.findOne({ guildID: menu.message.guild.id });
+						newdata.responses.push(res);
+						await newdata.save();
+					}
 				});
 			}
 			if (menu.id == 'dr') {
