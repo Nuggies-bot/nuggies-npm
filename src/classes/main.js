@@ -79,8 +79,10 @@ class main {
 					if (!data) return menu.reply.send({ content: 'Something went wrong!', ephemeral: true });
 					const last = data.responses.find(x => x.userID == menu.clicker.user.id);
 					if (last) {
-						if ((Date.now() - last.createdAt) < data.applicationCooldown) return menu.reply.send({ content: `You cannot create another application for ${ms(Date.now() - last.createdAt, { long: true })}`, ephemeral: true });
+						if ((Date.now() - last.createdAt) < data.applicationCooldown) return menu.reply.send({ content: `You cannot create another application for ${ms((last.createdAt + data.applicationCooldown) - Date.now(), { long: true })}`, ephemeral: true });
 					}
+					const responses = data.responses.filter(x => x.userID == menu.clicker.user.id);
+					if (responses.length == data.maxApplicationsFromUser) return menu.reply.send({ content: 'You cannot submit any more responses as you have reached the limit', ephemeral: true });
 					const index = await data.applications.find((application) => {
 						return application.name === app;
 					});
@@ -110,7 +112,7 @@ class main {
 							await newdata.save();
 						}
 					});
-					menu.reply.send({ content: `Check your DMs! Or click this link ${msg.url}` });
+					menu.reply.send({ content: `Check your DMs! Or click this link ${msg.url}`, ephemeral: true });
 				}
 				if (menu.id == 'dr') {
 					let member;

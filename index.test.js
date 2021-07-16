@@ -31,14 +31,17 @@ bot.on('message', async (message) => {
 		setTimeout(() => Nuggies.buttonroles.delete(msg), 5000);
 	}
 	else if (cmd.toLowerCase() == 'test') {
+		Nuggies.applications.deleteapplication({ guildID: message.guild.id, name: 'testname' });
 		const data = await Nuggies.applications.addApplication({
-			questions: ['test?', 'testtest?'], guildID: message.guild.id, name: 'testname', emoji: '😏', channel: message.channel.id, description: 'testdesc', label: 'label',
+			questions: ['test?', 'testtest?'], guildID: message.guild.id, name: 'testname', emoji: '😏', channel: message.channel.id, description: 'testdesc', label: 'label', maxApps: 2,
 		});
 
 		setTimeout(() => Nuggies.applications.create({ guildID: data.guildID, content: 'test hahahahahahaha', client: bot }), 2000);
+
+		setTimeout(() => Nuggies.applications.deleteResponses(message.author.id, message.guild.id), 6000);
 	}
 	else if (cmd.toLowerCase() == 'die') {
-		message.channel.send('ok');
+		await message.channel.send('ok');
 		process.exit();
 	}
 });
