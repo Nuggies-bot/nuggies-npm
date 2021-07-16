@@ -9,7 +9,7 @@ require('discord-buttons')(bot);
 Nuggies.connect(process.env.mongodb);
 bot.login(process.env.token);
 
-bot.on('clickMenu', (menu) => Nuggies.menuclick(menu));
+Nuggies.handleInteractions(bot);
 
 bot.on('message', async (message) => {
 	if (message.author.bot || message.channel.type === 'dm') return;
@@ -36,6 +36,10 @@ bot.on('message', async (message) => {
 		});
 
 		setTimeout(() => Nuggies.applications.create({ guildID: data.guildID, content: 'test hahahahahahaha', client: bot }), 2000);
+	}
+	else if (cmd.toLowerCase() == 'die') {
+		message.channel.send('ok');
+		process.exit();
 	}
 });
 

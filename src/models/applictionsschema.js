@@ -8,7 +8,7 @@ const schema = new mongoose.Schema({
 		type: Array, required: true,
 	},
 	responses: {
-		type: Array, required: true,
+		type: Array, default: [],
 	},
 	channelID: String,
 	maxApplicationsFromUser: { type: Number, default: 1 },
