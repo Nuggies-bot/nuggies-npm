@@ -2,6 +2,8 @@ const { MessageMenu, MessageMenuOption } = require('discord-buttons');
 const { MessageEmbed } = require('discord.js');
 const schema = require('../models/applictionsschema');
 const ms = require('ms');
+// eslint-disable-next-line no-unused-vars
+const { Document } = require('mongoose');
 
 class applications {
 	/**
@@ -14,7 +16,7 @@ class applications {
 	 * @param {String} label - The dropdown label
 	 * @param {Number} maxApps - The amount of responses
 	 */
-	static async addApplication({ guildID, questions, name, emoji, channel, description, label, maxApps, cooldown }) {
+	static async addApplication({ guildID, questions, name, emoji, channel, description, label, maxApps, cooldown, responseChannelID }) {
 		if (!guildID) throw new Error('NuggiesError: guildID not provided');
 		if (!questions) throw new Error('NuggiesError: questions Array not provided');
 		if (!name) throw new Error('NuggiesError: name not provided');
@@ -31,6 +33,7 @@ class applications {
 		if (typeof label !== 'string') throw new Error('NuggiesError: label must be a string');
 		if (maxApps && typeof maxApps !== 'number') throw new Error('NuggiesError: maxApps must be a number');
 		if (cooldown && typeof cooldown !== 'number') throw new Error('NuggiesError: cooldown must be a number');
+		if (typeof responseChannelID !== 'string') throw new Error('NuggiesError: responseChannelID must be a string');
 
 		if (cooldown) cooldown = ms(cooldown);
 
@@ -49,6 +52,7 @@ class applications {
 				applications: [object],
 				maxApplicationsFromUser: maxApps,
 				applicationCooldown: cooldown,
+				responseChannel: responseChannelID,
 			});
 		}
 		else if (data) {
@@ -103,6 +107,11 @@ class applications {
 			? client.channels.cache.get(data.channelID).send({ embed: content, component: await this.getDropdownComponent({ guildID }) })
 			: client.channels.cache.get(data.channelID).send({ content, component: await this.getDropdownComponent({ guildID }) });
 	}
+
+	/**
+	 * @param {String} guildID
+	 * @returns {Document}
+	 */
 	static async getDataByGuild(guildID) {
 		const data = await schema.findOne({ guildID: guildID });
 		return data;
@@ -126,7 +135,7 @@ class applications {
 	 * @param {String} userID
 	 * @param {String} guildID
 	 * @param {Number} max
-	 * @returns {undefined|Object[]} - Returns undefined if no data found
+	 * @returns {undefined|Document} Returns undefined if no data found
 	 */
 	static async deleteResponses(userID, guildID, max = 1) {
 		const data = await this.getDataByGuild(guildID);
@@ -136,6 +145,33 @@ class applications {
 		let count = 0;
 		data.reponses = data.responses.sort((a, b) => b.createdAt - a.createdAt).filter(x => (x.userID !== userID) && (!count > max) && (typeof count++ == 'number'));
 		data.save();
+		return data;
+	}
+
+	/**
+	 * @param {Document} data
+	 * @param {String} userID
+	 * @returns {Document}
+	 */
+	static async acceptResponse(data, userID) {
+		const res = data.responses.find(x => x.userID == userID);
+		res.accepted = true;
+		await data.save();
+		return data;
+	}
+
+	/**
+	 * @param {Document} data
+	 * @param {String} userID
+	 * @param {Boolean} del
+	 * @returns {Document}
+	 */
+	static async declineResponse(data, userID, del = false) {
+		const res = data.responses.find(x => x.userID == userID);
+		res.accepted = false;
+		await data.save();
+		if (del) this.deleteResponses(userID, data.guildID);
+		return data;
 	}
 }
 

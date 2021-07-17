@@ -90,7 +90,7 @@ class main {
 					const embed = new Discord.MessageEmbed().setColor('RANDOM').setTitle(`Application: ${app}`).setFooter(`Question: 1/${index.questions.length}`);
 					const msg = await menu.clicker.user.send(embed.setDescription(index.questions[0]));
 					const collector = msg.channel.createMessageCollector(m => !m.author.bot, { max: index.questions.length });
-					const res = { userID: menu.clicker.user.id, answers: [], createdAt: Date.now() };
+					const res = { userID: menu.clicker.user.id, answers: [], createdAt: Date.now(), app };
 					collector.on('collect', m => {
 						if (!m.content) return collector.stop('ERROR');
 						res.answers
@@ -110,6 +110,9 @@ class main {
 							const newdata = await applications.getDataByGuild(menu.message.guild.id);
 							newdata.responses.push(res);
 							await newdata.save();
+							const c = await client.channels.fetch(data.responseChannel, true, false);
+							if (!c) return;
+							c.send({ embed: new Discord.MessageEmbed().setTitle('New response').setDescription(`Application: ${app}\nUser: ${menu.clicker.user} - \`${menu.clicker.user.id}\``).addFields(res.answers.map(x => { return { name: `Question: ${x.question}`, value: `Answer: ${x.answer}`, inline: true }; })).setColor('RANDOM').setFooter(menu.clicker.user.tag, menu.clicker.user.displayAvatarURL()) });
 						}
 					});
 					menu.reply.send({ content: `Check your DMs! Or click this link ${msg.url}`, ephemeral: true });

@@ -4,3 +4,4 @@ index.test.js
 .github
 .gitignore
 package-lock.json
+index.d.ts

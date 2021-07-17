@@ -10,7 +10,8 @@ const schema = new mongoose.Schema({
 	responses: {
 		type: Array, default: [],
 	},
-	channelID: String,
+	channelID: { type: String },
+	responseChannel: { type: String },
 	maxApplicationsFromUser: { type: Number, default: 1 },
 	// eslint-disable-next-line no-inline-comments
 	applicationCooldown: { type: Number, default: 3600000 }, // Or 1 hour
