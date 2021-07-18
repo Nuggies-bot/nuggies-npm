@@ -2,7 +2,7 @@ import mongoose, {
 	Document
 } from 'mongoose';
 import {
-	Client, Message, Snowflake
+	Client, Message, Snowflake, ColorResolvable, MessageEmbed
 } from 'discord.js';
 import {
 	MessageButton, MessageComponent
@@ -63,6 +63,30 @@ declare class giveaways {
 		prize: String,
 		host: Snowflake,
 	}): Promise<void>;
+}
+declare class buttonroles {
+
+	addrole({
+		color: ColorResolvable,
+		label: String,
+		emoji: Snowflake,
+		role: Snowflake,
+	}): Promise<void>
+
+	create({
+		message: Message,
+		content: MessageEmbed,
+		role: Snowflake,
+		channelID: Snowflake,
+	}): Promise<void>
+
+	edit({
+		message: Message,
+		content: MessageEmbed,
+		role: Snowflake,
+	}): Promise<void>
+
+	delete(message: Message): Promise<void>
 }
 
 export = main;
