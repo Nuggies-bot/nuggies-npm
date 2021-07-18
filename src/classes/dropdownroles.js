@@ -1,6 +1,5 @@
 const { MessageActionRow, MessageMenuOption, MessageMenu } = require('discord-buttons');
-// eslint-disable-next-line no-unused-vars
-const { MessageEmbed, Message } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 class dropdownroles {
 	constructor() {
 		this.roles = [];
@@ -38,7 +37,7 @@ class dropdownroles {
 		// Promise.resolve(role).then(console.log);
 		// console.log(role);
 		for (const buttonObject of role.roles) {
-			dropdownsOptions.push(new MessageMenuOption().setEmoji(buttonObject.emoji).setLabel(buttonObject.label).setValue(buttonObject.role).setDescription(`click this to get the ${message.guild.roles.cache.get(buttonObject.role).name} role!`));
+			dropdownsOptions.push(new MessageMenuOption().setEmoji(buttonObject.emoji).setLabel(buttonObject.label).setValue(buttonObject.role).setDescription(`click this to get the ${message.guild.roles.cache.get(buttonObject.role).name} role!`.substr(0, 50)));
 		}
 
 		const dropdown = new MessageMenu().setID('dr');
