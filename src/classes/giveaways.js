@@ -17,8 +17,8 @@ const defaultManagerOptions = {
 	toParticipate: '**Click the Enter button to enter the giveaway!**',
 	newParticipant: 'You have successfully entered for this giveaway', // no placeholders | ephemeral
 	alreadyParticipated: 'you already entered this giveaway!', // no placeholders | ephemeral
-	nonoParticipants: 'There are not enough people in the giveaway!', // no placeholders
-	nonoRole: 'You do not have the required role(s)\n{requiredRoles}\n for the giveaway!', // only {requiredRoles} | ephemeral
+	noParticipants: 'There are not enough people in the giveaway!', // no placeholders
+	noRole: 'You do not have the required role(s)\n{requiredRoles}\n for the giveaway!', // only {requiredRoles} | ephemeral
 	dmMessage: 'You have won a giveaway in **{guildName}**!\nPrize: [{prize}]({giveawayURL})',
 	noWinner: 'Not enough people participated in this giveaway.', // no {winner} placerholder
 	alreadyEnded: 'The giveaway has already ended!', // no {winner} placeholder
@@ -29,12 +29,8 @@ mongoose.set('useFindAndModify', false);
 class giveaways {
 
 	/**
-	 * @param {any} - The Discord Message
-	 * @param {String} - the giveaway prize
-	 * @param {String} - the giveaway host
-	 * @param {Number} - timestamp when the giveaway ends
-	 * @param {Object} - role requirements object
-	 * @param {String} - channel id of the giveaway channel
+	 * @param {Discord.Client} client
+	 * @param {defaultManagerOptions} options
 	 */
 	static async Messages(client, options) {
 		this.client = client;
@@ -74,7 +70,6 @@ class giveaways {
 	 * @param {Discord.Message} message
 	 * @param {mongoose.Document} data
 	 */
-
 
 	static async startTimer(message, data, instant = false) {
 		if (!message) throw new Error('NuggiesError: message not provided while starting timer.');
@@ -123,7 +118,7 @@ class giveaways {
 			utils.editButtons(message.client, data);
 		}, time);
 	}
-	static async gotoGiveaway(data) {
+	static gotoGiveaway(data) {
 		if (!data) throw new Error('NuggiesError: data not provided');
 		const link = `https://discord.com/channels/${data.guildID}/${data.channelID}/${data.messageID}`;
 		const button = new MessageButton().setLabel('Giveaway').setStyle('url').setURL(link);

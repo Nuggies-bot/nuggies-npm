@@ -33,7 +33,7 @@ bot.on('message', async (message) => {
 	else if (cmd.toLowerCase() == 'test') {
 		Nuggies.applications.deleteapplication({ guildID: message.guild.id, name: 'testname' });
 		const data = await Nuggies.applications.addApplication({
-			questions: ['test?', 'testtest?'], guildID: message.guild.id, name: 'testname', emoji: '😏', channel: message.channel.id, description: 'testdesc', label: 'label', maxApps: 2,
+			questions: ['test?', 'testtest?'], guildID: message.guild.id, name: 'testname', emoji: '😏', channel: message.channel.id, description: 'testdesc', label: 'label', maxApps: 2, responseChannelID: message.channel.id,
 		});
 
 		setTimeout(() => Nuggies.applications.create({ guildID: data.guildID, content: 'test hahahahahahaha', client: bot }), 2000);
