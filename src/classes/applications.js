@@ -230,8 +230,8 @@ class applications {
 			}
 		});
 
-		collector.on('end', async (msgs, reason) => {
-			const data = await this.addApplication(application);
+		collector.on('end', async () => {
+			await this.addApplication(application);
 		});
 	}
 }
