@@ -116,62 +116,64 @@ class applications {
 		return data;
 	}
 
-	/**
-	 * @param {String} userID - User's ID
-	 * @param {String} guildID - Guild's ID
-	 * @param {Number} max - Amount of responses to return, default 1
-	 * @returns {undefined|Object[]} - Returns undefined if no data found
-	 */
-	static async getResponses(userID, guildID, max = 1) {
-		const data = await this.getDataByGuild(guildID);
-		if (!data) return;
-		const responses = data.responses.filter(x => x.userID == userID);
-		if (!responses) return;
-		return responses.sort((a, b) => b.createdAt - a.createdAt).slice(0, max);
-	}
+	// /**
+	//  * @param {String} userID - User's ID
+	//  * @param {String} guildID - Guild's ID
+	//  * @param {Number} max - Amount of responses to return, default 1
+	//  * @returns {undefined|Object[]} - Returns undefined if no data found
+	//  */
+	// static async getResponses(userID, guildID, max = 1) {
+	// 	const data = await this.getDataByGuild(guildID);
+	// 	if (!data) return;
+	// 	const responses = data.responses.filter(x => x.userID == userID);
+	// 	if (!responses) return;
+	// 	return responses.sort((a, b) => b.createdAt - a.createdAt).slice(0, max);
+	// }
 
-	/**
-	 * @param {String} userID
-	 * @param {String} guildID
-	 * @param {Number} max
-	 * @returns {undefined|Document} Returns undefined if no data found
-	 */
-	static async deleteResponses(userID, guildID, max = 1) {
-		const data = await this.getDataByGuild(guildID);
-		if (!data) return;
-		const responses = data.responses.filter(x => x.userID == userID);
-		if (!responses) return;
-		let count = 0;
-		data.reponses = data.responses.sort((a, b) => b.createdAt - a.createdAt).filter(x => (x.userID !== userID) && (!count > max) && (typeof count++ == 'number'));
-		data.save();
-		return data;
-	}
+	// /**
+	//  * @param {String} userID
+	//  * @param {String} guildID
+	//  * @param {Number} max
+	//  * @returns {undefined|Document} Returns undefined if no data found
+	//  */
+	// static async deleteResponses(userID, guildID, max = 1) {
+	// 	const data = await this.getDataByGuild(guildID);
+	// 	if (!data) return;
+	// 	const responses = data.responses.filter(x => x.userID == userID);
+	// 	if (!responses) return;
+	// 	let count = 0;
+	// 	data.reponses = data.responses.sort((a, b) => b.createdAt - a.createdAt).filter(x => (x.userID !== userID) && (!count > max) && (typeof count++ == 'number'));
+	// 	data.save();
+	// 	return data;
+	// }
 
-	/**
-	 * @param {Document} data
-	 * @param {String} userID
-	 * @returns {Document}
-	 */
-	static async acceptResponse(data, userID) {
-		const res = data.responses.find(x => x.userID == userID);
-		res.accepted = true;
-		await data.save();
-		return data;
-	}
+	// /**
+	//  * @param {Document} data
+	//  * @param {String} userID
+	//  * @returns {Document}
+	//  */
+	// static async acceptResponse(message, data, userID) {
+	// 	const res = data.responses.find(x => x.userID == userID);
+	// 	res.accepted = true;
+	// 	await data.save();
+	// 	message.client.users.cache.get(userID).send('congratulations! your application has been accepted!');
+	// 	return data;
+	// }
 
-	/**
-	 * @param {Document} data
-	 * @param {String} userID
-	 * @param {Boolean} del
-	 * @returns {Document}
-	 */
-	static async declineResponse(data, userID, del = false) {
-		const res = data.responses.find(x => x.userID == userID);
-		res.accepted = false;
-		await data.save();
-		if (del) this.deleteResponses(userID, data.guildID);
-		return data;
-	}
+	// /**
+	//  * @param {Document} data
+	//  * @param {String} userID
+	//  * @param {Boolean} del
+	//  * @returns {Document}
+	//  */
+	// static async declineResponse(message, data, userID, del = false) {
+	// 	const res = data.responses.find(x => x.userID == userID);
+	// 	res.accepted = false;
+	// 	message.client.users.cache.get(userID).send('unfortunately your application was denied!');
+	// 	await data.save();
+	// 	if (del) this.deleteResponses(userID, data.guildID);
+	// 	return data;
+	// }
 	/**
 	 *
 	 * @param {Discord.Message} message - The discord message
