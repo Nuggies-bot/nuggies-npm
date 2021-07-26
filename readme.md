@@ -193,6 +193,65 @@ starts the giveaway again after restart, put this in ready event to start All th
  ```
  > ### params
  client: Discord Client
+
+ ## Customize Messages
+ customize the messages that users see
+ ```js
+ const Nuggies = require('nuggies');
+  Nuggies.giveaways.Messages(client, {
+    dmWinner: true,
+    giveaway: '🎉🎉 **GIVEAWAY MOMENT** 🎉🎉',
+    giveawayDescription: '🎁 Prize: **${prize}**\n🎊 Hosted by: ${hostedBy}\n⏲️ Winner(s): \`{winners}\`\n\nRequirements: {requirements}',
+    endedGiveawayDescription : '🎁 Prize: **{prize}**\n🎊 Hosted by: ${hostedBy}\n⏲️ Winner(s): {winners}',
+    giveawayFooterImage: 'https://cdn.discordapp.com/emojis/843076397345144863.png',
+    winMessage: '{winners} you won {prize} Congratulations! Hosted by {hostedBy}',
+	rerolledMessage: 'Rerolled! {winner} is the new winner of the giveaway!', // only {winner} placeholder
+    toParticipate: '**Click the Enter button to enter the giveaway!**',
+	newParticipant: 'You have successfully entered for this giveaway', // no placeholders | ephemeral
+	alreadyParticipated: 'you already entered this giveaway!', // no placeholders | ephemeral
+	nonoParticipants: 'There are not enough people in the giveaway!', // no placeholders
+	nonoRole: 'You do not have the required role(s)\n{requiredRoles}\n for the giveaway!', // only {requiredRoles} | ephemeral
+    dmMessage: 'You have won a giveaway in **{guildName}**!\nPrize: [{prize}]({giveawayURL})',
+    noWinner: 'Not enough people participated in this giveaway.', // no {winner} placerholder
+    alreadyEnded: 'The giveaway has already ended!', // no {winner} placeholder
+    dropWin: '{winner} Won The Drop!!' // only {winner} placeholder
+})
+ ```
+ > ### params
+  dmWinner - Boolean - If bot should dm the winners of giveaway 
+
+  giveaway - String - Title text of giveaway message
+
+  giveawayDescription - String - Giveaway embed description
+
+  endedGiveawayDescription - String - Ended giveaway embed description
+
+  giveawayFooterImage - String - Image/Gif in embed footer
+
+  winMessage - String - Message to send when winner is declared
+
+  rerolledMessage - String - Message to send when giveaway is rerolled
+
+  toParticipate - String - Instruction on how to participate the giveaway
+
+  newParticipant - String - Ephemeral message that participant sees when they participate
+
+  alreadyParticipated - String - Ephemeral message that participant sees if they have already participated
+
+  nonoParticipants - String - Message when there are not enough participants for giveaway
+
+  nonoRole - String - Ephemeral message when participants doesn't have required roles
+
+  dmMessage - String - Message to send to winners of giveaway (only works in dmWinner is `true`)
+
+  noWinner - String - Message when giveaway is ended/rerolled and there are not enough participants
+
+  alreadyEnded - String - If giveaway is already ended
+
+  dropWin - String -  Message sent when drop winner is declared
+
+  <b>Placeholders - {guildName}, {prize}, {giveawayURL}, {hostedBy}, {winners}, {requiredRoles}(only works for nonoRole)</b>
+
 <br> <br>
  # __Button Roles__
   ### [click here for fully functional button-roles bot](https://github.com/Nuggies-bot/buttonroles-example)
@@ -275,29 +334,136 @@ starts the giveaway again after restart, put this in ready event to start All th
 ### features including buttons and dropdown menus require certain functions to handle the interaction
 
 
-## buttonclick
-handles all the button interactions
+## handleInteractions
+
 ```js
-client.on('clickButton', button => {
-	Nuggies.buttonclick(client, button);
-});
+Nuggies.handleInteractions(client)
 ```
 > ### params
-client: the discord client
-button: the button callback from the clickButton event
 
-## dropclick
-handles all the dropdown interactions
+client: Discord Client
+
+# __Applications__
+
+### Applications help you make your life easier with different types of applications you might have to handle! Here's how you can implement it <br> [click here](https://github.com/Nuggies-bot/applications-example) for a fully function applications bot
+
+## setup
+a pre made template for your bot.
 ```js
-client.on('clickMenu', async (menu) => {
-	Nuggies.dropclick(client, menu);
-});
+Nuggies.applications.setup(message)
 ```
 > ### params
-client: the discord client
-menu: the menu callback from the clickMenu event
 
+message: message callback from message event 
 
+## addApplication
+Creates a application for which anyone can make a response.
+```js
+Nuggies.applications.addApplication(
+  { guildID, questions, name, emoji, channel, description, label, maxApps, cooldown, responseChannelID },
+)
+```
+> ### params
+
+  guildID: The ID of the guild in which the application is to be added
+  questions: An array of questions to be asked in DM, Example:
+    ```js
+    ['How old are you?', 'How much time would you devote to it?'];
+    ```
+  name: The name of the application\
+
+  emoji: The emoji to be put in the menu
+  
+  channel: The ID of the channel in which the message is to be sent
+  
+  description: The description of the application
+  
+  label: The label of the application in the menu
+  
+  maxApps: The maximum amount of application 1 can create before it gets accepted/declined
+  
+  cooldown: The cooldown before creating another response
+  
+  responseChannelID: The channel to send responses in
+
+## deleteApplication
+Deletes an application for the guild
+```js
+Nuggies.applications.deleteapplication({ guildID, name });
+```
+
+> ### params
+  guildID: The ID of the guild
+  name: The name of the application to remove
+
+## create
+Creates/Initializes the application system for the guild
+```js
+Nuggies.applications.create({ guildID, content, client })
+```
+
+> ### params
+
+  guildID: The ID of the guild to be created in
+  content: The content of message to be sent in the channel
+  client: The discord.js client used
+
+## getDataByGuild
+Gets the data from database for you
+```js
+Nuggies.applications.getDataByGuild(guildID);
+```
+
+  ### params
+
+  guildID: The ID of the guild
+<!--
+
+## getResponses
+Fetches data and then filters the responses for you
+```js
+Nuggies.applications.getResponses(userID, guildID, max);
+```
+
+  ### params
+
+  userID: The ID of the user who's responses are to be fetched
+  guildID: The ID of the guild
+  max: Amount of responses you want
+## deleteResponses
+Deletes response(s) from database
+```js
+Nuggies.applications.deleteResponses(userID, guildID, max);
+```
+
+  ### params
+  userID: The ID of the user who's responses are to be deleted
+  guildID: The ID of the guild
+  max: Amount of responses you want
+
+## acceptResponse
+Accepts a response from a user
+```js
+Nuggies.applications.acceptResponse(data, userID);
+```
+
+  ### params
+
+  data: The data provided by `getDataByGuild` function
+  userID: The ID of the user who's response is to be accepted
+
+## declineResponse
+Declines a response from a user
+```js
+Nuggies.applications.declineResponse(data, userID, del);
+```
+
+  ### params
+
+  data: The data provided by `getDataByGuild` function
+  userID: The ID of the user who's response is to be declined
+  del: Delete the data stored in database
+-->
 ### License
 Nuggies npm licensed under the terms of [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://github.com/Nuggies-bot/nuggies-npm/blob/main/license) ("CC-BY-NC-SA-4.0"). Commercial use is not allowed under this license. This includes any kind of revenue made with or based upon the software, even donations.
 
