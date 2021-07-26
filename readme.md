@@ -356,6 +356,110 @@ client.on('clickMenu', async (menu) => {
 client: the discord client
 menu: the menu callback from the clickMenu event
 
+# __Applications__
+
+### Applications help you make your life easier with different types of applications you might have to handle! Here's how you can implement it
+
+## addApplication
+Creates a application for which anyone can make a response.
+```js
+Nuggies.applications.addApplication(
+  { guildID, questions, name, emoji, channel, description, label, maxApps, cooldown, responseChannelID },
+)
+```
+  ### params
+
+  guildID: The ID of the guild in which the application is to be added
+  questions: An array of questions to be asked in DM, Example:
+    ```js
+    ['How old are you?', 'How much time would you devote to it?'];
+    ```
+  name: The name of the application
+  emoji: The emoji to be put in the menu
+  channel: The ID of the channel in which the message is to be sent
+  description: The description of the application
+  label: The label of the application in the menu
+  maxApps: The maximum amount of application 1 can create before it gets accepted/declined
+  cooldown: The cooldown before creating another response
+  responseChannelID: The channel to send responses in
+
+## deleteApplication
+Deletes an application for the guild
+```js
+Nuggies.applications.deleteapplication({ guildID, name });
+```
+
+  ### params
+  guildID: The ID of the guild
+  name: The name of the application to remove
+
+## create
+Creates/Initializes the application system for the guild
+```js
+Nuggies.applications.create({ guildID, content, client })
+```
+
+  ### params
+
+  guildID: The ID of the guild to be created in
+  content: The content of message to be sent in the channel
+  client: The discord.js client used
+
+## getDataByGuild
+Gets the data from database for you
+```js
+Nuggies.applications.getDataByGuild(guildID);
+```
+
+  ### params
+
+  guildID: The ID of the guild
+
+## getResponses
+Fetches data and then filters the responses for you
+```js
+Nuggies.applications.getResponses(userID, guildID, max);
+```
+
+  ### params
+
+  userID: The ID of the user who's responses are to be fetched
+  guildID: The ID of the guild
+  max: Amount of responses you want
+
+## deleteResponses
+Deletes response(s) from database
+```js
+Nuggies.applications.deleteResponses(userID, guildID, max);
+```
+
+  ### params
+  userID: The ID of the user who's responses are to be deleted
+  guildID: The ID of the guild
+  max: Amount of responses you want
+
+## acceptResponse
+Accepts a response from a user
+```js
+Nuggies.applications.acceptResponse(data, userID);
+```
+
+  ### params
+
+  data: The data provided by `getDataByGuild` function
+  userID: The ID of the user who's response is to be accepted
+
+## declineResponse
+Declines a response from a user
+```js
+Nuggies.applications.declineResponse(data, userID, del);
+```
+
+  ### params
+
+  data: The data provided by `getDataByGuild` function
+  userID: The ID of the user who's response is to be declined
+  del: Delete the data stored in database
 
 ### License
 Nuggies npm licensed under the terms of [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://github.com/Nuggies-bot/nuggies-npm/blob/main/license) ("CC-BY-NC-SA-4.0"). Commercial use is not allowed under this license. This includes any kind of revenue made with or based upon the software, even donations.
