@@ -20,7 +20,6 @@ class applications {
 		if (!guildID) throw new Error('NuggiesError: guildID not provided');
 		if (!questions) throw new Error('NuggiesError: questions Array not provided');
 		if (!name) throw new Error('NuggiesError: name not provided');
-		if (!emoji) throw new Error('NuggiesError: emoji not provided');
 		if (!channel) throw new Error('NuggiesError: channel ID not provided');
 		if (!description) throw new Error('NuggiesError: description not provided');
 		if (!label) throw new Error('NuggiesError: label not provided');
@@ -42,7 +41,7 @@ class applications {
 			questions: questions,
 			description: description,
 			label: label,
-			emoji: emoji,
+			emoji: emoji ? emoji : null,
 		};
 		let data = await schema.findOne({ guildID: guildID });
 		if (!data) {
@@ -180,6 +179,7 @@ class applications {
 	static async setup(message) {
 		if(!message) throw new Error('NuggiesError: message not provided');
 		const application = {
+			guildID: message.guild.id,
 			questions: [],
 		};
 		message.channel.send('What should be the name of the application?');
@@ -223,6 +223,8 @@ class applications {
 			}
 			else if (step >= 8) {
 				if (msg.content.toLowerCase() == 'done') {
+					message.channel.send('application added!');
+					this.create({ guildID: message.guild.id, content: 'choose from the dropdown menu to apply!', client: message.client });
 					return collector.stop('DONE');
 				}
 				application.questions.push(msg.content);
@@ -230,8 +232,10 @@ class applications {
 			}
 		});
 
-		collector.on('end', async (msgs, reason) => {
-			const data = await this.addApplication(application);
+		collector.on('end', async (msg, reason) => {
+			if(reason == 'INVALID_CHANNEL') return message.channel.send('channel ID is invalid');
+			if(reason == 'INVALID_NUMBER') return message.channel.send('number is invalid');
+			await this.addApplication(application);
 		});
 	}
 }
