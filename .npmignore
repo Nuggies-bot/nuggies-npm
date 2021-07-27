@@ -5,3 +5,4 @@ index.test.js
 .gitignore
 package-lock.json
 index.d.ts
+test.js

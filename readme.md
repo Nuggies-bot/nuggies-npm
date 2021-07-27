@@ -21,6 +21,7 @@ A utility package for Discord Bots!
 ## - [Button Roles](https://www.npmjs.com/package/nuggies#button-roles)
 ## - [Dropdown Roles](https://www.npmjs.com/package/nuggies#dropdown-roles)
 ## - [handle interactions](https://www.npmjs.com/package/nuggies#handle-interactions)
+## - [applications](https://www.npmjs.com/package/nuggies#applications)
 npm:
 ```powershell
 npm i nuggies
