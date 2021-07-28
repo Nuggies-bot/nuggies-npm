@@ -66,6 +66,21 @@ class main {
 					await giveaways.endByButton(client, button.message.id, button);
 				}
 			}
+			if (id.startsWith('br')) {
+				let member;
+				const fetchMem = await button.guild.members.fetch(button.clicker.member.id, false);
+				if (fetchMem) member = button.guild.members.cache.get(button.clicker.member.id);
+				await member.fetch(true);
+				const role = id.split(':')[1];
+				if (button.clicker.member.roles.cache.has(role)) {
+					button.clicker.member.roles.remove(role);
+					button.reply.send(`I have removed the <@&${role}> role from you!`, true);
+				}
+				else {
+					button.clicker.member.roles.add(role);
+					button.reply.send(`I have added the <@&${role}> role to you!`, true);
+				}
+			}
 		});
 		client.on('clickMenu',
 			/**
