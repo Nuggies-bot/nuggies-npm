@@ -22,6 +22,8 @@ A utility package for Discord Bots!
 ## - [Dropdown Roles](https://www.npmjs.com/package/nuggies#dropdown-roles)
 ## - [handle interactions](https://www.npmjs.com/package/nuggies#handle-interactions)
 ## - [applications](https://www.npmjs.com/package/nuggies#applications)
+## - [embed-paginator](https://www.npmjs.com/package/nuggies#paginator)
+
 npm:
 ```powershell
 npm i nuggies
@@ -465,6 +467,8 @@ Nuggies.applications.declineResponse(data, userID, del);
   userID: The ID of the user who's response is to be declined
   del: Delete the data stored in database
 -->
+
+#paginator
 ### License
 Nuggies npm licensed under the terms of [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://github.com/Nuggies-bot/nuggies-npm/blob/main/license) ("CC-BY-NC-SA-4.0"). Commercial use is not allowed under this license. This includes any kind of revenue made with or based upon the software, even donations.
 
