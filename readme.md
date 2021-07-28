@@ -468,7 +468,38 @@ Nuggies.applications.declineResponse(data, userID, del);
   del: Delete the data stored in database
 -->
 
-#paginator
+## paginator
+
+**Example**
+
+```js
+	       let embed1 = new Discord.MessageEmbed() // the first embed
+		.setTitle("1")
+
+		let embed2 = new Discord.MessageEmbed() // the second embed
+		.setTitle("2")
+		
+		let pages = [embed1, embed2] // putting the embeds into an array to paginate
+
+		await Nuggies.Pagination({
+			message: message, // the discord message
+			embeds: pages, // Array of embeds
+			button1: {
+				label: '<<', // the label of the back button
+				style: 'gray', // discord button style
+			},
+			button2: {
+				label: '>>',  // the label of the forward button
+				style: 'gray', // discord button style
+			},
+			timeActive: 10, // the time that the buttons are valid, in MS
+			setDisabled: true, // should the buttons be setDisbaled after the allocated time 
+			invalidUser: {
+				ephemeralReply: true, // should the reply be ephemeral if the button clicker is not the message author
+				message: 'only the message author can use the buttons!', // the message to be send when such event occurs
+			}
+		});
+```
 ### License
 Nuggies npm licensed under the terms of [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://github.com/Nuggies-bot/nuggies-npm/blob/main/license) ("CC-BY-NC-SA-4.0"). Commercial use is not allowed under this license. This includes any kind of revenue made with or based upon the software, even donations.
 
