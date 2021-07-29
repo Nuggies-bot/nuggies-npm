@@ -15,7 +15,7 @@ class ButtonRoles {
 	 * @param {String} role - The role id
 	 */
 	addrole({ color, label, emoji, role }) {
-		if (!color) color = 'gray';
+		if (!color) color = 'grey';
 		if (!label) throw new Error('Provide the button label!');
 		if (!emoji) emoji = null;
 		if (!role) throw new Error('Provide a role!');

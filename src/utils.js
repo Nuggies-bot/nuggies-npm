@@ -5,7 +5,7 @@ const ms = require('ms');
 module.exports.giveawayButtons = (host, emojiid) => {
 	const reroll = new MessageButton()
 		.setLabel('Reroll')
-		.setStyle('gray')
+		.setStyle('grey')
 		.setID(`giveaways-reroll-${host}`)
 		.setDisabled(true);
 	const end = new MessageButton()
@@ -25,7 +25,7 @@ module.exports.giveawayButtons = (host, emojiid) => {
 module.exports.getButtons = (host) => {
 	const reroll = new MessageButton()
 		.setLabel('Reroll')
-		.setStyle('gray')
+		.setStyle('grey')
 		.setID(`giveaways-reroll-${host}`)
 		.setDisabled(true);
 	const end = new MessageButton()
@@ -69,8 +69,8 @@ module.exports.checkRole = (userID, roleIDs, message) => {
 module.exports.editButtons = async (client, data) => {
 	const m = await client.guilds.cache.get(data.guildID).channels.cache.get(data.channelID).messages.fetch(data.messageID);
 	const buttons = await this.getButtons(data.host);
-	buttons.find(x => x.label == 'End').setDisabled().setStyle('gray');
-	buttons.find(x => x.label == 'Enter').setDisabled().setStyle('gray');
+	buttons.find(x => x.label == 'End').setDisabled().setStyle('grey');
+	buttons.find(x => x.label == 'Enter').setDisabled().setStyle('grey');
 	buttons.find(x => x.label == 'Reroll').setDisabled(false).setStyle('green');
 	const row = new MessageActionRow().addComponents(buttons);
 	m.edit('', { components: [row], embed: m.embeds[0] }).catch((e) => { console.log('e' + e); });
@@ -106,7 +106,7 @@ module.exports.getByMessageID = async (messageID) => {
 module.exports.editDropButtons = async (client, button) => {
 	const m = await client.guilds.cache.get(button.guild.id).channels.cache.get(button.channel.id).messages.fetch(button.message.id);
 	const buttons = await this._dropButtons('xd');
-	buttons.setDisabled().setStyle('gray');
+	buttons.setDisabled().setStyle('grey');
 	const row = new MessageActionRow().addComponents(buttons);
 	const embed = m.embeds[0];
 	embed.footer.text = `drop ended! ${button.clicker.user.tag} won!`;

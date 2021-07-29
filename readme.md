@@ -271,7 +271,7 @@ starts the giveaway again after restart, put this in ready event to start All th
 
  > ### options
 
- color: the button color. Optional. Defaults to gray
+ color: the button color. Optional. Defaults to grey
  
  label: Button label
 
