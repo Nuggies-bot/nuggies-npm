@@ -9,8 +9,8 @@ const merge = require('deepmerge');
 const defaultManagerOptions = {
 	dmWinner: true,
 	giveaway: '🎉🎉 **GIVEAWAY MOMENT** 🎉🎉',
-	giveawayDescription: '🎁 Prize: **${prize}**\n🎊 Hosted by: ${hostedBy}\n⏲️ Winner(s): `{winners}`\n\nRequirements: {requirements}',
-	endedGiveawayDescription : '🎁 Prize: **{prize}**\n🎊 Hosted by: ${hostedBy}\n⏲️ Winner(s): {winners}',
+	giveawayDescription: '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): `{winners}`\n\nRequirements: {requirements}',
+	endedGiveawayDescription : '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): {winners}',
 	giveawayFooterImage: 'https://cdn.discordapp.com/emojis/843076397345144863.png',
 	winMessage: '{winners} you won {prize} Congratulations! Hosted by {hostedBy}',
 	rerolledMessage: 'Rerolled! {winner} is the new winner of the giveaway!', // only {winner} placeholder
@@ -44,6 +44,7 @@ class giveaways {
 	static async create({
 		message, prize, host, winners, endAfter, requirements, channel,
 	}) {
+		if(!message.client.giveawayMessages) message.client.giveawayMessages = defaultManagerOptions;
 		if (!message) throw new Error('NuggiesError: message wasnt provided while creating giveaway!');
 		if (!prize) throw new Error('NuggiesError: prize wasnt provided while creating giveaway!');
 		if (typeof prize !== 'string') throw new TypeError('NuggiesError: prize should be a string');
@@ -77,6 +78,7 @@ class giveaways {
 
 
 	static async startTimer(message, data, instant = false) {
+		if(!message.client.giveawayMessages) message.client.giveawayMessages = defaultManagerOptions;
 		if (!message) throw new Error('NuggiesError: message not provided while starting timer.');
 		if (!data) throw new Error('NuggiesError: data not provided while starting timer');
 		const msg = await message.guild.channels.cache.get(data.channelID).messages.fetch(data.messageID);
@@ -130,6 +132,7 @@ class giveaways {
 		return button;
 	}
 	static async endByButton(client, messageID, button) {
+		if(!client.giveawayMessages) client.giveawayMessages = defaultManagerOptions;
 		if (!client) throw new Error('NuggiesError: client not provided in button end');
 		if (!messageID) throw new Error('NuggiesError: ID not provided in button end');
 		if (!button) throw new Error('NuggiesError: button not provided in button end');
@@ -140,6 +143,7 @@ class giveaways {
 	}
 
 	static async end(message, data, giveawaymsg) {
+		if(!message.client.giveawayMessages) message.client.giveawayMessages = defaultManagerOptions;
 		if (!message) throw new Error('NuggiesError: message wasnt provided in end');
 		if (!data) throw new Error('NuggiesError: data wasnt provided in end');
 		if (!giveawaymsg) throw new Error('NuggiesError: giveawaymsg wasnt provided in end');
@@ -180,6 +184,7 @@ class giveaways {
 		utils.editButtons(message.client, data);
 	}
 	static async reroll(client, messageID) {
+		if(!client.giveawayMessages) client.giveawayMessages = defaultManagerOptions;
 		if (!client) throw new Error('NuggiesError: client wasnt provided in reroll');
 		if (!messageID) throw new Error('NuggiesError: message ID was not provided in reroll');
 		const data = await utils.getByMessageID(messageID);
@@ -218,6 +223,7 @@ class giveaways {
 	static async drop({ message, channel, prize, host }) {
 		// eslint-disable-next-line no-unused-vars
 		let ended;
+		if(!message.client.giveawayMessages) message.client.giveawayMessages = defaultManagerOptions;
 		if (!channel) throw new Error('NuggiesError: channel ID not provided');
 		if (!host) throw new Error('NuggiesError: host not provided');
 		if (!prize) throw new Error('NuggiesError: prize not provided');
