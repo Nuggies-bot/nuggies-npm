@@ -201,8 +201,8 @@ starts the giveaway again after restart, put this in ready event to start All th
   Nuggies.giveaways.Messages(client, {
     dmWinner: true,
     giveaway: '🎉🎉 **GIVEAWAY MOMENT** 🎉🎉',
-    giveawayDescription: '🎁 Prize: **${prize}**\n🎊 Hosted by: ${hostedBy}\n⏲️ Winner(s): \`{winners}\`\n\nRequirements: {requirements}',
-    endedGiveawayDescription : '🎁 Prize: **{prize}**\n🎊 Hosted by: ${hostedBy}\n⏲️ Winner(s): {winners}',
+    giveawayDescription: '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): \`{winners}\`\n\nRequirements: {requirements}',
+    endedGiveawayDescription : '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): {winners}',
     giveawayFooterImage: 'https://cdn.discordapp.com/emojis/843076397345144863.png',
     winMessage: '{winners} you won {prize} Congratulations! Hosted by {hostedBy}',
 	rerolledMessage: 'Rerolled! {winner} is the new winner of the giveaway!', // only {winner} placeholder
