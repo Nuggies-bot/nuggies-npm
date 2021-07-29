@@ -6,3 +6,4 @@ index.test.js
 package-lock.json
 index.d.ts
 test.js
+.env
