@@ -208,7 +208,12 @@ class giveaways {
 				if (err) throw err;
 
 				for (let i = 0; i < data.length; i++) {
-					const msg = await ((await client.guilds.fetch(data[i].guildID)).channels.cache.get(data[i].channelID)).messages.fetch(data[i].messageID);
+					const guild = await client.guilds.fetch(data[i].guildID);
+					if(!guild) return data.delete();
+					const channel = await guild.channels.cache.get(data[i].channelID);
+					if(!channel) return data.delete();
+					const msg = await channel.messages.fetch(data[i].messageID);
+					if(!msg) return data.delete();
 					this.startTimer(msg, data[i]);
 				}
 
