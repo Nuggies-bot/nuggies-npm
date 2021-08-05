@@ -140,11 +140,11 @@ class main {
 					const role = menu.values[0];
 					if (menu.clicker.member.roles.cache.has(role)) {
 						menu.clicker.member.roles.remove(role);
-						menu.reply.send(`I have removed the <@&${role}> role from you!`, true);
+						menu.reply.send(replacePlaceholders(client.customMessages.buttonroleMessages.removeMessage), true);
 					}
 					else {
 						menu.clicker.member.roles.add(role);
-						menu.reply.send(`I have added the <@&${role}> role to you!`, true);
+						menu.reply.send(replacePlaceholders(client.customMessages.buttonroleMessages.addMessage), true);
 					}
 				}
 			});
