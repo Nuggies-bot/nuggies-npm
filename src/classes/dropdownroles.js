@@ -1,11 +1,24 @@
 const { MessageActionRow, MessageMenuOption, MessageMenu } = require('discord-buttons');
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, Client } = require('discord.js');
+const defaultManagerOptions = {
+	addMessage: 'I have added the <@&{role}> role to you!',
+	removeMessage: 'I have removed the <@&{role}> role from you!',
+};
+const merge = require('deepmerge');
 class dropdownroles {
 	constructor() {
 		this.roles = [];
 		return this;
 	}
-
+	/**
+	 *
+	 * @param {Client} client
+	 * @param {Object} options
+	 */
+	async Messages(client, options) {
+		this.client = client;
+		client.customMessages.buttonroleMessages = merge(defaultManagerOptions, options);
+	}
 	/**
 	 *
 	 * @param {String} label - dropdown label
