@@ -1,5 +1,10 @@
 const { MessageButton, MessageActionRow } = require('discord-buttons');
 const { MessageEmbed, Message } = require('discord.js');
+const merge = require('deepmerge');
+const defaultManagerOptions = {
+	addMessage: 'I have added the <@&{role}> role to you!',
+	removeMessage: 'I have removed the <@&{role}> role from you!',
+};
 class ButtonRoles {
 
 	constructor() {
@@ -14,6 +19,10 @@ class ButtonRoles {
 	 * @param {String} emoji - The emoji id [optional]
 	 * @param {String} role - The role id
 	 */
+	async Messages(client, options) {
+		this.client = client;
+		client.customMessages.buttonroleMessages = merge(defaultManagerOptions, options);
+	}
 	addrole({ color, label, emoji, role }) {
 		if (!color) color = 'grey';
 		if (!label) throw new Error('Provide the button label!');
