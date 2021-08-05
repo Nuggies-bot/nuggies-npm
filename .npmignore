@@ -7,3 +7,4 @@ package-lock.json
 index.d.ts
 test.js
 .env
+./typings/index.d.ts

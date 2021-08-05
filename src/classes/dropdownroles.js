@@ -44,7 +44,7 @@ class dropdownroles {
 		dropdown.options = dropdownsOptions;
 		// console.log(dropdown);
 		const row = new MessageActionRow().addComponent(dropdown);
-		content instanceof MessageEmbed ? message.client.channels.cache.get(channelID).send({ embed: content, component: row }) : message.client.channels.cache.get(channelID).send(content, { components: [row] });
+		content instanceof MessageEmbed ? message.client.channels.cache.get(channelID).send({ embed: content, components: [row] }) : message.client.channels.cache.get(channelID).send(content, { components: [row] });
 	}
 }
 
