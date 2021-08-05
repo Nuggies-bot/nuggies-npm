@@ -48,7 +48,7 @@ class main {
 					}
 				}
 				if (tag[1] === 'reroll') {
-					if (button.clicker.user.id !== tag[2]) return button.reply.send('You Cannot End This Giveaway, Only Hoster Can', { ephemeral: true });
+					if (button.clicker.user.id !== tag[2]) return button.reply.send('You Cannot End This Giveaway, Only The Host Can', { ephemeral: true });
 					try {
 						button.reply.send('Rerolled!', true);
 						win = await giveaways.reroll(client, button.message.id);
@@ -62,7 +62,7 @@ class main {
 				}
 				if (tag[1] === 'end') {
 					button.reply.defer();
-					if (button.clicker.user.id !== tag[2]) return button.reply.send('You Cannot End This Giveaway, Only Hoster Can', { ephemeral: true });
+					if (button.clicker.user.id !== tag[2]) return button.reply.send('You Cannot End This Giveaway, Only The Host Can', { ephemeral: true });
 					await giveaways.endByButton(client, button.message.id, button);
 				}
 			}
@@ -74,11 +74,11 @@ class main {
 				const role = id.split(':')[1];
 				if (button.clicker.member.roles.cache.has(role)) {
 					button.clicker.member.roles.remove(role);
-					button.reply.send(`I have removed the <@&${role}> role from you!`, true);
+					button.reply.send(replacePlaceholders(client.customMessages.buttonroleMessages.removeMessage), true);
 				}
 				else {
 					button.clicker.member.roles.add(role);
-					button.reply.send(`I have added the <@&${role}> role to you!`, true);
+					button.reply.send(replacePlaceholders(client.customMessages.buttonroleMessages.addMessage), true);
 				}
 			}
 		});
@@ -151,3 +151,9 @@ class main {
 	}
 }
 module.exports = main;
+
+
+function replacePlaceholders(string, button, role) {
+	const newString = string.replace(/{guildName}/g, button.message.guild.name).replace(/{clicker}/g, button.clicker.user.username).replace(/{role}/g, role);
+	return newString;
+}
