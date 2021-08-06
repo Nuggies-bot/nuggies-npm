@@ -31,24 +31,24 @@ class main {
 				if (tag[1] === 'enter') {
 					const data = await schema.findOne({ messageID: button.message.id });
 					if (data.requirements.enabled == true) {
-						if (data.clickers.includes(button.clicker.user.id)) { return button.reply.send(client.giveawayMessages.alreadyParticipated, true); }
+						if (data.clickers.includes(button.clicker.user.id)) { return button.reply.send(client.customMessages.giveawayMessages.alreadyParticipated, true); }
 						const roles = data.requirements.roles.map(x => button.message.guild.members.cache.get(button.clicker.user.id).roles.cache.get(x));
 						if (!roles[0]) {
 							const requiredRoles = button.message.guild.roles.cache.filter(x => data.requirements.roles.includes(x.id)).filter(x => !button.message.guild.members.cache.get(button.clicker.user.id).roles.cache.get(x.id)).array().map(x => `\`${x.name}\``).join(', ');
-							return button.reply.send(client.giveawayMessages.nonoRole.replace(/{requiredRoles}/g, requiredRoles), true);
+							return button.reply.send(client.customMessages.giveawayMessages.nonoRole.replace(/{requiredRoles}/g, requiredRoles), true);
 						}
 					}
 					if (!data.clickers.includes(button.clicker.user.id)) {
 						data.clickers.push(button.clicker.user.id);
 						data.save();
-						return button.reply.send(client.giveawayMessages.newParticipant, true);
+						return button.reply.send(client.customMessages.giveawayMessages.newParticipant, true);
 					}
 					if (data.clickers.includes(button.clicker.user.id)) {
-						return button.reply.send(client.giveawayMessages.alreadyParticipated, true);
+						return button.reply.send(client.customMessages.giveawayMessages.alreadyParticipated, true);
 					}
 				}
 				if (tag[1] === 'reroll') {
-					if (button.clicker.user.id !== tag[2]) return button.reply.send('You Cannot End This Giveaway, Only Hoster Can', { ephemeral: true });
+					if (button.clicker.user.id !== tag[2]) return button.reply.send('You Cannot End This Giveaway, Only The Host Can', { ephemeral: true });
 					try {
 						button.reply.send('Rerolled!', true);
 						win = await giveaways.reroll(client, button.message.id);
@@ -57,12 +57,12 @@ class main {
 						console.log(err);
 						return button.message.channel.send('⚠️ **Unable To Find That Giveaway**');
 					}
-					if (!win.length) return button.message.channel.send(client.giveawayMessages.nonoParticipants);
-					button.message.channel.send(client.giveawayMessages.rerolledMessage.replace(/{winner}/g, `<@${win}>`), { component: new MessageButton().setLabel('Giveaway').setURL(`https://discord.com/channels/${button.message.guild.id}/${button.message.channel.id}/${button.message.id}`).setStyle('url') });
+					if (!win.length) return button.message.channel.send(client.customMessages.giveawayMessages.nonoParticipants);
+					button.message.channel.send(client.customMessages.giveawayMessages.rerolledMessage.replace(/{winner}/g, `<@${win}>`), { component: new MessageButton().setLabel('Giveaway').setURL(`https://discord.com/channels/${button.message.guild.id}/${button.message.channel.id}/${button.message.id}`).setStyle('url') });
 				}
 				if (tag[1] === 'end') {
 					button.reply.defer();
-					if (button.clicker.user.id !== tag[2]) return button.reply.send('You Cannot End This Giveaway, Only Hoster Can', { ephemeral: true });
+					if (button.clicker.user.id !== tag[2]) return button.reply.send('You Cannot End This Giveaway, Only The Host Can', { ephemeral: true });
 					await giveaways.endByButton(client, button.message.id, button);
 				}
 			}
@@ -74,11 +74,11 @@ class main {
 				const role = id.split(':')[1];
 				if (button.clicker.member.roles.cache.has(role)) {
 					button.clicker.member.roles.remove(role);
-					button.reply.send(`I have removed the <@&${role}> role from you!`, true);
+					button.reply.send(replacePlaceholders(client.customMessages.buttonroleMessages.removeMessage, button, role), true);
 				}
 				else {
 					button.clicker.member.roles.add(role);
-					button.reply.send(`I have added the <@&${role}> role to you!`, true);
+					button.reply.send(replacePlaceholders(client.customMessages.buttonroleMessages.addMessage, button, role), true);
 				}
 			}
 		});
@@ -140,14 +140,20 @@ class main {
 					const role = menu.values[0];
 					if (menu.clicker.member.roles.cache.has(role)) {
 						menu.clicker.member.roles.remove(role);
-						menu.reply.send(`I have removed the <@&${role}> role from you!`, true);
+						menu.reply.send(replacePlaceholders(client.customMessages.buttonroleMessages.removeMessage, menu, role), true);
 					}
 					else {
 						menu.clicker.member.roles.add(role);
-						menu.reply.send(`I have added the <@&${role}> role to you!`, true);
+						menu.reply.send(replacePlaceholders(client.customMessages.buttonroleMessages.addMessage, menu, role), true);
 					}
 				}
 			});
 	}
 }
 module.exports = main;
+
+
+function replacePlaceholders(string, button, role) {
+	const newString = string.replace(/{guildName}/g, button.message.guild.name).replace(/{clicker}/g, button.clicker.user.username).replace(/{role}/g, role);
+	return newString;
+}

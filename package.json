@@ -1,6 +1,6 @@
 {
   "name": "nuggies",
-  "version": "1.3.3",
+  "version": "1.3.6",
   "description": "A utility package for Discord Bots!",
   "main": "index.js",
 	"types": "./typings/index.d.ts",

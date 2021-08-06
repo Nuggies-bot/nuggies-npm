@@ -22,12 +22,8 @@ bot.on('message', async (message) => {
 
 	if (!cmd) return;
 
-	if (cmd.toLowerCase() === '.buttonrole') {
-		const manager = new Nuggies.buttonroles().addrole({ color: 'red', label: 'test', role: '807978319894413352', emoji: null });
-		const msg = await Nuggies.buttonroles.create({ message, content: 'test', role: manager, channelID: message.channel.id });
-		manager.addrole({ color: 'grey', label: 'hi', role: '804978976904052757' });
-		// setTimeout(() => Nuggies.buttonroles.edit({ color: 'grey', label: 'haha', role: '739562964871304628' }), 5000)
-		setTimeout(() => Nuggies.buttonroles.delete(msg), 5000);
+	if (cmd.toLowerCase() === '.applications') {
+		Nuggies.applications.setup(message);
 	}
 	else if (cmd.toLowerCase() == 'test') {
 		Nuggies.applications.setup(message);

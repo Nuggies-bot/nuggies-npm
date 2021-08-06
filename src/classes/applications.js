@@ -225,9 +225,10 @@ class applications {
 			}
 			else if (step >= 8) {
 				if (msg.content.toLowerCase() == 'done') {
+					await this.addApplication(application);
 					message.channel.send('application added!');
-					this.create({ guildID: message.guild.id, content: 'choose from the dropdown menu to apply!', client: message.client });
-					return collector.stop('DONE');
+					collector.stop('DONE');
+					return this.create({ guildID: message.guild.id, content: 'choose from the dropdown menu to apply!', client: message.client });
 				}
 				application.questions.push(msg.content);
 				message.channel.send(`What is question #${application.questions.length + 1}?`);
@@ -237,7 +238,6 @@ class applications {
 		collector.on('end', async (msg, reason) => {
 			if(reason == 'INVALID_CHANNEL') return message.channel.send('channel ID is invalid');
 			if(reason == 'INVALID_NUMBER') return message.channel.send('number is invalid');
-			await this.addApplication(application);
 		});
 	}
 }

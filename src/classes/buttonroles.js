@@ -1,10 +1,25 @@
 const { MessageButton, MessageActionRow } = require('discord-buttons');
-const { MessageEmbed, Message } = require('discord.js');
+const { MessageEmbed, Message, Client } = require('discord.js');
+const merge = require('deepmerge');
+const defaultManagerOptions = {
+	addMessage: 'I have added the <@&{role}> role to you!',
+	removeMessage: 'I have removed the <@&{role}> role from you!',
+};
 class ButtonRoles {
 
 	constructor() {
 		this.roles = [];
 		return this;
+	}
+
+	/**
+	 *
+	 * @param {Client} client
+	 * @param {Object} options
+	 */
+	async Messages(client, options) {
+		this.client = client;
+		client.customMessages.buttonroleMessages = merge(defaultManagerOptions, options);
 	}
 
 	/**
