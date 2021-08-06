@@ -140,11 +140,11 @@ class main {
 					const role = menu.values[0];
 					if (menu.clicker.member.roles.cache.has(role)) {
 						menu.clicker.member.roles.remove(role);
-						menu.reply.send(replacePlaceholders(client.customMessages.buttonroleMessages.removeMessage, menu, role), true);
+						menu.reply.send(replacePlaceholders(client.customMessages.dropdownrolesMessages.removeMessage, menu, role), true);
 					}
 					else {
 						menu.clicker.member.roles.add(role);
-						menu.reply.send(replacePlaceholders(client.customMessages.buttonroleMessages.addMessage, menu, role), true);
+						menu.reply.send(replacePlaceholders(client.customMessages.dropdownrolesMessages.addMessage, menu, role), true);
 					}
 				}
 			});

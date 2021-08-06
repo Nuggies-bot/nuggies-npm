@@ -17,7 +17,7 @@ class dropdownroles {
 	 */
 	async Messages(client, options) {
 		this.client = client;
-		client.customMessages.buttonroleMessages = merge(defaultManagerOptions, options);
+		client.customMessages.dropdownrolesMessages = merge(defaultManagerOptions, options);
 	}
 	/**
 	 *
@@ -26,7 +26,7 @@ class dropdownroles {
 	 * @param {String} role - The role id
 	 */
 	addrole({ label, emoji, role }) {
-		if (!label) throw new Error('please provide the button label!');
+		if (!label) throw new Error('please provide the dropdown label!');
 		if (!emoji) emoji = null;
 		if (!role) throw new Error('please provide a role!');
 		this.roles.push({ label: label, emoji: emoji, role: role });
@@ -42,6 +42,7 @@ class dropdownroles {
  * @param {String} channelID - The channel ID that will be recieving the dropdown
  */
 	static async create({ message, content, role, channelID }) {
+		if(!message.client.customMessages || !message.client.customMessages.dropdownrolesMessages) message.client.customMessages.dropdownrolesMessages = defaultManagerOptions;
 		if(!message) throw new TypeError('please provide the Discord Message');
 		if(!content) throw new Error('please provide content!');
 		if(!role) throw new Error('role not provided!');

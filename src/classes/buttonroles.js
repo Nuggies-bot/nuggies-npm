@@ -47,6 +47,7 @@ class ButtonRoles {
 	 * @returns {Message} - The message sent
 	 */
 	static async create({ message, content, role, channelID }) {
+		if(!message.client.customMessages || !message.client.customMessages.buttonroleMessages) message.client.customMessages.dropdownrolesMessages = defaultManagerOptions;
 		if (!message) throw new TypeError('Provide the Discord Message');
 		if (!(message instanceof Message)) throw Error('Provide a valid message');
 		if (!content) throw new Error('Provide content!');
