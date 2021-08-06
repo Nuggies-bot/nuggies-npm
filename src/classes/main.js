@@ -74,11 +74,11 @@ class main {
 				const role = id.split(':')[1];
 				if (button.clicker.member.roles.cache.has(role)) {
 					button.clicker.member.roles.remove(role);
-					button.reply.send(replacePlaceholders(client.customMessages.buttonroleMessages.removeMessage, button, role), true);
+					button.reply.send(`I have removed the <@&${role}> role from you!`, true);
 				}
 				else {
 					button.clicker.member.roles.add(role);
-					button.reply.send(replacePlaceholders(client.customMessages.buttonroleMessages.addMessage, button, role), true);
+					button.reply.send(`I have added the <@&${role}> role to you!`, true);
 				}
 			}
 		});
@@ -140,11 +140,11 @@ class main {
 					const role = menu.values[0];
 					if (menu.clicker.member.roles.cache.has(role)) {
 						menu.clicker.member.roles.remove(role);
-						menu.reply.send(replacePlaceholders(client.customMessages.dropdownrolesMessages.removeMessage, menu, role), true);
+						menu.reply.send(`I have removed the <@&${role}> role from you!`, true);
 					}
 					else {
 						menu.clicker.member.roles.add(role);
-						menu.reply.send(replacePlaceholders(client.customMessages.dropdownrolesMessages.addMessage, menu, role), true);
+						menu.reply.send(`I have added the <@&${role}> role to you!`, true);
 					}
 				}
 			});

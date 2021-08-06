@@ -10,15 +10,15 @@ class dropdownroles {
 		this.roles = [];
 		return this;
 	}
-	/**
-	 *
-	 * @param {Client} client
-	 * @param {Object} options
-	 */
-	async Messages(client, options) {
-		this.client = client;
-		client.customMessages.dropdownrolesMessages = merge(defaultManagerOptions, options);
-	}
+	// /**
+	//  *
+	//  * @param {Client} client
+	//  * @param {Object} options
+	//  */
+	// async Messages(client, options) {
+	// 	this.client = client;
+	// 	client.customMessages.dropdownrolesMessages = merge(defaultManagerOptions, options);
+	// }
 	/**
 	 *
 	 * @param {String} label - dropdown label
@@ -42,7 +42,7 @@ class dropdownroles {
  * @param {String} channelID - The channel ID that will be recieving the dropdown
  */
 	static async create({ message, content, role, channelID }) {
-		if(!message.client.customMessages || !message.client.customMessages.dropdownrolesMessages) message.client.customMessages.dropdownrolesMessages = defaultManagerOptions;
+		// if(!message.client.customMessages || !message.client.customMessages.dropdownrolesMessages) message.client.customMessages.dropdownrolesMessages = defaultManagerOptions;
 		if(!message) throw new TypeError('please provide the Discord Message');
 		if(!content) throw new Error('please provide content!');
 		if(!role) throw new Error('role not provided!');
