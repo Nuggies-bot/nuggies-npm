@@ -33,7 +33,7 @@
   "dependencies": {
     "deepmerge": "^4.2.2",
     "discord-buttons": "^4.0.0",
-    "discord.js": "^12.5.3",
+    "discord.js": "^13.0.0",
     "mongoose": "^5.12.14",
     "ms": "^2.1.2"
   },
