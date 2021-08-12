@@ -1,39 +1,38 @@
-const { MessageButton, MessageActionRow } = require('discord-buttons');
 const schema = require('./models/giveawayschema');
 const Discord = require('discord.js');
 const ms = require('ms');
 module.exports.giveawayButtons = (host, emojiid) => {
-	const reroll = new MessageButton()
+	const reroll = new Discord.MessageButton()
 		.setLabel('Reroll')
 		.setStyle('grey')
 		.setID(`giveaways-reroll-${host}`)
 		.setDisabled(true);
-	const end = new MessageButton()
+	const end = new Discord.MessageButton()
 		.setLabel('End')
 		.setStyle('red')
 		.setID(`giveaways-end-${host}`);
 
-	const enter = new MessageButton()
+	const enter = new Discord.MessageButton()
 		.setLabel('Enter')
 		.setStyle('green')
 		.setEmoji(emojiid)
 		.setID(`giveaways-enter-${host}`);
-	const b = new MessageActionRow().addComponents([end, enter, reroll]);
+	const b = new Discord.MessageActionRow().addComponents([end, enter, reroll]);
 	return b;
 };
 
 module.exports.getButtons = (host) => {
-	const reroll = new MessageButton()
+	const reroll = new Discord.MessageButton()
 		.setLabel('Reroll')
 		.setStyle('grey')
 		.setID(`giveaways-reroll-${host}`)
 		.setDisabled(true);
-	const end = new MessageButton()
+	const end = new Discord.MessageButton()
 		.setLabel('End')
 		.setStyle('red')
 		.setID(`giveaways-end-${host}`);
 
-	const enter = new MessageButton()
+	const enter = new Discord.MessageButton()
 		.setLabel('Enter')
 		.setStyle('green')
 		.setID(`giveaways-enter-${host}`);
@@ -72,7 +71,7 @@ module.exports.editButtons = async (client, data) => {
 	buttons.find(x => x.label == 'End').setDisabled().setStyle('grey');
 	buttons.find(x => x.label == 'Enter').setDisabled().setStyle('grey');
 	buttons.find(x => x.label == 'Reroll').setDisabled(false).setStyle('green');
-	const row = new MessageActionRow().addComponents(buttons);
+	const row = new Discord.MessageActionRow().addComponents(buttons);
 	m.edit('', { components: [row], embed: m.embeds[0] }).catch((e) => { console.log('e' + e); });
 };
 
@@ -107,7 +106,7 @@ module.exports.editDropButtons = async (client, button) => {
 	const m = await client.guilds.cache.get(button.guild.id).channels.cache.get(button.channel.id).messages.fetch(button.message.id);
 	const buttons = await this._dropButtons('xd');
 	buttons.setDisabled().setStyle('grey');
-	const row = new MessageActionRow().addComponents(buttons);
+	const row = new Discord.MessageActionRow().addComponents(buttons);
 	const embed = m.embeds[0];
 	embed.footer.text = `drop ended! ${button.clicker.user.tag} won!`;
 
@@ -115,16 +114,16 @@ module.exports.editDropButtons = async (client, button) => {
 };
 
 module.exports.dropButtons = async (prize) => {
-	const enter = new MessageButton()
+	const enter = new Discord.MessageButton()
 		.setLabel('Enter')
 		.setStyle('green')
 		.setID(`giveaways-drop-${prize}`);
-	const b = new MessageActionRow().addComponent(enter);
+	const b = new Discord.MessageActionRow().addComponent(enter);
 	return b;
 };
 
 module.exports._dropButtons = async () => {
-	const enter = new MessageButton()
+	const enter = new Discord.MessageButton()
 		.setLabel('Enter')
 		.setStyle('green')
 		.setID('giveaways-drop');

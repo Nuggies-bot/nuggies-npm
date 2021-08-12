@@ -2,15 +2,15 @@
 // Make sure you use `npm run test` when testing the package!
 
 require('dotenv').config();
-const Nuggies = require('./index.js');
+const Nuggies = require('./src/index.js');
 const Discord = require('discord.js');
-const bot = new Discord.Client();
-require('discord-buttons')(bot);
+const bot = new Discord.Client({ intents: 32767 });
+// require('discord-buttons')(bot);
 bot.login(process.env.token);
 
 Nuggies.handleInteractions(bot);
 Nuggies.connect(process.env.mongo);
-bot.on('message', async (message) => {
+bot.on('messageCreate', async (message) => {
 	if (message.author.bot || message.channel.type === 'dm') return;
 
 	const prefix = '...';

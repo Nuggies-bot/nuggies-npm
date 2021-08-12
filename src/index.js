@@ -1,8 +1,7 @@
 const Discord = require('discord.js');
-const v13 = require('./classes/v13/main');
-const v12 = require('./classes/v12/main');
 
 if (Discord.version.startsWith('13')) {
+	const v13 = require('./classes/v13/main');
 	module.exports = {
 		connect: v13.connect,
 		handleInteractions: v13.handleInteractions,
@@ -13,6 +12,7 @@ if (Discord.version.startsWith('13')) {
 	};
 }
 else if (Discord.version.startsWith('12')) {
+	const v12 = require('./classes/v12/main');
 	module.exports = {
 		connect: v12.connect,
 		handleInteractions: v12.handleInteractions,

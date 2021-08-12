@@ -1,5 +1,5 @@
-const { MessageButton, MessageActionRow } = require('discord-buttons');
-const { MessageEmbed, Message, Client } = require('discord.js');
+/* eslint-disable no-unused-vars */
+const { MessageEmbed, Message, Client, MessageButton, MessageActionRow } = require('discord.js');
 const merge = require('deepmerge');
 const defaultManagerOptions = {
 	addMessage: 'I have added the <@&{role}> role to you!',
@@ -77,8 +77,8 @@ class ButtonRoles {
 			row.addComponents(buttons.slice(0 + (i * 5), 5 + (i * 5)));
 		});
 		return await (content instanceof MessageEmbed
-			? message.client.channels.cache.get(channelID).send({ embed: content, components: rows })
-			: message.client.channels.cache.get(channelID).send(content, { components: rows }));
+			? message.client.channels.cache.get(channelID).send({ embeds: [content], components: rows })
+			: message.client.channels.cache.get(channelID).send({ content, components: rows }));
 	}
 
 	/**
@@ -115,7 +115,7 @@ class ButtonRoles {
 			row.addComponents(buttons.slice(0 + (i * 5), 5 + (i * 5)));
 		});
 		return await (content instanceof MessageEmbed
-			? message.edit({ embed: content, components: rows })
+			? message.edit({ embeds: [content], components: rows })
 			: message.edit({ content: content, components: rows }));
 	}
 

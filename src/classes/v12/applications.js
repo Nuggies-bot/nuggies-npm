@@ -1,6 +1,6 @@
 const { MessageMenu, MessageMenuOption } = require('discord-buttons');
 const { MessageEmbed } = require('discord.js');
-const schema = require('../models/applictionsschema');
+const schema = require('../../models/applictionsschema');
 const ms = require('ms');
 // eslint-disable-next-line no-unused-vars
 const { Document } = require('mongoose');

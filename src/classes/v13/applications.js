@@ -1,13 +1,11 @@
-const { MessageMenu, MessageMenuOption } = require('discord-buttons');
-const { MessageEmbed } = require('discord.js');
-const schema = require('../models/applictionsschema');
+const { MessageEmbed, MessageSelectMenu } = require('discord.js');
+const schema = require('../../models/applictionsschema');
 const ms = require('ms');
 // eslint-disable-next-line no-unused-vars
 const { Document } = require('mongoose');
 
-class applications {
+class Applications {
 	/**
-	 *
 	 * @param {Array} questions - Questions array
 	 * @param {String} name - the application name
 	 * @param {String} emoji - the dropdown emoji ID or unicode
@@ -81,16 +79,17 @@ class applications {
 		const data = await schema.findOne({ guildID: guildID });
 		if (!data || !data.applications[0]) return null;
 		data.applications.forEach(app => {
-			const menu = new MessageMenuOption()
-				.setLabel(app.name)
-				.setValue(app.name)
-				.setDescription(`apply for ${app.name}`);
-			if (app.emoji !== 'null') {
+			const menu = {
+				label: app.name,
+				value: app.name,
+				description: `apply for ${app.name}`,
+			};
+			if (app.emoji != 'null') {
 				menu.setEmoji(app.emoji);
 			}
 			options.push(menu);
 		});
-		const dropdown = new MessageMenu().addOptions(options).setID('app');
+		const dropdown = new MessageSelectMenu().addOptions(options).setID('app');
 		return dropdown
 			? dropdown
 			: null;
@@ -103,8 +102,8 @@ class applications {
 		// if (!data) throw new Error('NuggiesError: Data not found in database');
 		if (!data.channelID || data.channelID == 'null') throw new Error('channelID not present in the data.');
 		content instanceof MessageEmbed
-			? client.channels.cache.get(data.channelID).send({ embed: content, component: await this.getDropdownComponent({ guildID }) })
-			: client.channels.cache.get(data.channelID).send({ content, component: await this.getDropdownComponent({ guildID }) });
+			? client.channels.cache.get(data.channelID).send({ embeds: [content], components: [await this.getDropdownComponent({ guildID })] })
+			: client.channels.cache.get(data.channelID).send({ content, components: [await this.getDropdownComponent({ guildID })] });
 	}
 
 	/**
@@ -242,4 +241,4 @@ class applications {
 	}
 }
 
-module.exports = applications;
+module.exports = Applications;

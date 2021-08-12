@@ -1,11 +1,11 @@
-const { MessageActionRow, MessageMenuOption, MessageMenu } = require('discord-buttons');
-const { MessageEmbed, Client } = require('discord.js');
+/* eslint-disable no-unused-vars */
+const { MessageEmbed, Client, MessageActionRow, MessageSelectMenu } = require('discord.js');
 const defaultManagerOptions = {
 	addMessage: 'I have added the <@&{role}> role to you!',
 	removeMessage: 'I have removed the <@&{role}> role from you!',
 };
 const merge = require('deepmerge');
-class dropdownroles {
+class DropdownRoles {
 	constructor() {
 		this.roles = [];
 		return this;
@@ -51,16 +51,16 @@ class dropdownroles {
 		// Promise.resolve(role).then(console.log);
 		// console.log(role);
 		for (const buttonObject of role.roles) {
-			dropdownsOptions.push(new MessageMenuOption().setEmoji(buttonObject.emoji).setLabel(buttonObject.label).setValue(buttonObject.role).setDescription(`click this to get the ${message.guild.roles.cache.get(buttonObject.role).name} role!`.substr(0, 50)));
+			dropdownsOptions.push({ emoji: buttonObject.emoji, label: buttonObject.label, value: buttonObject.role, description: `click this to get the ${message.guild.roles.cache.get(buttonObject.role).name} role!`.substr(0, 50) });
 		}
 
-		const dropdown = new MessageMenu().setID('dr');
+		const dropdown = new MessageSelectMenu().setID('dr');
 		dropdown.options = dropdownsOptions;
 		// console.log(dropdown);
 		const row = new MessageActionRow().addComponent(dropdown);
-		content instanceof MessageEmbed ? message.client.channels.cache.get(channelID).send({ embed: content, components: [row] }) : message.client.channels.cache.get(channelID).send(content, { components: [row] });
+		content instanceof MessageEmbed ? message.client.channels.cache.get(channelID).send({ embeds: [content], components: [row] }) : message.client.channels.cache.get(channelID).send({ content, components: [row] });
 	}
 }
 
 
-module.exports = dropdownroles;
+module.exports = DropdownRoles;
