@@ -179,7 +179,7 @@ class applications {
 	 * @param {Discord.Message} message - The discord message
 	 */
 	static async setup(message) {
-		if(!message) throw new Error('NuggiesError: message not provided');
+		if (!message) throw new Error('NuggiesError: message not provided');
 		const application = {
 			guildID: message.guild.id,
 			questions: [],
@@ -225,10 +225,13 @@ class applications {
 			}
 			else if (step >= 8) {
 				if (msg.content.toLowerCase() == 'done') {
-					await this.addApplication(application);
+					await this.addApplication(application).then(async () => {
+						setTimeout(async () => await this.create({ guildID: message.guild.id, content: 'choose from the dropdown menu to apply!', client: message.client }),
+							2000);
+					});
 					message.channel.send('application added!');
 					collector.stop('DONE');
-					return this.create({ guildID: message.guild.id, content: 'choose from the dropdown menu to apply!', client: message.client });
+					return;
 				}
 				application.questions.push(msg.content);
 				message.channel.send(`What is question #${application.questions.length + 1}?`);
@@ -236,8 +239,8 @@ class applications {
 		});
 
 		collector.on('end', async (msg, reason) => {
-			if(reason == 'INVALID_CHANNEL') return message.channel.send('channel ID is invalid');
-			if(reason == 'INVALID_NUMBER') return message.channel.send('number is invalid');
+			if (reason == 'INVALID_CHANNEL') return message.channel.send('channel ID is invalid');
+			if (reason == 'INVALID_NUMBER') return message.channel.send('number is invalid');
 		});
 	}
 }
