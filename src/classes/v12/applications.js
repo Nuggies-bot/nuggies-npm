@@ -26,7 +26,7 @@ class applications {
 		if (typeof guildID !== 'string') throw new Error('NuggiesError: guildID must be a string');
 		if (!Array.isArray(questions)) throw new Error('NuggiesError: questions must be an array');
 		if (typeof name !== 'string') throw new Error('NuggiesError: name must be a string');
-		if (typeof emoji !== 'string') throw new Error('NuggiesError: emoji must be a string');
+		if (emoji && typeof emoji !== 'string') throw new Error('NuggiesError: emoji must be a string');
 		if (typeof channel !== 'string') throw new Error('NuggiesError: channel must be a string');
 		if (typeof description !== 'string') throw new Error('NuggiesError: description must be a string');
 		if (typeof label !== 'string') throw new Error('NuggiesError: label must be a string');
