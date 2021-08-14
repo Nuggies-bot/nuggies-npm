@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 mongoose.set('useFindAndModify', false);
 const applications = require('./applications');
 let win;
-const schema = require('../models/giveawayschema');
+const schema = require('../../models/giveawayschema');
 const { MessageButton, MessageComponent } = require('discord-buttons');
 const giveaways = require('./giveaways');
 const Discord = require('discord.js');
