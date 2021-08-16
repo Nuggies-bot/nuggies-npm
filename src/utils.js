@@ -2,7 +2,7 @@ const schema = require('./models/giveawayschema');
 const Discord = require('discord.js');
 const ms = require('ms');
 let buttons;
-if (Discord.version.startsWith('13')) {
+if (Discord.version.startsWith('12')) {
 	buttons = require('discord-buttons');
 }
 module.exports.giveawayButtons = (host, emojiid) => {

@@ -64,7 +64,7 @@ class ButtonRoles {
 			const button = new MessageButton()
 				.setStyle(buttonObject.color)
 				.setLabel(buttonObject.label)
-				.setID(`br:${buttonObject.role}`);
+				.setCustomId(`br:${buttonObject.role}`);
 			buttonObject.emoji
 				? button.setEmoji(buttonObject.emoji)
 				: null;
@@ -102,7 +102,7 @@ class ButtonRoles {
 			const button = new MessageButton()
 				.setStyle(buttonObject.color)
 				.setLabel(buttonObject.label)
-				.setID(`br:${buttonObject.role}`);
+				.setCustomId(`br:${buttonObject.role}`);
 			buttonObject.emoji
 				? button.setEmoji(buttonObject.emoji)
 				: null;

@@ -89,7 +89,7 @@ class Applications {
 			}
 			options.push(menu);
 		});
-		const dropdown = new MessageSelectMenu().addOptions(options).setID('app');
+		const dropdown = new MessageSelectMenu().addOptions(options).setCustomId('app');
 		return dropdown
 			? dropdown
 			: null;

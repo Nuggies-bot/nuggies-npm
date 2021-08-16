@@ -54,7 +54,7 @@ class DropdownRoles {
 			dropdownsOptions.push({ emoji: buttonObject.emoji, label: buttonObject.label, value: buttonObject.role, description: `click this to get the ${message.guild.roles.cache.get(buttonObject.role).name} role!`.substr(0, 50) });
 		}
 
-		const dropdown = new MessageSelectMenu().setID('dr');
+		const dropdown = new MessageSelectMenu().setCustomId('dr');
 		dropdown.options = dropdownsOptions;
 		// console.log(dropdown);
 		const row = new MessageActionRow().addComponent(dropdown);
