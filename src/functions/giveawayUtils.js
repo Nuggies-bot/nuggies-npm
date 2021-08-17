@@ -1,4 +1,4 @@
-const schema = require('./models/giveawayschema');
+const schema = require('../models/giveawayschema');
 const Discord = require('discord.js');
 const ms = require('ms');
 let buttons;
