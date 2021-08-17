@@ -1,5 +1,5 @@
 /* eslint-disable no-inline-comments */
-const utils = require('../../utils');
+const utils = require('../../functions/giveawayUtils');
 const schema = require('../../models/giveawayschema');
 const Discord = require('discord.js');
 const mongoose = require('mongoose');

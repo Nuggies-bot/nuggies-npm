@@ -1,5 +1,6 @@
 const { MessageButton, MessageActionRow } = require('discord-buttons');
 const { MessageEmbed, Message, Client } = require('discord.js');
+const utils = require('../../functions/utils');
 const merge = require('deepmerge');
 const defaultManagerOptions = {
 	addMessage: 'I have added the <@&{role}> role to you!',
@@ -62,7 +63,7 @@ class ButtonRoles {
 		// console.log(role);
 		for (const buttonObject of role.roles) {
 			const button = new MessageButton()
-				.setStyle(buttonObject.color)
+				.setStyle(utils.isDjsButtonStyle(buttonObject.color) ? buttonObject.color : utils.convertButtonStyle(buttonObject.color))
 				.setLabel(buttonObject.label)
 				.setID(`br:${buttonObject.role}`);
 			buttonObject.emoji

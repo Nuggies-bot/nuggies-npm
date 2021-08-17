@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 const { MessageEmbed, Message, Client, MessageButton, MessageActionRow } = require('discord.js');
 const merge = require('deepmerge');
+const utils = require('../../functions/utils');
 const defaultManagerOptions = {
 	addMessage: 'I have added the <@&{role}> role to you!',
 	removeMessage: 'I have removed the <@&{role}> role from you!',
@@ -62,7 +63,7 @@ class ButtonRoles {
 		// console.log(role);
 		for (const buttonObject of role.roles) {
 			const button = new MessageButton()
-				.setStyle(buttonObject.color)
+				.setStyle(utils.isDjsButtonStyle(buttonObject.color) ? buttonObject.color : utils.convertButtonStyle(buttonObject.color))
 				.setLabel(buttonObject.label)
 				.setCustomId(`br:${buttonObject.role}`);
 			buttonObject.emoji

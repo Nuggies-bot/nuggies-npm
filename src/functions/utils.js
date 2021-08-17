@@ -1,7 +1,7 @@
 const { version } = require('discord.js');
 const { DJS_STYLES, DISBUT_STYLES, toV13 } = require('../constants');
 
-module.exports.convertButtonStyle = async (style) => {
+module.exports.convertButtonStyle = (style) => {
 	const isv13 = version.startsWith('13');
 	if (this.isDjsButtonStyle(style) === null) throw new Error('Invalid style provided');
 	if (isv13 && this.isDjsButtonStyle(style)) return style;
