@@ -1,7 +1,10 @@
-const applications = require('./applications');
+const applications = require('../applications');
 const ms = require('ms');
 const Discord = require('discord.js');
-
+/**
+ * @param {Discord.Client} client
+ * @param {Discord.SelectMenuInteraction} menu
+ */
 module.exports = async (client, menu) => {
 	await menu.member.fetch();
 	if (menu.customId == 'app') {

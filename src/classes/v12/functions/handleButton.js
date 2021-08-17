@@ -1,7 +1,7 @@
 let win;
-const schema = require('../../models/giveawayschema');
+const schema = require('../../../models/giveawayschema');
 const { MessageButton } = require('discord-buttons');
-const giveaways = require('./giveaways');
+const giveaways = require('../giveaways');
 module.exports = async (client, button) => {
 	await button.clicker.fetch();
 	const id = button.id;
