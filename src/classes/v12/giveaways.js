@@ -34,7 +34,9 @@ class giveaways {
 	 */
 	static async Messages(client, options) {
 		this.client = client;
-		client.giveawayMessages = merge(defaultManagerOptions, options);
+		client.customMessages = {
+			giveawayMessages: merge(defaultManagerOptions, options),
+		};
 	}
 
 	static async create({
