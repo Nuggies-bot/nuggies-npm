@@ -233,7 +233,7 @@ class giveaways {
 		if (!message) throw new Error('NuggiesError: message not provided');
 
 		const m = await message.client.channels.cache.get(channel).send({ embeds: [await utils.dropEmbed(message.client, { prize: prize, host: host })], components: [await utils.dropButtons(prize)] });
-		const filter = (button) => button.member.id === message.author.id;
+		const filter = (button) => button.member.id !== host;
 		const collector = await m.createMessageInteractionCollector({ filter, time: 90000, max: 1 });
 		collector.on('collect', async (b) => {
 			b.deferReply();
