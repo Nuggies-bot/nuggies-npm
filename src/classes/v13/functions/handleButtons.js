@@ -40,7 +40,6 @@ module.exports = async (client, button) => {
 			button.message.channel.send({ content: client.customMessages.giveawayMessages.rerolledMessage.replace(/{winner}/g, `<@${win}>`), components: [new Discord.MessageActionRow().addComponents([new Discord.MessageButton().setLabel('Giveaway').setURL(`https://discord.com/channels/${button.message.guild.id}/${button.message.channel.id}/${button.message.id}`).setStyle('LINK')])] });
 		}
 		if (tag[1] === 'end') {
-			button.deferReply();
 			if (button.user.id !== tag[2]) return button.reply({ content: 'You Cannot End This Giveaway, Only The Host Can', ephemeral: true });
 			await giveaways.endByButton(client, button.message.id, button);
 		}

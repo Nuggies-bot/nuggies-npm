@@ -114,7 +114,7 @@ module.exports.editDropButtons = async (client, button) => {
 module.exports.dropButtons = async (prize) => {
 	const enter = new (buttons ? buttons : Discord).MessageButton()
 		.setLabel('Enter')
-		.setStyle('green')[buttons ? 'setID' : 'setCustomId'](`giveaways-drop-${prize}`);
+		.setStyle(buttons ? 'green' : 'SUCCESS')[buttons ? 'setID' : 'setCustomId'](`giveaways-drop-${prize}`);
 	const b = new (buttons ? buttons : Discord).MessageActionRow().addComponents([enter]);
 	return b;
 };
