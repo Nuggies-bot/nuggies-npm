@@ -29,11 +29,11 @@ module.exports.getButtons = (host) => {
 		.setDisabled(true);
 	const end = new (buttons ? buttons : Discord).MessageButton()
 		.setLabel('End')
-		.setStyle('red')[buttons ? 'setID' : 'setCustomId'](`giveaways-end-${host}`);
+		.setStyle(buttons ? 'red' : 'DANGER')[buttons ? 'setID' : 'setCustomId'](`giveaways-end-${host}`);
 
 	const enter = new (buttons ? buttons : Discord).MessageButton()
 		.setLabel('Enter')
-		.setStyle('green')[buttons ? 'setID' : 'setCustomId'](`giveaways-enter-${host}`);
+		.setStyle(buttons ? 'green' : 'SUCCESS')[buttons ? 'setID' : 'setCustomId'](`giveaways-enter-${host}`);
 	const b = [end, enter, reroll];
 	return b;
 };
@@ -69,7 +69,7 @@ module.exports.editButtons = async (client, data) => {
 	bs.find(x => x.label == 'End').setDisabled().setStyle(buttons ? 'grey' : 'SECONDARY');
 	bs.find(x => x.label == 'Enter').setDisabled().setStyle(buttons ? 'grey' : 'SECONDARY');
 	bs.find(x => x.label == 'Reroll').setDisabled(false).setStyle(buttons ? 'green' : 'SUCCESS');
-	const row = new (buttons ? buttons : Discord).MessageActionRow().addComponents(buttons);
+	const row = new (buttons ? buttons : Discord).MessageActionRow().addComponents(bs);
 	m.edit({ components: [row], embed: buttons ? m.embeds[0] : undefined, embeds: buttons ? undefined : m.embeds }).catch((e) => { console.log('e' + e); });
 };
 
