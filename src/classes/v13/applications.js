@@ -185,7 +185,7 @@ class Applications {
 		};
 		message.channel.send('What should be the name of the application?');
 		const filter = m => m.author.id === message.author.id;
-		const collector = message.channel.createMessageCollector(filter);
+		const collector = message.channel.createMessageCollector({ filter });
 		let step = 0;
 		collector.on('collect', async (msg) => {
 			if (!msg.content) return msg.reply('That is not valid option!');
