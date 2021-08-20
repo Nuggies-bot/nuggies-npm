@@ -29,11 +29,11 @@ module.exports.getButtons = (host) => {
 		.setDisabled(true);
 	const end = new (buttons ? buttons : Discord).MessageButton()
 		.setLabel('End')
-		.setStyle(buttons ? 'red' : 'DANGER')[buttons ? 'setID' : 'setCustomId'](`giveaways-end-${host}`);
+		.setStyle('red')[buttons ? 'setID' : 'setCustomId'](`giveaways-end-${host}`);
 
 	const enter = new (buttons ? buttons : Discord).MessageButton()
 		.setLabel('Enter')
-		.setStyle(buttons ? 'green' : 'SUCCESS')[buttons ? 'setID' : 'setCustomId'](`giveaways-enter-${host}`);
+		.setStyle('green')[buttons ? 'setID' : 'setCustomId'](`giveaways-enter-${host}`);
 	const b = [end, enter, reroll];
 	return b;
 };
@@ -106,7 +106,7 @@ module.exports.editDropButtons = async (client, button) => {
 	bs.setDisabled().setStyle(buttons ? 'grey' : 'SECONDARY');
 	const row = new (buttons ? buttons : Discord).MessageActionRow().addComponents([bs]);
 	const embed = m.embeds[0];
-	embed.footer.text = `drop ended! ${button.clicker.user.tag} won!`;
+	embed.footer.text = `drop ended! ${button.clicker?.user.tag || button.user.tag} won!`;
 
 	m.edit({ components: [row], embed: buttons ? embed : undefined, embeds: buttons ? undefined : [embed] }).catch((e) => { console.log('e' + e); });
 };
