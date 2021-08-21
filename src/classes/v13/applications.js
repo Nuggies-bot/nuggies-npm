@@ -1,4 +1,4 @@
-const { MessageEmbed, MessageSelectMenu } = require('discord.js');
+const { MessageEmbed, MessageSelectMenu, MessageActionRow } = require('discord.js');
 const schema = require('../../models/applictionsschema');
 const ms = require('ms');
 // eslint-disable-next-line no-unused-vars
@@ -85,7 +85,7 @@ class Applications {
 				description: `apply for ${app.name}`,
 			};
 			if (app.emoji != 'null') {
-				menu.setEmoji(app.emoji);
+				menu.emoji = app.emoji;
 			}
 			options.push(menu);
 		});
@@ -102,8 +102,8 @@ class Applications {
 		// if (!data) throw new Error('NuggiesError: Data not found in database');
 		if (!data.channelID || data.channelID == 'null') throw new Error('channelID not present in the data.');
 		content instanceof MessageEmbed
-			? client.channels.cache.get(data.channelID).send({ embeds: [content], components: [await this.getDropdownComponent({ guildID })] })
-			: client.channels.cache.get(data.channelID).send({ content, components: [await this.getDropdownComponent({ guildID })] });
+			? client.channels.cache.get(data.channelID).send({ embeds: [content], components: [new MessageActionRow().addComponents(await this.getDropdownComponent({ guildID }))] })
+			: client.channels.cache.get(data.channelID).send({ content, components: [new MessageActionRow().addComponents(await this.getDropdownComponent({ guildID }))] });
 	}
 
 	/**
