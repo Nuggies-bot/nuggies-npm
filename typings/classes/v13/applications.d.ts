@@ -9,29 +9,46 @@ declare class Applications {
      * @param {String} label - The dropdown label
      * @param {Number} maxApps - The amount of responses
      */
-    static addApplication({ guildID, questions, name, emoji, channel, description, label, maxApps, cooldown, responseChannelID }: any[]): Promise<any>;
-    static deleteApplication({ guildID, name }: {
-        guildID: any;
-        name: any;
-    }): Promise<boolean>;
+    static addApplication(options: ApplicationsAddOptions): Promise<Document>;
+    static deleteApplication(options: ApplicationsDeleteOptions): Promise<boolean>;
     static getDropdownComponent({ guildID }: {
-        guildID: any;
-    }): Promise<MessageSelectMenu>;
-    static create({ guildID, content, client }: {
-        guildID: any;
-        content: any;
-        client: any;
-    }): Promise<void>;
+        guildID: Discord.Snowflake;
+    }): Promise<Discord.MessageSelectMenu>;
+    static create(options: ApplicationsCreateOptions): Promise<void>;
     /**
      * @param {String} guildID
      * @returns {Document}
      */
-    static getDataByGuild(guildID: string): Document;
+    static getDataByGuild(guildID: Discord.Snowflake): Document;
     /**
      *
      * @param {Discord.Message} message - The discord message
      */
-    static setup(message: any): Promise<void>;
+    static setup(message: Discord.Message): Promise<void>;
 }
-import { MessageSelectMenu } from "discord.js";
+import Discord = require("discord.js");
 import { Document } from "mongoose";
+
+declare interface ApplicationsAddOptions {
+	guildID: Discord.Snowflake,
+	questions: Array<string>,
+	name: string,
+	emoji: Discord.EmojiResolvable,
+	channel: Discord.Snowflake,
+	description: string,
+	label: string,
+	maxApps: number,
+	cooldown: number,
+	responseChannelID: Discord.Snowflake,
+}
+
+declare interface ApplicationsDeleteOptions {
+	guildID: Discord.Snowflake,
+	name: string,
+}
+
+declare interface ApplicationsCreateOptions {
+	guildID: Discord.Snowflake,
+	content: string | Discord.MessageEmbed,
+	client: Discord.Client,
+}
