@@ -32,7 +32,7 @@ class giveaways {
 	 * @param {Discord.Client} client
 	 * @param {defaultManagerOptions} options
 	 */
-	static async Messages(client, options) {
+	static async Messages(client, options = {}) {
 		this.client = client;
 		client.customMessages = {
 			giveawayMessages: merge(defaultManagerOptions, options),
