@@ -59,11 +59,11 @@ module.exports = async (client, menu) => {
 		const role = menu.values[0];
 		if (menu.member.roles.cache.has(role)) {
 			menu.member.roles.remove(role);
-			menu.reply(`I have removed the <@&${role}> role from you!`, true);
+			menu.reply({ content: `I have removed the <@&${role}> role from you!`, ephemeral: true });
 		}
 		else {
 			menu.member.roles.add(role);
-			menu.reply(`I have added the <@&${role}> role to you!`, true);
+			menu.reply({ content: `I have added the <@&${role}> role to you!`, ephemeral: true });
 		}
 	}
 };
