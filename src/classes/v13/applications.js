@@ -227,7 +227,7 @@ class Applications {
 					await this.addApplication(application);
 					message.channel.send('application added!');
 					collector.stop('DONE');
-					return this.create({ guildID: message.guild.id, content: 'choose from the dropdown menu to apply!', client: message.client });
+					setTimeout(() => this.create({ guildID: message.guild.id, content: 'choose from the dropdown menu to apply!', client: message.client }), 2000);
 				}
 				application.questions.push(msg.content);
 				message.channel.send(`What is question #${application.questions.length + 1}?`);

@@ -46,7 +46,7 @@ module.exports = async (client, menu) => {
 				await newdata.save();
 				const c = await client.channels.fetch(data.responseChannel, true, false);
 				if (!c) return;
-				c.send({ embeds: [new Discord.MessageEmbed().setTitle('New response').setDescription(`Application: ${app}\nUser: ${menu.clicker.user} - \`${menu.clicker.user.id}\``).addFields(res.answers.map(x => { return { name: `Question: ${x.question}`, value: `Answer: ${x.answer}`, inline: true }; })).setColor('RANDOM').setFooter(menu.clicker.user.tag, menu.clicker.user.displayAvatarURL())] });
+				c.send({ embeds: [new Discord.MessageEmbed().setTitle('New response').setDescription(`Application: ${app}\nUser: ${menu.user} - \`${menu.user.id}\``).addFields(res.answers.map(x => { return { name: `Question: ${x.question}`, value: `Answer: ${x.answer}`, inline: true }; })).setColor('RANDOM').setFooter(menu.user.tag, menu.user.displayAvatarURL())] });
 			}
 		});
 		menu.reply({ content: `Check your DMs! Or click this link ${msg.url}`, ephemeral: true });
