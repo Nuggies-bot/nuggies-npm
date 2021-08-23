@@ -1,42 +1,39 @@
-const { MessageButton, MessageActionRow } = require('discord-buttons');
-const schema = require('./models/giveawayschema');
+const schema = require('../models/giveawayschema');
 const Discord = require('discord.js');
 const ms = require('ms');
+let buttons;
+if (Discord.version.startsWith('12')) {
+	buttons = require('discord-buttons');
+}
 module.exports.giveawayButtons = (host, emojiid) => {
-	const reroll = new MessageButton()
+	const reroll = new (buttons ? buttons : Discord).MessageButton()
 		.setLabel('Reroll')
-		.setStyle('grey')
-		.setID(`giveaways-reroll-${host}`)
+		.setStyle('grey')[buttons ? 'setID' : 'setCustomId'](`giveaways-reroll-${host}`)
 		.setDisabled(true);
-	const end = new MessageButton()
+	const end = new (buttons ? buttons : Discord).MessageButton()
 		.setLabel('End')
-		.setStyle('red')
-		.setID(`giveaways-end-${host}`);
+		.setStyle(buttons ? 'red' : 'DANGER')[buttons ? 'setID' : 'setCustomId'](`giveaways-end-${host}`);
 
-	const enter = new MessageButton()
+	const enter = new (buttons ? buttons : Discord).MessageButton()
 		.setLabel('Enter')
-		.setStyle('green')
-		.setEmoji(emojiid)
-		.setID(`giveaways-enter-${host}`);
-	const b = new MessageActionRow().addComponents([end, enter, reroll]);
+		.setStyle(buttons ? 'green' : 'SUCCESS')
+		.setEmoji(emojiid)[buttons ? 'setID' : 'setCustomId'](`giveaways-enter-${host}`);
+	const b = new (buttons ? buttons : Discord).MessageActionRow().addComponents([end, enter, reroll]);
 	return b;
 };
 
 module.exports.getButtons = (host) => {
-	const reroll = new MessageButton()
+	const reroll = new (buttons ? buttons : Discord).MessageButton()
 		.setLabel('Reroll')
-		.setStyle('grey')
-		.setID(`giveaways-reroll-${host}`)
+		.setStyle(buttons ? 'grey' : 'SECONDARY')[buttons ? 'setID' : 'setCustomId'](`giveaways-reroll-${host}`)
 		.setDisabled(true);
-	const end = new MessageButton()
+	const end = new (buttons ? buttons : Discord).MessageButton()
 		.setLabel('End')
-		.setStyle('red')
-		.setID(`giveaways-end-${host}`);
+		.setStyle('red')[buttons ? 'setID' : 'setCustomId'](`giveaways-end-${host}`);
 
-	const enter = new MessageButton()
+	const enter = new (buttons ? buttons : Discord).MessageButton()
 		.setLabel('Enter')
-		.setStyle('green')
-		.setID(`giveaways-enter-${host}`);
+		.setStyle('green')[buttons ? 'setID' : 'setCustomId'](`giveaways-enter-${host}`);
 	const b = [end, enter, reroll];
 	return b;
 };
@@ -68,16 +65,16 @@ module.exports.checkRole = (userID, roleIDs, message) => {
 
 module.exports.editButtons = async (client, data) => {
 	const m = await client.guilds.cache.get(data.guildID).channels.cache.get(data.channelID).messages.fetch(data.messageID);
-	const buttons = await this.getButtons(data.host);
-	buttons.find(x => x.label == 'End').setDisabled().setStyle('grey');
-	buttons.find(x => x.label == 'Enter').setDisabled().setStyle('grey');
-	buttons.find(x => x.label == 'Reroll').setDisabled(false).setStyle('green');
-	const row = new MessageActionRow().addComponents(buttons);
-	m.edit('', { components: [row], embed: m.embeds[0] }).catch((e) => { console.log('e' + e); });
+	const bs = await this.getButtons(data.host);
+	bs.find(x => x.label == 'End').setDisabled().setStyle(buttons ? 'grey' : 'SECONDARY');
+	bs.find(x => x.label == 'Enter').setDisabled().setStyle(buttons ? 'grey' : 'SECONDARY');
+	bs.find(x => x.label == 'Reroll').setDisabled(false).setStyle(buttons ? 'green' : 'SUCCESS');
+	const row = new (buttons ? buttons : Discord).MessageActionRow().addComponents(bs);
+	m.edit({ components: [row], embed: buttons ? m.embeds[0] : undefined, embeds: buttons ? undefined : m.embeds }).catch((e) => { console.log('e' + e); });
 };
 
 module.exports.giveawayEmbed = async (client, { host, prize, endAfter, winners, requirements }) => {
-	const hostedBy = client.users.cache.get(host) || await client.users.fetch(host).catch();
+	const hostedBy = client.users.cache.get(host) || await client.users.fetch(host).catch(() => null);
 	const req = requirements.enabled ? requirements.roles.map(x => `<@&${x}>`).join(', ') : 'None!';
 	const embed = new Discord.MessageEmbed()
 		.setTitle('Giveaway! 🎉')
@@ -105,28 +102,26 @@ module.exports.getByMessageID = async (messageID) => {
 
 module.exports.editDropButtons = async (client, button) => {
 	const m = await client.guilds.cache.get(button.guild.id).channels.cache.get(button.channel.id).messages.fetch(button.message.id);
-	const buttons = await this._dropButtons('xd');
-	buttons.setDisabled().setStyle('grey');
-	const row = new MessageActionRow().addComponents(buttons);
+	const bs = await this._dropButtons('xd');
+	bs.setDisabled().setStyle(buttons ? 'grey' : 'SECONDARY');
+	const row = new (buttons ? buttons : Discord).MessageActionRow().addComponents([bs]);
 	const embed = m.embeds[0];
-	embed.footer.text = `drop ended! ${button.clicker.user.tag} won!`;
+	embed.footer.text = `drop ended! ${button.clicker?.user.tag || button.user.tag} won!`;
 
-	m.edit('', { components: [row], embed: embed }).catch((e) => { console.log('e' + e); });
+	m.edit({ components: [row], embed: buttons ? embed : undefined, embeds: buttons ? undefined : [embed] }).catch((e) => { console.log('e' + e); });
 };
 
 module.exports.dropButtons = async (prize) => {
-	const enter = new MessageButton()
+	const enter = new (buttons ? buttons : Discord).MessageButton()
 		.setLabel('Enter')
-		.setStyle('green')
-		.setID(`giveaways-drop-${prize}`);
-	const b = new MessageActionRow().addComponent(enter);
+		.setStyle(buttons ? 'green' : 'SUCCESS')[buttons ? 'setID' : 'setCustomId'](`giveaways-drop-${prize}`);
+	const b = new (buttons ? buttons : Discord).MessageActionRow().addComponents([enter]);
 	return b;
 };
 
 module.exports._dropButtons = async () => {
-	const enter = new MessageButton()
+	const enter = new (buttons ? buttons : Discord).MessageButton()
 		.setLabel('Enter')
-		.setStyle('green')
-		.setID('giveaways-drop');
+		.setStyle('green')[buttons ? 'setID' : 'setCustomId']('giveaways-drop');
 	return enter;
 };

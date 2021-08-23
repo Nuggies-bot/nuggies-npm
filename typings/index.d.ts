@@ -1,92 +1,120 @@
-import mongoose, {
-	Document
-} from 'mongoose';
-import {
-	Client, Message, Snowflake, ColorResolvable, MessageEmbed
-} from 'discord.js';
-import {
-	MessageButton, MessageComponent
-} from 'discord-buttons';
+/// <reference types="mongoose" />
+declare const _exports: {
+    connect: typeof import("./classes/v13/main").connect;
+    handleInteractions: typeof import("./classes/v13/main").handleInteractions;
+    giveaways: typeof import("./classes/v13/giveaways");
+    buttonroles: typeof import("./classes/v13/buttonroles");
+    dropdownroles: typeof import("./classes/v13/dropdownroles");
+    applications: typeof import("./classes/v13/applications");
+} | {
+    connect: typeof import("./classes/v12/main").connect;
+    handleInteractions: typeof import("./classes/v12/main").handleInteractions;
+    giveaways: typeof import("./classes/v12/giveaways");
+    buttonroles: typeof import("./classes/v12/buttonroles");
+    dropdownroles: typeof import("./classes/v12/dropdownroles");
+    applications: typeof import("./classes/v12/applications");
+};
+export = _exports;
 
-declare class main {
-	public connect(uri: string): Promise<typeof import("mongoose")>;
-	public handleInteractions(client: Client): Promise<void>;
-}
-declare class giveaways {
 
-	Messages(client: Client, options: {
-		dmWinner: Boolean,
-		giveaway: String,
-		giveawayDescription: String,
-		endedGiveawayDescription: String,
-		giveawayFooterImage: String,
-		winMessage: String,
-		rerolledMessage: String,
-		toParticipate: String,
-		newParticipant: String,
-		alreadyParticipated: String,
-		noParticipants: String,
-		noRole: String,
-		dmMessage: String,
-		noWinner: String,
-		alreadyEnded: String,
-		dropWin: String,
-	}): Promise<void>;
-
-	create({
-		message: Message,
-		prize: String,
-		host: Snowflake,
-		winners: Number,
-		endAfter: String,
-		requirements: Array,
-		channel: Snowflake,
-	}): Promise<void>;
-
-	startTimer(message: Message, data: Document, instant: Boolean): Promise<void>;
-
-	gotoGiveaway(data: Document): MessageButton;
-
-	endByButton(client: Client, messageID: Snowflake, button: MessageComponent): Promise<void>;
-
-	end(message: Message, data: Document, giveawaymsg: Message): Promise<"ENDED" | "NO_WINNERS">;
-
-	reroll(client: Client, messageID: Snowflake): Promise<Number | Snowflake[]>;
-
-	getByMessageID(messageID: Snowflake): Promise<Document>;
-
-	startAgain(client: Client): Promise<void>;
-
-	drop({
-		message: Message,
-		channel: Snowflake,
-		prize: String,
-		host: Snowflake,
-	}): Promise<void>;
-}
-declare class buttonroles {
-
-	addrole({
-		color: ColorResolvable,
-		label: String,
-		emoji: Snowflake,
-		role: Snowflake,
-	}): Promise<void>
-
-	create({
-		message: Message,
-		content: MessageEmbed,
-		role: Snowflake,
-		channelID: Snowflake,
-	}): Promise<void>
-
-	edit({
-		message: Message,
-		content: MessageEmbed,
-		role: Snowflake,
-	}): Promise<void>
-
-	delete(message: Message): Promise<void>
+declare interface GiveawayMessageOptions {
+	dmWinner: string,
+	giveaway: string,
+	giveawayDescription: string,
+	endedGiveawayDescription: string,
+	giveawayFooterImage: string,
+	winMessage: string,
+	rerolledMessage: string,
+	toParticipate: string,
+	newParticipant: string,
+	alreadyParticipated: string,
+	noParticipants: string,
+	noRole: string,
+	dmMessage: string,
+	noWinner: string,
+	alreadyEnded: string,
+	dropWin: string,
 }
 
-export = main;
+declare interface GiveawayCreateOptions {
+	message: Discord.Message,
+	prize: string,
+	host: Discord.Snowflake,
+	winners: number,
+	endAfter: string,
+	requirements: GiveawayRequirements,
+	channel: Discord.Snowflake,
+}
+
+declare interface GiveawayRequirements {
+	roles: Array<Discord.Snowflake>,
+	enabled: boolean,
+}
+
+declare interface GiveawayDropOptions {
+	message: Discord.Message,
+	channel: Discord.Snowflake,
+	prize: string,
+	host: Discord.Snowflake,
+}
+
+declare interface ApplicationsAddOptions {
+	guildID: Discord.Snowflake,
+	questions: Array<string>,
+	name: string,
+	emoji: Discord.EmojiResolvable,
+	channel: Discord.Snowflake,
+	description: string,
+	label: string,
+	maxApps: number,
+	cooldown: number,
+	responseChannelID: Discord.Snowflake,
+}
+
+declare interface ApplicationsDeleteOptions {
+	guildID: Discord.Snowflake,
+	name: string,
+}
+
+declare interface ApplicationsCreateOptions {
+	guildID: Discord.Snowflake,
+	content: string | Discord.MessageEmbed,
+	client: Discord.Client,
+}
+
+declare interface RolesOptions {
+	label: string,
+	emoji: Discord.EmojiResolvable,
+	role: Discord.Snowflake,
+}
+
+declare interface ButtonRolesOptions extends RolesOptions {
+	color: Discord.MessageButtonStyle,
+}
+
+declare interface RolesCreateOptions {
+	message: Discord.Message,
+	content: Discord.MessageEmbed | string,
+	channelID: Discord.Snowflake,
+}
+
+declare interface ButtonRolesCreateOptions extends RolesCreateOptions {
+	role: ButtonRoles,
+}
+
+declare interface DropdownRolesCreateOptions extends RolesCreateOptions {
+	role: DropdownRoles,
+}
+
+declare interface RolesEditOptions {
+	message: Discord.Message,
+	content: Discord.MessageEmbed | string,
+}
+
+declare interface ButtonRolesEditOptions extends RolesEditOptions {
+	role: ButtonRoles,
+}
+
+declare interface DropdownRolesEditOptions extends RolesEditOptions {
+	role: DropdownRoles,
+}

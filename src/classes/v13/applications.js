@@ -1,13 +1,11 @@
-const { MessageMenu, MessageMenuOption } = require('discord-buttons');
-const { MessageEmbed } = require('discord.js');
-const schema = require('../models/applictionsschema');
+const { MessageEmbed, MessageSelectMenu, MessageActionRow } = require('discord.js');
+const schema = require('../../models/applictionsschema');
 const ms = require('ms');
 // eslint-disable-next-line no-unused-vars
 const { Document } = require('mongoose');
 
-class applications {
+class Applications {
 	/**
-	 *
 	 * @param {Array} questions - Questions array
 	 * @param {String} name - the application name
 	 * @param {String} emoji - the dropdown emoji ID or unicode
@@ -62,7 +60,7 @@ class applications {
 		data.save();
 		return data;
 	}
-	static async deleteapplication({ guildID, name }) {
+	static async deleteApplication({ guildID, name }) {
 		const data = await schema.findOne({ guildID: guildID });
 		if (!data) return false;
 		if (data) {
@@ -81,16 +79,17 @@ class applications {
 		const data = await schema.findOne({ guildID: guildID });
 		if (!data || !data.applications[0]) return null;
 		data.applications.forEach(app => {
-			const menu = new MessageMenuOption()
-				.setLabel(app.name)
-				.setValue(app.name)
-				.setDescription(`apply for ${app.name}`);
-			if (app.emoji !== 'null') {
-				menu.setEmoji(app.emoji);
+			const menu = {
+				label: app.name,
+				value: app.name,
+				description: `apply for ${app.name}`,
+			};
+			if (app.emoji != 'null') {
+				menu.emoji = app.emoji;
 			}
 			options.push(menu);
 		});
-		const dropdown = new MessageMenu().addOptions(options).setID('app');
+		const dropdown = new MessageSelectMenu().addOptions(options).setCustomId('app');
 		return dropdown
 			? dropdown
 			: null;
@@ -103,8 +102,8 @@ class applications {
 		// if (!data) throw new Error('NuggiesError: Data not found in database');
 		if (!data.channelID || data.channelID == 'null') throw new Error('channelID not present in the data.');
 		content instanceof MessageEmbed
-			? client.channels.cache.get(data.channelID).send({ embed: content, component: await this.getDropdownComponent({ guildID }) })
-			: client.channels.cache.get(data.channelID).send({ content, component: await this.getDropdownComponent({ guildID }) });
+			? client.channels.cache.get(data.channelID).send({ embeds: [content], components: [new MessageActionRow().addComponents(await this.getDropdownComponent({ guildID }))] })
+			: client.channels.cache.get(data.channelID).send({ content, components: [new MessageActionRow().addComponents(await this.getDropdownComponent({ guildID }))] });
 	}
 
 	/**
@@ -186,7 +185,7 @@ class applications {
 		};
 		message.channel.send('What should be the name of the application?');
 		const filter = m => m.author.id === message.author.id;
-		const collector = message.channel.createMessageCollector(filter);
+		const collector = message.channel.createMessageCollector({ filter });
 		let step = 0;
 		collector.on('collect', async (msg) => {
 			if (!msg.content) return msg.reply('That is not valid option!');
@@ -228,7 +227,7 @@ class applications {
 					await this.addApplication(application);
 					message.channel.send('application added!');
 					collector.stop('DONE');
-					return this.create({ guildID: message.guild.id, content: 'choose from the dropdown menu to apply!', client: message.client });
+					setTimeout(() => this.create({ guildID: message.guild.id, content: 'choose from the dropdown menu to apply!', client: message.client }), 2000);
 				}
 				application.questions.push(msg.content);
 				message.channel.send(`What is question #${application.questions.length + 1}?`);
@@ -242,4 +241,4 @@ class applications {
 	}
 }
 
-module.exports = applications;
+module.exports = Applications;

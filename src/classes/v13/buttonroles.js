@@ -1,6 +1,7 @@
-const { MessageButton, MessageActionRow } = require('discord-buttons');
-const { MessageEmbed, Message, Client } = require('discord.js');
+/* eslint-disable no-unused-vars */
+const { MessageEmbed, Message, Client, MessageButton, MessageActionRow } = require('discord.js');
 const merge = require('deepmerge');
+const utils = require('../../functions/utils');
 const defaultManagerOptions = {
 	addMessage: 'I have added the <@&{role}> role to you!',
 	removeMessage: 'I have removed the <@&{role}> role from you!',
@@ -62,9 +63,9 @@ class ButtonRoles {
 		// console.log(role);
 		for (const buttonObject of role.roles) {
 			const button = new MessageButton()
-				.setStyle(buttonObject.color)
+				.setStyle(utils.isDjsButtonStyle(buttonObject.color) ? buttonObject.color : utils.convertButtonStyle(buttonObject.color))
 				.setLabel(buttonObject.label)
-				.setID(`br:${buttonObject.role}`);
+				.setCustomId(`br:${buttonObject.role}`);
 			buttonObject.emoji
 				? button.setEmoji(buttonObject.emoji)
 				: null;
@@ -77,8 +78,8 @@ class ButtonRoles {
 			row.addComponents(buttons.slice(0 + (i * 5), 5 + (i * 5)));
 		});
 		return await (content instanceof MessageEmbed
-			? message.client.channels.cache.get(channelID).send({ embed: content, components: rows })
-			: message.client.channels.cache.get(channelID).send(content, { components: rows }));
+			? message.client.channels.cache.get(channelID).send({ embeds: [content], components: rows })
+			: message.client.channels.cache.get(channelID).send({ content, components: rows }));
 	}
 
 	/**
@@ -102,7 +103,7 @@ class ButtonRoles {
 			const button = new MessageButton()
 				.setStyle(buttonObject.color)
 				.setLabel(buttonObject.label)
-				.setID(`br:${buttonObject.role}`);
+				.setCustomId(`br:${buttonObject.role}`);
 			buttonObject.emoji
 				? button.setEmoji(buttonObject.emoji)
 				: null;
@@ -115,7 +116,7 @@ class ButtonRoles {
 			row.addComponents(buttons.slice(0 + (i * 5), 5 + (i * 5)));
 		});
 		return await (content instanceof MessageEmbed
-			? message.edit({ embed: content, components: rows })
+			? message.edit({ embeds: [content], components: rows })
 			: message.edit({ content: content, components: rows }));
 	}
 

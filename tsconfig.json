@@ -1,0 +1,11 @@
+{
+    "include": ["src"],
+    "compilerOptions": {
+      "allowJs": true,
+      // Generate d.ts files
+      "declaration": true,
+      "emitDeclarationOnly": true,
+      "outDir": "./typings"
+    },
+    "exclude": ["node_modules"]
+  }
