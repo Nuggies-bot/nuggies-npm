@@ -6,7 +6,7 @@ if (Discord.version.startsWith('12')) {
 	buttons = require('discord-buttons');
 }
 
-module.exports.getButtons = (host) => {
+module.exports.getButtons = (host, emojiid) => {
 	const reroll = new (buttons ? buttons : Discord).MessageButton()
 		.setLabel('Reroll')
 		.setStyle(buttons ? 'grey' : 'SECONDARY')[buttons ? 'setID' : 'setCustomId'](`giveaways-reroll-${host}`)
@@ -17,7 +17,8 @@ module.exports.getButtons = (host) => {
 
 	const enter = new (buttons ? buttons : Discord).MessageButton()
 		.setLabel('Enter')
-		.setStyle(buttons ? 'green' : 'SUCCESS')[buttons ? 'setID' : 'setCustomId'](`giveaways-enter-${host}`);
+		.setStyle(buttons ? 'green' : 'SUCCESS')[buttons ? 'setID' : 'setCustomId'](`giveaways-enter-${host}`)
+		.setEmoji(emojiid);
 	const b = [end, enter, reroll];
 	return b;
 };
