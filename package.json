@@ -32,7 +32,7 @@
   "homepage": "https://github.com/Nuggies-bot/nuggies-npm#readme",
   "dependencies": {
     "deepmerge": "^4.2.2",
-    "mongoose": "^5.12.14",
+    "mongoose": "^6.0.0",
     "ms": "^2.1.2"
   },
   "devDependencies": {
