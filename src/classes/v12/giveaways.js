@@ -3,6 +3,7 @@ const utils = require('../../functions/giveawayUtils');
 const schema = require('../../models/giveawayschema');
 const { MessageButton } = require('discord-buttons');
 const Discord = require('discord.js');
+const mongoose = require('mongoose');
 const ms = require('ms');
 const merge = require('deepmerge');
 const defaultManagerOptions = {
@@ -23,6 +24,7 @@ const defaultManagerOptions = {
 	alreadyEnded: 'The giveaway has already ended!', // no {winner} placeholder
 	dropWin: '{winner} Won The Drop!!', // only {winner} placeholder
 };
+mongoose.set('useFindAndModify', false);
 
 class giveaways {
 
