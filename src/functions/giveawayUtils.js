@@ -23,21 +23,6 @@ module.exports.getButtons = (host, emojiid) => {
 	return b;
 };
 
-module.exports.getButtons = (host) => {
-	const reroll = new (buttons ? buttons : Discord).MessageButton()
-		.setLabel('Reroll')
-		.setStyle(buttons ? 'grey' : 'SECONDARY')[buttons ? 'setID' : 'setCustomId'](`giveaways-reroll-${host}`)
-		.setDisabled(true);
-	const end = new (buttons ? buttons : Discord).MessageButton()
-		.setLabel('End')
-		.setStyle('red')[buttons ? 'setID' : 'setCustomId'](`giveaways-end-${host}`);
-
-	const enter = new (buttons ? buttons : Discord).MessageButton()
-		.setLabel('Enter')
-		.setStyle('green')[buttons ? 'setID' : 'setCustomId'](`giveaways-enter-${host}`);
-	const b = [end, enter, reroll];
-	return b;
-};
 module.exports.choose = async (winners, msgid) => {
 	const data = await this.getByMessageID(msgid);
 	if(winners > data.clickers.length + 1) return null;
