@@ -7,7 +7,7 @@ const ms = require('ms');
 const merge = require('deepmerge');
 const defaultManagerOptions = {
 	dmWinner: true,
-	giveaway: '🎉🎉 **GIVEAWAY MOMENT** 🎉🎉',
+	giveaway: '🎉 **GIVEAWAY** 🎉',
 	giveawayDescription: '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): `{winners}`\n\nRequirements: {requirements}',
 	endedGiveawayDescription: '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): {winners}',
 	giveawayFooterImage: 'https://cdn.discordapp.com/emojis/843076397345144863.png',
@@ -41,7 +41,8 @@ class Giveaways {
 	static async create({
 		message, prize, host, winners, endAfter, requirements, channel,
 	}) {
-		if (!message.client.customMessages.giveawayMessages) message.client.customMessages.giveawayMessages = defaultManagerOptions;
+		if (!message.client.customMessages) message.client.customMessages = defaultManagerOptions;
+
 		if (!message) throw new Error('NuggiesError: message wasnt provided while creating giveaway!');
 		if (!prize) throw new Error('NuggiesError: prize wasnt provided while creating giveaway!');
 		if (typeof prize !== 'string') throw new TypeError('NuggiesError: prize should be a string');
@@ -52,7 +53,7 @@ class Giveaways {
 		if (typeof endAfter !== 'string') throw new TypeError('NuggiesError: endAfter should be a string');
 		if (!channel) throw new Error('NuggiesError: channel wasnt provided while creating giveaway');
 		const msg = await message.guild.channels.cache.get(channel).send({
-			content: message.client.customMessages.giveawayMessages.giveaway,
+			content: message.client.customMessages.giveaway,
 			components: [new Discord.MessageActionRow().addComponents([utils.getButtons(host)])],
 			embeds: [await utils.giveawayEmbed(message.client, { host, prize, endAfter, winners, requirements })],
 		});
