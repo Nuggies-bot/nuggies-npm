@@ -1,45 +1,52 @@
 # Nuggies
 
-A utility package for Discord Bots!
-<div align="center">
+[![discordBadge](https://img.shields.io/badge/Chat-Click%20here-7289d9?style=for-the-badge&logo=discord)](https://discord.gg/X8v22CPwFN)
+[![downloadsBadge](https://img.shields.io/npm/dt/nuggies?style=for-the-badge)](https://npmjs.com/nuggies)
+[![versionBadge](https://img.shields.io/npm/v/nuggies?style=for-the-badge)](https://npmjs.com/nuggies)
+[![documentationBadge](https://img.shields.io/badge/Documentation-Click%20here-blue?style=for-the-badge)](https://nuggies.js.org)
+
+
+<div align="left">
   <p>
     <a href="https://nodei.co/npm/nuggies
 /"><img src="https://nodei.co/npm/nuggies.png?downloads=true&stars=true" alt="NPM Info" /></a>
   </p>
 </div>
 
-<div align="center">
- <p>
- For errors and questions you can join <a href="https://discord.gg/Z4ebH8PXeA">our support server</a></p>
-</div>
+An Utility Package For Discord Bots!
 
-# Installation <img src = "https://cdn.discordapp.com/emojis/763159009686585354.gif?v=1" alt="download" width=40>
-npm:
+# 📂・Installation
 ```powershell
 npm i nuggies
- ```
+```
 
-yarn:
-```powershell
-yarn add nuggies
- ```
+# 🖥️・Setup
+```js
+const Discord = require('discord.js');
+const client = new Discord.Client();
+const Nuggies = require('nuggies');
+Nuggies.connect("MONGODB_CONNECTION_URL");
+Nuggies.handleInteractions(client);
+Nuggies.giveaways.Messages(client, {}); //only for giveaways
 
-# features <img src = "https://cdn.discordapp.com/emojis/855246959185887282.png?v=1" alt="download" width=40>
-
-- Giveaways
-- Dropdown Roles
-- Button Roles
-- Applications
-
-<br>
-
-# Contacts <img src = "https://cdn.discordapp.com/emojis/837339151040643083.png?v=1" alt="download" width=40> <img src = "https://cdn.discordapp.com/emojis/837339117716897793.png?v=1" alt="download" width=40>
-
-### if you have any problems you can join our [discord server](https://discord.gg/X8v22CPwFN), documentation can be found here [here](https://nuggies.js.org) and bugs / suggestions can be submitted [here](https://github.com/Nuggies-bot/nuggies-npm/issues/new/choose)
+```
+# 💡・Features
+- [Giveaways](https://github.com/Nuggies-bot/giveaways-example)
+- [Dropdown Roles](https://github.com/Nuggies-bot/dropdown-roles-example)
+- [Button Roles](https://github.com/Nuggies-bot/buttonroles-example)
+- [Applications](https://github.com/Nuggies-bot/applications-example)
 
 <br>
 
-# License
+# 👥・Contact Us
+
+### If You Have Any Problems You Can Join Our [Discord Server](https://discord.gg/X8v22CPwFN).
+### Documentation Can Be Found [Here](https://nuggies.js.org).
+### Bugs/Suggestions Can Be Submitted [Here](https://github.com/Nuggies-bot/nuggies-npm/issues/new/choose)
+
+<br>
+
+# 👮・License
 Nuggies npm licensed under the terms of [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International](https://github.com/Nuggies-bot/nuggies-npm/blob/main/license) ("CC-BY-NC-SA-4.0"). Commercial use is not allowed under this license. This includes any kind of revenue made with or based upon the software, even donations.
 
 The CC-BY-NC-SA-4.0 allows you to:
