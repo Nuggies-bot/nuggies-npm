@@ -1,4 +1,4 @@
-const { MessageEmbed, MessageSelectMenu } = require('discord.js');
+const { MessageEmbed, MessageSelectMenu, MessageActionRow } = require('discord.js');
 const schema = require('../../models/applictionsschema');
 const ms = require('ms');
 // eslint-disable-next-line no-unused-vars
@@ -60,7 +60,7 @@ class Applications {
 		data.save();
 		return data;
 	}
-	static async deleteapplication({ guildID, name }) {
+	static async deleteApplication({ guildID, name }) {
 		const data = await schema.findOne({ guildID: guildID });
 		if (!data) return false;
 		if (data) {
@@ -85,7 +85,7 @@ class Applications {
 				description: `apply for ${app.name}`,
 			};
 			if (app.emoji != 'null') {
-				menu.setEmoji(app.emoji);
+				menu.emoji = app.emoji;
 			}
 			options.push(menu);
 		});
@@ -102,8 +102,8 @@ class Applications {
 		// if (!data) throw new Error('NuggiesError: Data not found in database');
 		if (!data.channelID || data.channelID == 'null') throw new Error('channelID not present in the data.');
 		content instanceof MessageEmbed
-			? client.channels.cache.get(data.channelID).send({ embeds: [content], components: [await this.getDropdownComponent({ guildID })] })
-			: client.channels.cache.get(data.channelID).send({ content, components: [await this.getDropdownComponent({ guildID })] });
+			? client.channels.cache.get(data.channelID).send({ embeds: [content], components: [new MessageActionRow().addComponents(await this.getDropdownComponent({ guildID }))] })
+			: client.channels.cache.get(data.channelID).send({ content, components: [new MessageActionRow().addComponents(await this.getDropdownComponent({ guildID }))] });
 	}
 
 	/**
@@ -227,7 +227,7 @@ class Applications {
 					await this.addApplication(application);
 					message.channel.send('application added!');
 					collector.stop('DONE');
-					return this.create({ guildID: message.guild.id, content: 'choose from the dropdown menu to apply!', client: message.client });
+					setTimeout(() => this.create({ guildID: message.guild.id, content: 'choose from the dropdown menu to apply!', client: message.client }), 2000);
 				}
 				application.questions.push(msg.content);
 				message.channel.send(`What is question #${application.questions.length + 1}?`);

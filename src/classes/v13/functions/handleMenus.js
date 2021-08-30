@@ -46,7 +46,7 @@ module.exports = async (client, menu) => {
 				await newdata.save();
 				const c = await client.channels.fetch(data.responseChannel, true, false);
 				if (!c) return;
-				c.send({ embeds: [new Discord.MessageEmbed().setTitle('New response').setDescription(`Application: ${app}\nUser: ${menu.clicker.user} - \`${menu.clicker.user.id}\``).addFields(res.answers.map(x => { return { name: `Question: ${x.question}`, value: `Answer: ${x.answer}`, inline: true }; })).setColor('RANDOM').setFooter(menu.clicker.user.tag, menu.clicker.user.displayAvatarURL())] });
+				c.send({ embeds: [new Discord.MessageEmbed().setTitle('New response').setDescription(`Application: ${app}\nUser: ${menu.user} - \`${menu.user.id}\``).addFields(res.answers.map(x => { return { name: `Question: ${x.question}`, value: `Answer: ${x.answer}`, inline: true }; })).setColor('RANDOM').setFooter(menu.user.tag, menu.user.displayAvatarURL())] });
 			}
 		});
 		menu.reply({ content: `Check your DMs! Or click this link ${msg.url}`, ephemeral: true });
@@ -59,11 +59,11 @@ module.exports = async (client, menu) => {
 		const role = menu.values[0];
 		if (menu.member.roles.cache.has(role)) {
 			menu.member.roles.remove(role);
-			menu.reply(`I have removed the <@&${role}> role from you!`, true);
+			menu.reply({ content: `I have removed the <@&${role}> role from you!`, ephemeral: true });
 		}
 		else {
 			menu.member.roles.add(role);
-			menu.reply(`I have added the <@&${role}> role to you!`, true);
+			menu.reply({ content: `I have added the <@&${role}> role to you!`, ephemeral: true });
 		}
 	}
 };

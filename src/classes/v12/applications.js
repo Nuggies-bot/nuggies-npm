@@ -62,7 +62,7 @@ class applications {
 		data.save();
 		return data;
 	}
-	static async deleteapplication({ guildID, name }) {
+	static async deleteApplication({ guildID, name }) {
 		const data = await schema.findOne({ guildID: guildID });
 		if (!data) return false;
 		if (data) {
