@@ -29,7 +29,7 @@
     "discord-dropdowns",
     "discord-menu"
   ],
-  "homepage": "https://github.com/Nuggies-bot/nuggies-npm#readme",
+  "homepage": "https://nuggies.js.org",
   "dependencies": {
     "deepmerge": "^4.2.2",
     "mongoose": "^5.13.8",
