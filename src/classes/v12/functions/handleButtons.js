@@ -27,7 +27,7 @@ module.exports = async (client, button) => {
 			}
 		}
 		if (tag[1] === 'reroll') {
-			if (button.clicker.user.id !== tag[2]) return button.reply.send('You Cannot End This Giveaway, Only The Host Can', { ephemeral: true });
+			if (button.clicker.user.id !== tag[2]) return button.reply.send('You Cannot Reroll This Giveaway, Only The Host Can', { ephemeral: true });
 			try {
 				button.reply.send('Rerolled!', true);
 				win = await giveaways.reroll(client, button.message.id);
