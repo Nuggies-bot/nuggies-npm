@@ -93,7 +93,7 @@ module.exports.editDropButtons = async (client, button) => {
 	bs.setDisabled().setStyle(buttons ? 'grey' : 'SECONDARY');
 	const row = new (buttons ? buttons : Discord).MessageActionRow().addComponents([bs]);
 	const embed = m.embeds[0];
-	embed.footer.text = `drop ended! ${button.clicker?.user.tag || button.user.tag} won!`;
+	embed.footer.text = `drop ended! ${button.clicker ? button.clicker.user.tag : button.user.tag} won!`;
 
 	m.edit({ components: [row], embed: buttons ? embed : undefined, embeds: buttons ? undefined : [embed] }).catch((e) => { console.log('e' + e); });
 };
