@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 const { MessageActionRow, MessageSelectMenu } = require('discord.js');
-const { client } = require('./giveaways');
 class DropdownRoles {
 	constructor() {
 		this.roles = [];

@@ -1,6 +1,4 @@
 const { MessageActionRow, MessageMenuOption, MessageMenu } = require('discord-buttons');
-const { MessageEmbed, Client } = require('discord.js');
-const { client } = require('../v13/giveaways');
 class dropdownroles { 
 	constructor() {
 		this.roles = [];
