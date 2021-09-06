@@ -1,5 +1,6 @@
 const { MessageActionRow, MessageMenuOption, MessageMenu } = require('discord-buttons');
 const { MessageEmbed, Client } = require('discord.js');
+const { client } = require('../v13/giveaways');
 class dropdownroles { 
 	constructor() {
 		this.roles = [];
@@ -36,12 +37,12 @@ class dropdownroles {
  * @param {String} role - The role ID of the role
  * @param {String} channelID - The channel ID that will be recieving the dropdown
  */
-	static async create({ content, role, channel }) {
+	static async create(client, { content, role, channelID }) {
+		if (!client) throw new TypeError('Provide the Discord Client');
 		// if(!message.client.customMessages || !message.client.customMessages.dropdownrolesMessages) message.client.customMessages.dropdownrolesMessages = defaultManagerOptions;
-		if(!message) throw new TypeError('please provide the Discord Message');
 		if(!content) throw new Error('please provide content!');
 		if(!role) throw new Error('role not provided!');
-		if(!channel) throw new Error('channel not provided!');
+		if(!channelID) throw new Error('channel ID not provided!');
 		const dropdownsOptions = [];
 		// Promise.resolve(role).then(console.log);
 		// console.log(role);
@@ -54,9 +55,9 @@ class dropdownroles {
 		// console.log(dropdown);
 		const row = new MessageActionRow().addComponent(dropdown);
 		if(typeof content === 'object') {
-			channel.send({ embed: content, components: [row] })
+			client.channels.cache.get(channelID).send({ embed: content, components: [row] })
 		} else {
-			channel.send(content, { components: [row] });
+			client.channels.cache.get(channelID).send(content, { components: [row] });
 		}
 	}
 }

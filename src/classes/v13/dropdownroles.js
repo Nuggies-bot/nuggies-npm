@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 const { MessageActionRow, MessageSelectMenu } = require('discord.js');
+const { client } = require('./giveaways');
 class DropdownRoles {
 	constructor() {
 		this.roles = [];
@@ -36,10 +37,11 @@ class DropdownRoles {
  * @param {String} role - The role ID of the role
  * @param {String} channelID - The channel ID that will be recieving the dropdown
  */
-	static async create({ content, role, channel }) {
+	static async create(client, { content, role, channelID }) {
+		if (!client) throw new TypeError('Provide the Discord Client');
 		if(!content) throw new Error('please provide content!');
 		if(!role) throw new Error('role not provided!');
-		if(!channel) throw new Error('channel not provided!');
+		if(!channelID) throw new Error('channel ID not provided!');
 		const dropdownsOptions = [];
 		
 		for (const buttonObject of role.roles) {
@@ -50,9 +52,9 @@ class DropdownRoles {
 		dropdown.options = dropdownsOptions;
 		const row = new MessageActionRow().addComponents([dropdown]);
 		if(typeof content === 'object') {
-			channel.send({ embeds: [content], components: [row] })
+			client.channels.cache.get(channelID).send({ embeds: [content], components: [row] })
 		} else {
-			channel.send(content, { components: [row] })
+			client.channels.cache.get(channelID).send(content, { components: [row] })
 		}
 	}
 }
