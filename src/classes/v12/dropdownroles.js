@@ -1,11 +1,6 @@
 const { MessageActionRow, MessageMenuOption, MessageMenu } = require('discord-buttons');
 const { MessageEmbed, Client } = require('discord.js');
-const defaultManagerOptions = {
-	addMessage: 'I have added the <@&{role}> role to you!',
-	removeMessage: 'I have removed the <@&{role}> role from you!',
-};
-const merge = require('deepmerge');
-class dropdownroles {
+class dropdownroles { 
 	constructor() {
 		this.roles = [];
 		return this;
@@ -41,12 +36,12 @@ class dropdownroles {
  * @param {String} role - The role ID of the role
  * @param {String} channelID - The channel ID that will be recieving the dropdown
  */
-	static async create({ message, content, role, channelID }) {
+	static async create({ content, role, channel }) {
 		// if(!message.client.customMessages || !message.client.customMessages.dropdownrolesMessages) message.client.customMessages.dropdownrolesMessages = defaultManagerOptions;
 		if(!message) throw new TypeError('please provide the Discord Message');
 		if(!content) throw new Error('please provide content!');
 		if(!role) throw new Error('role not provided!');
-		if(!channelID) throw new Error('channelID not provided!');
+		if(!channel) throw new Error('channel not provided!');
 		const dropdownsOptions = [];
 		// Promise.resolve(role).then(console.log);
 		// console.log(role);
@@ -58,9 +53,12 @@ class dropdownroles {
 		dropdown.options = dropdownsOptions;
 		// console.log(dropdown);
 		const row = new MessageActionRow().addComponent(dropdown);
-		content instanceof MessageEmbed ? message.client.channels.cache.get(channelID).send({ embed: content, components: [row] }) : message.client.channels.cache.get(channelID).send(content, { components: [row] });
+		if(typeof content === 'object') {
+			channel.send({ embed: content, components: [row] })
+		} else {
+			channel.send(content, { components: [row] });
+		}
 	}
 }
-
 
 module.exports = dropdownroles;

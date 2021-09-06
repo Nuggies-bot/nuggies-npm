@@ -1,11 +1,18 @@
 const applications = require('../applications');
 const ms = require('ms');
 const Discord = require('discord.js');
+const defaultDropdownRolesMessages = {
+	addMessage: 'I have added the {role} role to you!',
+	removeMessage: 'I have removed the {role} role from you!',
+};
 /**
  * @param {Discord.Client} client
  * @param {Discord.SelectMenuInteraction} menu
  */
 module.exports = async (client, menu) => {
+	if (!client.customMessages || !client.customMessages.dropdownRolesMessages) client.customMessages = {
+		dropdownRolesMessages: defaultDropdownRolesMessages
+	};
 	await menu.member.fetch();
 	if (menu.customId == 'app') {
 		const app = menu.values[0];
@@ -59,11 +66,11 @@ module.exports = async (client, menu) => {
 		const role = menu.values[0];
 		if (menu.member.roles.cache.has(role)) {
 			menu.member.roles.remove(role);
-			menu.reply({ content: `I have removed the <@&${role}> role from you!`, ephemeral: true });
+			menu.reply({ content: client.customMessages.dropdownRolesMessages.removeMessage.replace(/{role}/g, `<@&${role}>`), ephemeral: true });
 		}
 		else {
 			menu.member.roles.add(role);
-			menu.reply({ content: `I have added the <@&${role}> role to you!`, ephemeral: true });
+			menu.reply({ content: client.customMessages.dropdownRolesMessages.addMessage.replace(/{role}/g, `<@&${role}>`), ephemeral: true });
 		}
 	}
 };

@@ -1,8 +1,15 @@
 const applications = require('../applications');
 const Discord = require('discord.js');
 const ms = require('ms');
+const defaultDropdownRolesMessages = {
+	addMessage: 'I have added the {role} role to you!',
+	removeMessage: 'I have removed the {role} role from you!',
+};
 
 module.exports = async (client, menu) => {
+	if (!client.customMessages || !client.customMessages.dropdownRolesMessages) client.customMessages = {
+		dropdownRolesMessages: defaultDropdownRolesMessages
+	};
 	await menu.clicker.fetch();
 	if (menu.id == 'app') {
 		const app = menu.values[0];
@@ -56,11 +63,11 @@ module.exports = async (client, menu) => {
 		const role = menu.values[0];
 		if (menu.clicker.member.roles.cache.has(role)) {
 			menu.clicker.member.roles.remove(role);
-			menu.reply.send(`I have removed the <@&${role}> role from you!`, true);
+			menu.reply.send(client.customMessages.dropdownRolesMessages.removeMessage.replace(/{role}/g, `<@&${role}>`), true);
 		}
 		else {
 			menu.clicker.member.roles.add(role);
-			menu.reply.send(`I have added the <@&${role}> role to you!`, true);
+			menu.reply.send(client.customMessages.dropdownRolesMessages.addMessage.replace(/{role}/g, `<@&${role}>`), true);
 		}
 	}
 };
