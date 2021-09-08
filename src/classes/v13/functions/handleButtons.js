@@ -39,7 +39,7 @@ module.exports = async (client, button) => {
 		if (tag[1] === 'enter') {
 			const data = await schema.findOne({ messageID: button.message.id });
 			if (data.requirements.enabled == true) {
-				if (data.clickers.includes(button.clicker.user.id)) { return button.reply({ content: client.customMessages.giveawayMessages.alreadyParticipated, ephemeral: true }); }
+				if (data.clickers.includes(button.user.id)) { return button.reply({ content: client.customMessages.giveawayMessages.alreadyParticipated, ephemeral: true }); }
 				const roles = data.requirements.roles.map(x => button.guild.members.cache.get(button.user.id).roles.cache.get(x));
 				if (!roles[0]) {
 					const requiredRoles = button.guild.roles.cache.filter(x => data.requirements.roles.includes(x.id)).filter(x => !button.guild.members.cache.get(button.user.id).roles.cache.get(x.id)).array().map(x => `\`${x.name}\``).join(', ');
@@ -56,7 +56,7 @@ module.exports = async (client, button) => {
 			}
 		}
 		if (tag[1] === 'reroll') {
-			if (button.user.id !== tag[2]) return button.reply({ ephemeral: true, content: 'You Cannot End This Giveaway, Only The Host Can' });
+			if (button.user.id !== tag[2]) return button.reply({ ephemeral: true, content: 'You Cannot Reroll This Giveaway, Only The Host Can' });
 			try {
 				button.reply({ content: 'Rerolled!', ephemeral: true });
 				win = await giveaways.reroll(client, button.message.id);
