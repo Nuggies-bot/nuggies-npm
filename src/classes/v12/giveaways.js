@@ -40,7 +40,7 @@ class giveaways {
 	}
 
 	static async create(client, {
-		prize, host, winners, endAfter, requirements, channel,
+		prize, host, winners, endAfter, requirements, channelID,
 	}) {
 		if (!client) throw new Error('NuggiesError: client wasnt provided while creating giveaway!');
 		if (!client.customMessages || !client.customMessages.giveawayMessages) {
@@ -55,13 +55,13 @@ class giveaways {
 		if (isNaN(winners)) throw new TypeError('NuggiesError: winners should be a Number');
 		if (!endAfter) throw new Error('NuggiesError:  time wasnt provided while creating giveaway');
 		if (typeof endAfter !== 'string') throw new TypeError('NuggiesError: endAfter should be a string');
-		if (!channel) throw new Error('NuggiesError: channel wasnt provided while creating giveaway');
-		const msg = await channel.guild.channels.cache.get(channel).send(client.customMessages.giveawayMessages.giveaway, {
+		if (!channelID) throw new Error('NuggiesError: channel ID wasnt provided while creating giveaway');
+		const msg = await channel.guild.channels.cache.get(channelID).send(client.customMessages.giveawayMessages.giveaway, {
 			buttons: utils.getButtons(host), embed: await utils.giveawayEmbed(client, { host, prize, endAfter, winners, requirements }),
 		});
 		const data = await new schema({
 			messageID: msg.id,
-			channelID: channel.id,
+			channelID: channelID,
 			guildID: msg.guild.id,
 			host: host,
 			winners: winners,
@@ -226,7 +226,7 @@ class giveaways {
 			}, 10000);
 		});
 	}
-	static async drop(client, { channel, prize, host }) {
+	static async drop(client, { channelID, prize, host }) {
 		// eslint-disable-next-line no-unused-vars
 		let ended;
 		if (!client) throw new Error('NuggiesError: client not provided');
@@ -235,11 +235,11 @@ class giveaways {
 				giveawayMessages: defaultGiveawayMessages,
 			};
 		}
-		if (!channel) throw new Error('NuggiesError: channel not provided');
+		if (!channelID) throw new Error('NuggiesError: channel ID not provided');
 		if (!host) throw new Error('NuggiesError: host ID not provided');
 		if (!prize) throw new Error('NuggiesError: prize not provided');
 
-		const m = await client.channels.cache.get(channel).send({ embed: await utils.dropEmbed(client, { prize: prize, host: host }), component: await utils.dropButtons(prize) });
+		const m = await client.channels.cache.get(channelID).send({ embed: await utils.dropEmbed(client, { prize: prize, host: host }), component: await utils.dropButtons(prize) });
 		const filter = (button) => button.clicker.user.id === host;
 		const collector = await m.createButtonCollector(filter, { time: 90000, max: 1 });
 		collector.on('collect', async (b) => {

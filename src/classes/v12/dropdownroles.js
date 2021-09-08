@@ -45,7 +45,7 @@ class dropdownroles {
 		// Promise.resolve(role).then(console.log);
 		// console.log(role);
 		for (const buttonObject of role.roles) {
-			dropdownsOptions.push(new MessageMenuOption().setEmoji(buttonObject.emoji).setLabel(buttonObject.label).setValue(buttonObject.role).setDescription(`click this to get the ${message.guild.roles.cache.get(buttonObject.role).name} role!`.substr(0, 50)));
+			dropdownsOptions.push(new MessageMenuOption().setEmoji(buttonObject.emoji).setLabel(buttonObject.label).setValue(buttonObject.role).setDescription(`click this to get the ${client.channels.cache.get(channelID).guild.roles.cache.get(buttonObject.role).name} role!`.substr(0, 50)));
 		}
 
 		const dropdown = new MessageMenu().setID('dr');

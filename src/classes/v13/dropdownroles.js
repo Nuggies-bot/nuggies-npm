@@ -44,7 +44,7 @@ class DropdownRoles {
 		const dropdownsOptions = [];
 
 		for (const buttonObject of role.roles) {
-			dropdownsOptions.push({ emoji: buttonObject.emoji, label: buttonObject.label, value: buttonObject.role, description: `click this to get the ${channel.guild.roles.cache.get(buttonObject.role).name} role!`.substr(0, 50) });
+			dropdownsOptions.push({ emoji: buttonObject.emoji, label: buttonObject.label, value: buttonObject.role, description: `click this to get the ${client.channels.cache.get(channelID).guild.roles.cache.get(buttonObject.role).name} role!`.substr(0, 50) });
 		}
 
 		const dropdown = new MessageSelectMenu().setCustomId('dr');
