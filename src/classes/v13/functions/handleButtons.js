@@ -1,3 +1,4 @@
+/* eslint-disable no-inline-comments */
 const Discord = require('discord.js');
 let win;
 const schema = require('../../../models/giveawayschema');

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const { MessageButton, MessageActionRow } = require('discord-buttons');
 const { MessageEmbed, Message, Client } = require('discord.js');
 const utils = require('../../functions/utils');

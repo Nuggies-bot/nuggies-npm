@@ -1,3 +1,4 @@
+/* eslint-disable no-inline-comments */
 let win;
 const schema = require('../../../models/giveawayschema');
 const { MessageButton } = require('discord-buttons');

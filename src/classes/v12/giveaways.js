@@ -30,12 +30,12 @@ class giveaways {
 
 	/**
 	 * @param {Discord.Client} client
-	 * @param {defaultManagerOptions} options
+	 * @param {defaultGiveawayMessages} options
 	 */
 	static async Messages(client, options = {}) {
 		this.client = client;
 		client.customMessages = {
-			giveawayMessages: merge(defaultManagerOptions, options),
+			giveawayMessages: merge(defaultGiveawayMessages, options),
 		};
 	}
 
@@ -79,7 +79,7 @@ class giveaways {
 	 */
 
 	static async startTimer(message, data, instant = false) {
-		if(!message.client.customMessages.giveawayMessages) message.client.customMessages.giveawayMessages = defaultManagerOptions;
+		if(!message.client.customMessages.giveawayMessages) message.client.customMessages.giveawayMessages = defaultGiveawayMessages;
 		if (!message) throw new Error('NuggiesError: message not provided while starting timer.');
 		if (!data) throw new Error('NuggiesError: data not provided while starting timer');
 		const msg = await message.guild.channels.cache.get(data.channelID).messages.fetch(data.messageID);
@@ -133,7 +133,7 @@ class giveaways {
 		return button;
 	}
 	static async endByButton(client, messageID, button) {
-		if(!client.customMessages.giveawayMessages) client.customMessages.giveawayMessages = defaultManagerOptions;
+		if(!client.customMessages.giveawayMessages) client.customMessages.giveawayMessages = defaultGiveawayMessages;
 		if (!client) throw new Error('NuggiesError: client not provided in button end');
 		if (!messageID) throw new Error('NuggiesError: ID not provided in button end');
 		if (!button) throw new Error('NuggiesError: button not provided in button end');
@@ -144,7 +144,7 @@ class giveaways {
 	}
 
 	static async end(message, data, giveawaymsg) {
-		if(!message.client.customMessages.giveawayMessages) message.client.customMessages.giveawayMessages = defaultManagerOptions;
+		if(!message.client.customMessages.giveawayMessages) message.client.customMessages.giveawayMessages = defaultGiveawayMessages;
 		if (!message) throw new Error('NuggiesError: message wasnt provided in end');
 		if (!data) throw new Error('NuggiesError: data wasnt provided in end');
 		if (!giveawaymsg) throw new Error('NuggiesError: giveawaymsg wasnt provided in end');
@@ -185,7 +185,7 @@ class giveaways {
 		utils.editButtons(message.client, data);
 	}
 	static async reroll(client, messageID) {
-		if(!client.customMessages.giveawayMessages) client.customMessages.giveawayMessages = defaultManagerOptions;
+		if(!client.customMessages.giveawayMessages) client.customMessages.giveawayMessages = defaultGiveawayMessages;
 		if (!client) throw new Error('NuggiesError: client wasnt provided in reroll');
 		if (!messageID) throw new Error('NuggiesError: message ID was not provided in reroll');
 		const data = await utils.getByMessageID(messageID);

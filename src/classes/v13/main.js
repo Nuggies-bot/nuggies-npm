@@ -1,3 +1,4 @@
+/* eslint-disable no-inline-comments */
 /* eslint-disable no-unused-vars */
 const mongoose = require('mongoose');
 mongoose.set('useFindAndModify', false);
