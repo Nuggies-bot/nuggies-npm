@@ -1,4 +1,3 @@
-export = ButtonRoles;
 declare class ButtonRoles {
     /**
      * @param {Message} message - The Discord Message
@@ -7,7 +6,7 @@ declare class ButtonRoles {
      * @param {String} channelID - the id of the channel you want to send the message to.
      * @returns {Message} - The message sent
      */
-    static create(options: ButtonRolesCreateOptions): Discord.Message;
+    static create(client: Discord.Client, options: ButtonRolesCreateOptions): Discord.Message;
     /**
      * @param {Message} message - The Discord Message
      * @param {MessageEmbed} embed - The Discord Embed/Content
@@ -32,6 +31,7 @@ declare class ButtonRoles {
         roles: Discord.Snowflake[];
     };
 }
+
 import Discord = require("discord.js");
 
 declare interface RolesOptions {
@@ -45,7 +45,6 @@ declare interface ButtonRolesOptions extends RolesOptions {
 }
 
 declare interface RolesCreateOptions {
-	message: Discord.Message,
 	content: Discord.MessageEmbed | string,
 	channelID: Discord.Snowflake,
 }

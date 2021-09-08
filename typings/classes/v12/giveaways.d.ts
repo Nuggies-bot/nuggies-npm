@@ -1,18 +1,14 @@
-export = giveaways;
-declare class giveaways {
-	/**
-	 * @param {Discord.Client} client
-	 * @param {defaultManagerOptions} options
-	 */
-	static Messages(client: Discord.Client, options?: GiveawayMessageOptions): Promise<void>;
+export = Giveaways;
+declare class Giveaways {
+	static Messages(client: Discord.Client, options?: GiveawayMessageOptions): void;
 
-	static create(options: GiveawayCreateOptions): Promise<void>;
+	static create(client: Discord.Client, options: GiveawayCreateOptions): Promise<void>;
 
 	static startTimer(message: Discord.Message, data: mongoose.Document, instant?: boolean): Promise<void>;
 
-	static gotoGiveaway(data: mongoose.Document): MessageButton;
+	static gotoGiveaway(data: mongoose.Document): buttons.MessageComponent;
 
-	static endByButton(client: Discord.Client, messageID: Discord.Snowflake, button: Discord.ButtonInteraction): Promise<void>;
+	static endByButton(client: Discord.Client, messageID: Discord.Snowflake, button: buttons.MessageComponent): Promise<void>;
 
 	static end(message: Discord.Message, data: mongoose.Document, giveawaymsg: Discord.Message): Promise<"ENDED" | "NO_WINNERS">;
 
@@ -22,14 +18,14 @@ declare class giveaways {
 
 	static startAgain(client: Discord.Client): Promise<void>;
 
-	static drop(options: GiveawayDropOptions): Promise<void>;
+	static drop(client: Discord.Client, options: GiveawayDropOptions): Promise<void>;
 }
 import Discord = require("discord.js");
+import buttons = require("discord-buttons");
 import mongoose = require("mongoose");
-import { MessageButton } from "discord-buttons";
 
 declare interface GiveawayMessageOptions {
-	dmWinner: string,
+	dmWinner: boolean,
 	giveaway: string,
 	giveawayDescription: string,
 	endedGiveawayDescription: string,
@@ -48,13 +44,12 @@ declare interface GiveawayMessageOptions {
 }
 
 declare interface GiveawayCreateOptions {
-	message: Discord.Message,
 	prize: string,
 	host: Discord.Snowflake,
 	winners: number,
 	endAfter: string,
 	requirements: GiveawayRequirements,
-	channel: Discord.Snowflake,
+	channelID: Discord.Snowflake,
 }
 
 declare interface GiveawayRequirements {
@@ -63,8 +58,7 @@ declare interface GiveawayRequirements {
 }
 
 declare interface GiveawayDropOptions {
-	message: Discord.Message,
-	channel: Discord.Snowflake,
+	channelID: Discord.Snowflake,
 	prize: string,
 	host: Discord.Snowflake,
 }
