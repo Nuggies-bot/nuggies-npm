@@ -26,10 +26,12 @@ const defaultGiveawayMessages = {
 };
 
 module.exports = async (client, button) => {
-	if (!client.customMessages || !client.customMessages.buttonRolesMessages) client.customMessages = {
-		buttonRolesMessages: defaultButtonRolesMessages,
-		giveawayMessages: defaultGiveawayMessages
-	};
+	if (!client.customMessages || !client.customMessages.buttonRolesMessages) {
+		client.customMessages = {
+			buttonRolesMessages: defaultButtonRolesMessages,
+			giveawayMessages: defaultGiveawayMessages,
+		};
+	}
 	await button.member.fetch();
 	const id = button.customId;
 	if (id.startsWith('giveaways')) {

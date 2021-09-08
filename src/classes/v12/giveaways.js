@@ -43,9 +43,11 @@ class giveaways {
 		prize, host, winners, endAfter, requirements, channel,
 	}) {
 		if (!client) throw new Error('NuggiesError: client wasnt provided while creating giveaway!');
-		if (!client.customMessages || !client.customMessages.giveawayMessages) client.customMessages = {
-			giveawayMessages: defaultGiveawayMessages
-		};
+		if (!client.customMessages || !client.customMessages.giveawayMessages) {
+			client.customMessages = {
+				giveawayMessages: defaultGiveawayMessages,
+			};
+		}
 		if (!prize) throw new Error('NuggiesError: prize wasnt provided while creating giveaway!');
 		if (typeof prize !== 'string') throw new TypeError('NuggiesError: prize should be a string');
 		if (!host) throw new Error('NuggiesError: host wasnt provided while creating giveaway');
@@ -228,9 +230,11 @@ class giveaways {
 		// eslint-disable-next-line no-unused-vars
 		let ended;
 		if (!client) throw new Error('NuggiesError: client not provided');
-		if (!client.customMessages || !client.customMessages.giveawayMessages) client.customMessages = {
-			giveawayMessages: defaultGiveawayMessages
-		};
+		if (!client.customMessages || !client.customMessages.giveawayMessages) {
+			client.customMessages = {
+				giveawayMessages: defaultGiveawayMessages,
+			};
+		}
 		if (!channel) throw new Error('NuggiesError: channel not provided');
 		if (!host) throw new Error('NuggiesError: host ID not provided');
 		if (!prize) throw new Error('NuggiesError: prize not provided');
@@ -239,9 +243,11 @@ class giveaways {
 		const filter = (button) => button.clicker.user.id === host;
 		const collector = await m.createButtonCollector(filter, { time: 90000, max: 1 });
 		collector.on('collect', async (b) => {
-			if (!b.client.customMessages || !b.client.customMessages.giveawayMessages) b.client.customMessages = {
-				giveawayMessages: defaultGiveawayMessages
-			};
+			if (!b.client.customMessages || !b.client.customMessages.giveawayMessages) {
+				b.client.customMessages = {
+					giveawayMessages: defaultGiveawayMessages,
+				};
+			}
 			b.reply.defer();
 			ended = true;
 			b.channel.send(b.client.customMessages.giveawayMessages.dropWin.replace(/{winner}/g, `<@${b.clicker.user.id}>`));

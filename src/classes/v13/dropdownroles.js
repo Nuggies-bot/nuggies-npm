@@ -42,7 +42,7 @@ class DropdownRoles {
 		if(!role) throw new Error('role not provided!');
 		if(!channelID) throw new Error('channel ID not provided!');
 		const dropdownsOptions = [];
-		
+
 		for (const buttonObject of role.roles) {
 			dropdownsOptions.push({ emoji: buttonObject.emoji, label: buttonObject.label, value: buttonObject.role, description: `click this to get the ${channel.guild.roles.cache.get(buttonObject.role).name} role!`.substr(0, 50) });
 		}
@@ -51,9 +51,10 @@ class DropdownRoles {
 		dropdown.options = dropdownsOptions;
 		const row = new MessageActionRow().addComponents([dropdown]);
 		if(typeof content === 'object') {
-			client.channels.cache.get(channelID).send({ embeds: [content], components: [row] })
-		} else {
-			client.channels.cache.get(channelID).send(content, { components: [row] })
+			client.channels.cache.get(channelID).send({ embeds: [content], components: [row] });
+		}
+		else {
+			client.channels.cache.get(channelID).send(content, { components: [row] });
 		}
 	}
 }

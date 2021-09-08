@@ -45,7 +45,7 @@ module.exports = {
 		});
 	},
 	async Messages(client, {
-		giveawayOptions = {}, buttonRolesOptions = {}, dropdownRolesOptions = {}
+		giveawayOptions = {}, buttonRolesOptions = {}, dropdownRolesOptions = {},
 	}) {
 		if (!client) throw new TypeError('NuggiesError: You didn\'t provide a Client in Messages Function.');
 		if (typeof giveawayOptions !== 'object') throw new TypeError('NuggiesError: giveawaysOptions in Messages function is not an object.');
@@ -54,7 +54,7 @@ module.exports = {
 		client.customMessages = {
 			giveawayMessages: merge(defaultGiveawayMessages, giveawayOptions),
 			buttonRolesMessages: merge(defaultButtonRolesMessages, buttonRolesOptions),
-			dropdownRolesMessages: merge(defaultDropdownRolesMessages, dropdownRolesOptions)
+			dropdownRolesMessages: merge(defaultDropdownRolesMessages, dropdownRolesOptions),
 		};
 	},
 	async handleInteractions(client) {

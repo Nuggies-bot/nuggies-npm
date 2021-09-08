@@ -1,5 +1,5 @@
 const { MessageActionRow, MessageMenuOption, MessageMenu } = require('discord-buttons');
-class dropdownroles { 
+class dropdownroles {
 	constructor() {
 		this.roles = [];
 		return this;
@@ -53,8 +53,9 @@ class dropdownroles {
 		// console.log(dropdown);
 		const row = new MessageActionRow().addComponent(dropdown);
 		if(typeof content === 'object') {
-			client.channels.cache.get(channelID).send({ embed: content, components: [row] })
-		} else {
+			client.channels.cache.get(channelID).send({ embed: content, components: [row] });
+		}
+		else {
 			client.channels.cache.get(channelID).send(content, { components: [row] });
 		}
 	}

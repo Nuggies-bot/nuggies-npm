@@ -42,9 +42,11 @@ class Giveaways {
 		prize, host, winners, endAfter, requirements, channel,
 	}) {
 		if (!client) throw new Error('NuggiesError: client wasnt provided while creating giveaway!');
-		if (!client.customMessages || !client.customMessages.giveawayMessages) client.customMessages = {
-			giveawayMessages: defaultGiveawayMessages
-		};
+		if (!client.customMessages || !client.customMessages.giveawayMessages) {
+			client.customMessages = {
+				giveawayMessages: defaultGiveawayMessages,
+			};
+		}
 		if (!prize) throw new Error('NuggiesError: prize wasnt provided while creating giveaway!');
 		if (typeof prize !== 'string') throw new TypeError('NuggiesError: prize should be a string');
 		if (!host) throw new Error('NuggiesError: host wasnt provided while creating giveaway');
@@ -58,7 +60,7 @@ class Giveaways {
 			components: [new Discord.MessageActionRow().addComponents([utils.getButtons(host)])],
 			embeds: [await utils.giveawayEmbed(client, { host, prize, endAfter, winners, requirements })],
 		});
-		
+
 		const data = await new schema({
 			messageID: msg.id,
 			channelID: channel.id,
@@ -237,9 +239,11 @@ class Giveaways {
 		const filter = (button) => button.member.id === host;
 		const collector = await m.createMessageComponentCollector({ filter, time: 90000, max: 1 });
 		collector.on('collect', async (b) => {
-			if (!b.client.customMessages || !b.client.customMessages.giveawayMessages) b.client.customMessages = {
-				giveawayMessages: defaultGiveawayMessages
-			};
+			if (!b.client.customMessages || !b.client.customMessages.giveawayMessages) {
+				b.client.customMessages = {
+					giveawayMessages: defaultGiveawayMessages,
+				};
+			}
 			b.deferUpdate();
 			ended = true;
 			b.channel.send(b.client.customMessages.giveawayMessages.dropWin.replace(/{winner}/g, `<@${b.user.id}>`));

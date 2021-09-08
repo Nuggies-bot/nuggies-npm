@@ -10,9 +10,11 @@ const defaultDropdownRolesMessages = {
  * @param {Discord.SelectMenuInteraction} menu
  */
 module.exports = async (client, menu) => {
-	if (!client.customMessages || !client.customMessages.dropdownRolesMessages) client.customMessages = {
-		dropdownRolesMessages: defaultDropdownRolesMessages
-	};
+	if (!client.customMessages || !client.customMessages.dropdownRolesMessages) {
+		client.customMessages = {
+			dropdownRolesMessages: defaultDropdownRolesMessages,
+		};
+	}
 	await menu.member.fetch();
 	if (menu.customId == 'app') {
 		const app = menu.values[0];

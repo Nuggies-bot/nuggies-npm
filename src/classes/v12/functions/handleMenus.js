@@ -7,9 +7,11 @@ const defaultDropdownRolesMessages = {
 };
 
 module.exports = async (client, menu) => {
-	if (!client.customMessages || !client.customMessages.dropdownRolesMessages) client.customMessages = {
-		dropdownRolesMessages: defaultDropdownRolesMessages
-	};
+	if (!client.customMessages || !client.customMessages.dropdownRolesMessages) {
+		client.customMessages = {
+			dropdownRolesMessages: defaultDropdownRolesMessages,
+		};
+	}
 	await menu.clicker.fetch();
 	if (menu.id == 'app') {
 		const app = menu.values[0];
