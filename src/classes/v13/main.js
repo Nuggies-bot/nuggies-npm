@@ -47,7 +47,6 @@ module.exports = {
 	async Messages(client, {
 		giveawayOptions = {}, buttonRolesOptions = {}, dropdownRolesOptions = {},
 	}) {
-		console.log(giveawayOptions, '\n', buttonRolesOptions, '\n', dropdownRolesOptions);
 		if (!client) throw new TypeError('NuggiesError: You didn\'t provide a Client in Messages Function.');
 		if (typeof giveawayOptions !== 'object') throw new TypeError('NuggiesError: giveawaysOptions in Messages function is not an object.');
 		if (typeof buttonRolesOptions !== 'object') throw new TypeError('NuggiesError: buttonRolesOptions in Messages function is not an object.');
