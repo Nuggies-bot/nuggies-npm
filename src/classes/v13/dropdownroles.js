@@ -43,6 +43,7 @@ class DropdownRoles {
 		if (!content) throw new Error('please provide content!');
 		if (!role) throw new Error('role not provided!');
 		if (!channelID) throw new Error('channel ID not provided!');
+		if(!type) throw new Error('type was not provided')
 		const dropdownsOptions = [];
 		let roles = [];
 		for (const buttonObject of role.roles) {
