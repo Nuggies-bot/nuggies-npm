@@ -20,7 +20,7 @@ module.exports = async (client, button) => {
 			if (!data.clickers.includes(button.clicker.user.id)) {
 				data.clickers.push(button.clicker.user.id);
 				data.save();
-				return button.reply.send(client.customMessages.giveawayMessages.newParticipant, true);
+				return button.reply.send(client.customMessages.giveawayMessages.newParticipant.replace(/{winPercentage}/g, (1 / data.clickers.length) * 100).replace(/{totalParticipants}/g, data.clickers.length), true);
 			}
 			if (data.clickers.includes(button.clicker.user.id)) {
 				return button.reply.send(client.customMessages.giveawayMessages.alreadyParticipated, true);
