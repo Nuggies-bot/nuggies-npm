@@ -1,7 +1,7 @@
 /* eslint-disable no-inline-comments */
 /* eslint-disable no-unused-vars */
 // Make sure you use `npm run test` when testing the package!
-const defaultManagerOptions = {
+const defaultGiveawayMessages = {
 	dmWinner: true,
 	giveaway: '🎉🎉 **GIVEAWAY!** 🎉🎉',
 	giveawayDescription: '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): `{winners}`\n\nRequirements: {requirements}',
@@ -29,7 +29,9 @@ const bot = new Discord.Client({ intents: 32767 });
 bot.login(process.env.token);
 
 Nuggies.handleInteractions(bot);
-Nuggies.giveaways.Messages(bot, defaultManagerOptions);
+Nuggies.Messages(bot, {
+	giveawayOptions: defaultGiveawayMessages,
+});
 Nuggies.connect(process.env.mongo);
 bot.on('messageCreate', async (message) => {
 	if (message.author.bot || message.channel.type === 'dm') return;
@@ -44,8 +46,7 @@ bot.on('messageCreate', async (message) => {
 	if (!cmd) return;
 
 	if (cmd.toLowerCase() === 'test') {
-		Nuggies.giveaways.create({
-			message: message, prize: 'test', host: '833713876628406363', winners: 1, endAfter: '10s', requirements: [], channel: message.channel.id,
+		Nuggies.giveaways.create(bot, { prize: 'test', host: '833713876628406363', winners: 1, endAfter: '10s', requirements: [], channelID: message.channel.id,
 		});
 	}
 	else if (cmd.toLowerCase() == 'test') {
