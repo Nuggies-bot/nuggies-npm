@@ -56,7 +56,7 @@ class giveaways {
 		if (!endAfter) throw new Error('NuggiesError:  time wasnt provided while creating giveaway');
 		if (typeof endAfter !== 'string') throw new TypeError('NuggiesError: endAfter should be a string');
 		if (!channelID) throw new Error('NuggiesError: channel ID wasnt provided while creating giveaway');
-		const msg = await channel.guild.channels.cache.get(channelID).send(client.customMessages.giveawayMessages.giveaway, {
+		const msg = await client.channels.cache.get(channelID).send(client.customMessages.giveawayMessages.giveaway, {
 			buttons: utils.getButtons(host), embed: await utils.giveawayEmbed(client, { host, prize, endAfter, winners, requirements }),
 		});
 		const data = await new schema({
