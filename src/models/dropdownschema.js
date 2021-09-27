@@ -5,11 +5,11 @@ const schema = new mongoose.Schema({
 		type: String, required: true,
 	},
 	type: {
-		type: String, required: true, default: 'multiple'
+		type: String, required: true, default: 'multiple',
 	},
 	roles: {
-		type: Array, default: []
-	}
+		type: Array, default: [],
+	},
 });
 
 module.exports = mongoose.model('dropdownSchema', schema);
