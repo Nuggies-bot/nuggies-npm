@@ -43,24 +43,26 @@ class DropdownRoles {
 		if (!content) throw new Error('please provide content!');
 		if (!role) throw new Error('role not provided!');
 		if (!channelID) throw new Error('channel ID not provided!');
-		if(!type) throw new Error('type was not provided')
+		if(!type) throw new Error('type was not provided');
 		const dropdownsOptions = [];
-		let roles = [];
+		const roles = [];
 		for (const buttonObject of role.roles) {
 			dropdownsOptions.push({ emoji: buttonObject.emoji, label: buttonObject.label, value: buttonObject.role, description: `click this to get the ${client.channels.cache.get(channelID).guild.roles.cache.get(buttonObject.role).name} role!`.substr(0, 50) });
-			roles.push(buttonObject.role)
+			roles.push(buttonObject.role);
 		}
 
 		const dropdown = new MessageSelectMenu().setCustomId('dr');
 
 		if (type.toLowerCase() === 'multiple') {
-			if(!min || !max) throw new Error('For type MULTIPLE you need to provide min & max amount of roles that can be selected at once')
-			if(isNaN(min) || isNaN(max)) throw new Error('min/max amount should be a valid number')
-			dropdown.setMinValues(parseInt(min)).setMaxValues(parseInt(max))
-		} else if (type.toLowerCase() === 'single') {
+			if(!min || !max) throw new Error('For type MULTIPLE you need to provide min & max amount of roles that can be selected at once');
+			if(isNaN(min) || isNaN(max)) throw new Error('min/max amount should be a valid number');
+			dropdown.setMinValues(parseInt(min)).setMaxValues(parseInt(max));
+		}
+		else if (type.toLowerCase() === 'single') {
 			/* */
-		} else throw new Error('Type Provided In Dropdown Role Was Invalid. Available Types Are MULTIPLE & SINGLE!');
-		
+		}
+		else {throw new Error('Type Provided In Dropdown Role Was Invalid. Available Types Are MULTIPLE & SINGLE!');}
+
 		dropdown.options = dropdownsOptions;
 		const row = new MessageActionRow().addComponents([dropdown]);
 		if (typeof content === 'object') {
@@ -71,7 +73,7 @@ class DropdownRoles {
 		else {
 			client.channels.cache.get(channelID).send(content, { components: [row] }).then(msg => {
 				new schema({ ID: msg.id, type: type.toLowerCase(), roles: roles }).save();
-			});;
+			});
 		}
 	}
 }
