@@ -10,51 +10,29 @@ declare class applications {
      * @param {String} label - The dropdown label
      * @param {Number} maxApps - The amount of responses
      */
-    static addApplication(options: ApplicationsAddOptions): Promise<Document>;
-
-    static deleteApplication(options: ApplicationsDeleteOptions): Promise<boolean>;
-
+    static addApplication({ guildID, questions, name, emoji, channel, description, label, maxApps, cooldown, responseChannelID }: any[]): Promise<any>;
+    static deleteApplication({ guildID, name }: {
+        guildID: any;
+        name: any;
+    }): Promise<boolean>;
     static getDropdownComponent({ guildID }: {
-        guildID: Discord.Snowflake;
-    }): Promise<Discord.MessageSelectMenu>;
-
-    static create(option: ApplicationsCreateOptions): Promise<void>;
+        guildID: any;
+    }): Promise<MessageMenu>;
+    static create({ guildID, content, client }: {
+        guildID: any;
+        content: any;
+        client: any;
+    }): Promise<void>;
     /**
      * @param {String} guildID
      * @returns {Document}
      */
-
-    static getDataByGuild(guildID: Discord.Snowflake): Document;
+    static getDataByGuild(guildID: string): Document;
     /**
      *
      * @param {Discord.Message} message - The discord message
      */
-
-    static setup(message: Discord.Message): Promise<void>;
+    static setup(message: any): Promise<void>;
 }
-import Discord = require("discord.js");
+import { MessageMenu } from "discord-buttons";
 import { Document } from "mongoose";
-
-declare interface ApplicationsAddOptions {
-	guildID: Discord.Snowflake,
-	questions: Array<string>,
-	name: string,
-	emoji: Discord.EmojiResolvable,
-	channel: Discord.Snowflake,
-	description: string,
-	label: string,
-	maxApps: number,
-	cooldown: number,
-	responseChannelID: Discord.Snowflake,
-}
-
-declare interface ApplicationsDeleteOptions {
-	guildID: Discord.Snowflake,
-	name: string,
-}
-
-declare interface ApplicationsCreateOptions {
-	guildID: Discord.Snowflake,
-	content: string | Discord.MessageEmbed,
-	client: Discord.Client,
-}

@@ -1,10 +1,4 @@
 const { MessageActionRow, MessageMenuOption, MessageMenu } = require('discord-buttons');
-const { MessageEmbed, Client } = require('discord.js');
-const defaultManagerOptions = {
-	addMessage: 'I have added the <@&{role}> role to you!',
-	removeMessage: 'I have removed the <@&{role}> role from you!',
-};
-const merge = require('deepmerge');
 class dropdownroles {
 	constructor() {
 		this.roles = [];
@@ -41,26 +35,39 @@ class dropdownroles {
  * @param {String} role - The role ID of the role
  * @param {String} channelID - The channel ID that will be recieving the dropdown
  */
-	static async create({ message, content, role, channelID }) {
-		// if(!message.client.customMessages || !message.client.customMessages.dropdownrolesMessages) message.client.customMessages.dropdownrolesMessages = defaultManagerOptions;
-		if(!message) throw new TypeError('please provide the Discord Message');
+	static async create(client, { content, role, channelID, type, min, max }) {
+		if (!client) throw new TypeError('Provide the Discord Client');
 		if(!content) throw new Error('please provide content!');
 		if(!role) throw new Error('role not provided!');
-		if(!channelID) throw new Error('channelID not provided!');
+		if(!channelID) throw new Error('channel ID not provided!');
+		if(!type) throw new Error('type was not provided')
 		const dropdownsOptions = [];
+		let roles = [];
 		// Promise.resolve(role).then(console.log);
 		// console.log(role);
 		for (const buttonObject of role.roles) {
-			dropdownsOptions.push(new MessageMenuOption().setEmoji(buttonObject.emoji).setLabel(buttonObject.label).setValue(buttonObject.role).setDescription(`click this to get the ${message.guild.roles.cache.get(buttonObject.role).name} role!`.substr(0, 50)));
+			dropdownsOptions.push(new MessageMenuOption().setEmoji(buttonObject.emoji).setLabel(buttonObject.label).setValue(buttonObject.role).setDescription(`click this to get the ${client.channels.cache.get(channelID).guild.roles.cache.get(buttonObject.role).name} role!`.substr(0, 50)));
+			roles.push(buttonObject.role)
 		}
 
-		const dropdown = new MessageMenu().setID('dr');
+		if (type.toLowerCase() === 'multiple') {
+			if(!min || !max) throw new Error('For type MULTIPLE you need to provide min & max amount of roles that can be selected at once')
+			if(isNaN(min) || isNaN(max)) throw new Error('min/max amount should be a valid number')
+			dropdown.setMinValues(parseInt(min)).setMaxValues(parseInt(max))
+		} else if (type.toLowerCase() === 'single') {
+			/* */
+		} else throw new Error('Type Provided In Dropdown Role Was Invalid. Available Types Are MULTIPLE & SINGLE!');
+		
 		dropdown.options = dropdownsOptions;
 		// console.log(dropdown);
 		const row = new MessageActionRow().addComponent(dropdown);
-		content instanceof MessageEmbed ? message.client.channels.cache.get(channelID).send({ embed: content, components: [row] }) : message.client.channels.cache.get(channelID).send(content, { components: [row] });
+		if(typeof content === 'object') {
+			client.channels.cache.get(channelID).send({ embed: content, components: [row] });
+		}
+		else {
+			client.channels.cache.get(channelID).send(content, { components: [row] });
+		}
 	}
 }
-
 
 module.exports = dropdownroles;

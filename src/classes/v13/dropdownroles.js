@@ -1,10 +1,7 @@
 /* eslint-disable no-unused-vars */
-const { MessageEmbed, Client, MessageActionRow, MessageSelectMenu } = require('discord.js');
-const defaultManagerOptions = {
-	addMessage: 'I have added the <@&{role}> role to you!',
-	removeMessage: 'I have removed the <@&{role}> role from you!',
-};
-const merge = require('deepmerge');
+const { MessageActionRow, MessageSelectMenu } = require('discord.js');
+const schema = require('../../models/dropdownschema');
+
 class DropdownRoles {
 	constructor() {
 		this.roles = [];
@@ -41,24 +38,41 @@ class DropdownRoles {
  * @param {String} role - The role ID of the role
  * @param {String} channelID - The channel ID that will be recieving the dropdown
  */
-	static async create({ message, content, role, channelID }) {
-		// if(!message.client.customMessages || !message.client.customMessages.dropdownrolesMessages) message.client.customMessages.dropdownrolesMessages = defaultManagerOptions;
-		if(!message) throw new TypeError('please provide the Discord Message');
-		if(!content) throw new Error('please provide content!');
-		if(!role) throw new Error('role not provided!');
-		if(!channelID) throw new Error('channelID not provided!');
+	static async create(client, { content, role, channelID, type, min, max }) {
+		if (!client) throw new TypeError('Provide the Discord Client');
+		if (!content) throw new Error('please provide content!');
+		if (!role) throw new Error('role not provided!');
+		if (!channelID) throw new Error('channel ID not provided!');
+		if(!type) throw new Error('type was not provided')
 		const dropdownsOptions = [];
-		// Promise.resolve(role).then(console.log);
-		// console.log(role);
+		let roles = [];
 		for (const buttonObject of role.roles) {
-			dropdownsOptions.push({ emoji: buttonObject.emoji, label: buttonObject.label, value: buttonObject.role, description: `click this to get the ${message.guild.roles.cache.get(buttonObject.role).name} role!`.substr(0, 50) });
+			dropdownsOptions.push({ emoji: buttonObject.emoji, label: buttonObject.label, value: buttonObject.role, description: `click this to get the ${client.channels.cache.get(channelID).guild.roles.cache.get(buttonObject.role).name} role!`.substr(0, 50) });
+			roles.push(buttonObject.role)
 		}
 
 		const dropdown = new MessageSelectMenu().setCustomId('dr');
+
+		if (type.toLowerCase() === 'multiple') {
+			if(!min || !max) throw new Error('For type MULTIPLE you need to provide min & max amount of roles that can be selected at once')
+			if(isNaN(min) || isNaN(max)) throw new Error('min/max amount should be a valid number')
+			dropdown.setMinValues(parseInt(min)).setMaxValues(parseInt(max))
+		} else if (type.toLowerCase() === 'single') {
+			/* */
+		} else throw new Error('Type Provided In Dropdown Role Was Invalid. Available Types Are MULTIPLE & SINGLE!');
+		
 		dropdown.options = dropdownsOptions;
-		// console.log(dropdown);
 		const row = new MessageActionRow().addComponents([dropdown]);
-		content instanceof MessageEmbed ? message.client.channels.cache.get(channelID).send({ embeds: [content], components: [row] }) : message.client.channels.cache.get(channelID).send({ content, components: [row] });
+		if (typeof content === 'object') {
+			client.channels.cache.get(channelID).send({ embeds: [content], components: [row] }).then(msg => {
+				new schema({ ID: msg.id, type: type.toLowerCase(), roles: roles }).save();
+			});
+		}
+		else {
+			client.channels.cache.get(channelID).send(content, { components: [row] }).then(msg => {
+				new schema({ ID: msg.id, type: type.toLowerCase(), roles: roles }).save();
+			});;
+		}
 	}
 }
 

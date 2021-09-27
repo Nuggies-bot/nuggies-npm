@@ -1,8 +1,38 @@
+/* eslint-disable no-inline-comments */
 const Discord = require('discord.js');
 let win;
 const schema = require('../../../models/giveawayschema');
 const giveaways = require('../giveaways');
+const defaultButtonRolesMessages = {
+	addMessage: 'I have added the {role} role to you!',
+	removeMessage: 'I have removed the {role} role from you!',
+};
+const defaultGiveawayMessages = {
+	dmWinner: true,
+	giveaway: '🎉🎉 **GIVEAWAY MOMENT** 🎉🎉',
+	giveawayDescription: '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): `{winners}`\n\nRequirements: {requirements}',
+	endedGiveawayDescription: '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): {winners}',
+	giveawayFooterImage: 'https://cdn.discordapp.com/emojis/843076397345144863.png',
+	winMessage: '{winners} you won {prize} Congratulations! Hosted by {hostedBy}',
+	rerolledMessage: 'Rerolled! {winner} is the new winner of the giveaway!', // only {winner} placeholder
+	toParticipate: '**Click the Enter button to enter the giveaway!**',
+	newParticipant: 'You have successfully entered for this giveaway', // no placeholders | ephemeral
+	alreadyParticipated: 'you already entered this giveaway!', // no placeholders | ephemeral
+	noParticipants: 'There are not enough people in the giveaway!', // no placeholders
+	noRole: 'You do not have the required role(s)\n{requiredRoles}\n for the giveaway!', // only {requiredRoles} | ephemeral
+	dmMessage: 'You have won a giveaway in **{guildName}**!\nPrize: [{prize}]({giveawayURL})',
+	noWinner: 'Not enough people participated in this giveaway.', // no {winner} placerholder
+	alreadyEnded: 'The giveaway has already ended!', // no {winner} placeholder
+	dropWin: '{winner} Won The Drop!!', // only {winner} placeholder
+};
+
 module.exports = async (client, button) => {
+	if (!client.customMessages || !client.customMessages.buttonRolesMessages) {
+		client.customMessages = {
+			buttonRolesMessages: defaultButtonRolesMessages,
+			giveawayMessages: defaultGiveawayMessages,
+		};
+	}
 	await button.member.fetch();
 	const id = button.customId;
 	if (id.startsWith('giveaways')) {
@@ -52,11 +82,11 @@ module.exports = async (client, button) => {
 		const role = id.split(':')[1];
 		if (button.member.roles.cache.has(role)) {
 			button.member.roles.remove(role);
-			button.reply({ content: `I have removed the <@&${role}> role from you!`, ephemeral: true });
+			button.reply({ content: client.customMessages.buttonRolesMessages.removeMessage.replace(/{role}/g, `<@&${role}>`), ephemeral: true });
 		}
 		else {
 			button.member.roles.add(role);
-			button.reply({ content: `I have added the <@&${role}> role to you!`, ephemeral: true });
+			button.reply({ content: client.customMessages.buttonRolesMessages.addMessage.replace(/{role}/g, `<@&${role}>`), ephemeral: true });
 		}
 	}
 };

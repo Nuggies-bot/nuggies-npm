@@ -1,8 +1,17 @@
 const applications = require('../applications');
 const Discord = require('discord.js');
 const ms = require('ms');
+const defaultDropdownRolesMessages = {
+	addMessage: 'I have added the {role} role to you!',
+	removeMessage: 'I have removed the {role} role from you!',
+};
 
 module.exports = async (client, menu) => {
+	if (!client.customMessages || !client.customMessages.dropdownRolesMessages) {
+		client.customMessages = {
+			dropdownRolesMessages: defaultDropdownRolesMessages,
+		};
+	}
 	await menu.clicker.fetch();
 	if (menu.id == 'app') {
 		const app = menu.values[0];
@@ -49,18 +58,39 @@ module.exports = async (client, menu) => {
 		menu.reply.send({ content: `Check your DMs! Or click this link ${msg.url}`, ephemeral: true });
 	}
 	if (menu.id == 'dr') {
+		const doc = await schema.findOne({ ID: menu.message.id });
+		if (!doc) return
+
 		let member;
-		const fetchMem = await menu.guild.members.fetch(menu.clicker.member.id, false);
-		if (fetchMem) member = menu.guild.members.cache.get(menu.clicker.member.id);
+		const fetchMem = await menu.guild.members.fetch(menu.member.id, false);
+		if (fetchMem) member = menu.guild.members.cache.get(menu.member.id);
 		await member.fetch(true);
-		const role = menu.values[0];
-		if (menu.clicker.member.roles.cache.has(role)) {
-			menu.clicker.member.roles.remove(role);
-			menu.reply.send(`I have removed the <@&${role}> role from you!`, true);
-		}
-		else {
-			menu.clicker.member.roles.add(role);
-			menu.reply.send(`I have added the <@&${role}> role to you!`, true);
+		if (doc.type === 'multiple') {
+			let msg = '';
+			for (let i = 0; i < menu.values.length; i++) {
+				const role = menu.values[i];
+				if (menu.member.roles.cache.has(role)) {
+					menu.member.roles.remove(role);
+					msg += client.customMessages.dropdownRolesMessages.removeMessage.replace(/{role}/g, `<@&${role}>`) + '\n'
+				}
+				else {
+					menu.member.roles.add(role);
+					msg += client.customMessages.dropdownRolesMessages.addMessage.replace(/{role}/g, `<@&${role}>`) + '\n'
+				}
+			}
+			menu.reply({ content: msg, ephemeral: true })
+		} else if (doc.type === 'single') {
+			for (let i = 0; i < doc.roles.length; i++) {
+				if (menu.member.roles.cache.has(doc.roles[i])) menu.member.roles.remove(doc.roles[i]);
+			}
+			if (menu.member.roles.cache.has(menu.values[0])) {
+				menu.member.roles.remove(menu.values[0]);
+				menu.reply({ content: client.customMessages.dropdownRolesMessages.removeMessage.replace(/{role}/g, `<@&${menu.values[0]}>`), ephemeral: true });
+			}
+			else {
+				menu.member.roles.add(menu.values[0]);
+				menu.reply.send({ content: client.customMessages.dropdownRolesMessages.addMessage.replace(/{role}/g, `<@&${menu.values[0]}>`), ephemeral: true });
+			}
 		}
 	}
 };

@@ -1,12 +1,8 @@
 export = Giveaways;
 declare class Giveaways {
-	/**
-	 * @param {Discord.Client} client
-	 * @param {defaultManagerOptions} options
-	 */
 	static Messages(client: Discord.Client, options?: GiveawayMessageOptions): void;
 
-	static create(options: GiveawayCreateOptions): Promise<void>;
+	static create(client: Discord.Client, options: GiveawayCreateOptions): Promise<void>;
 
 	static startTimer(message: Discord.Message, data: mongoose.Document, instant?: boolean): Promise<void>;
 
@@ -22,13 +18,13 @@ declare class Giveaways {
 
 	static startAgain(client: Discord.Client): Promise<void>;
 
-	static drop(options: GiveawayDropOptions): Promise<void>;
+	static drop(client: Discord.Client, options: GiveawayDropOptions): Promise<void>;
 }
 import Discord = require("discord.js");
 import mongoose = require("mongoose");
 
 declare interface GiveawayMessageOptions {
-	dmWinner: string,
+	dmWinner: boolean,
 	giveaway: string,
 	giveawayDescription: string,
 	endedGiveawayDescription: string,
@@ -47,13 +43,12 @@ declare interface GiveawayMessageOptions {
 }
 
 declare interface GiveawayCreateOptions {
-	message: Discord.Message,
 	prize: string,
 	host: Discord.Snowflake,
 	winners: number,
 	endAfter: string,
 	requirements: GiveawayRequirements,
-	channel: Discord.Snowflake,
+	channelID: Discord.Snowflake,
 }
 
 declare interface GiveawayRequirements {
@@ -62,8 +57,7 @@ declare interface GiveawayRequirements {
 }
 
 declare interface GiveawayDropOptions {
-	message: Discord.Message,
-	channel: Discord.Snowflake,
+	channelID: Discord.Snowflake,
 	prize: string,
 	host: Discord.Snowflake,
 }
