@@ -1,7 +1,5 @@
 const { MessageButton } = require('discord-buttons');
 const schema = require('../models/ticketsschema');
-const mongoose = require('mongoose');
-mongoose.set('useFindAndModify', false);
 class tickets {
 	/**
 	 * @param {String} message - The Discord Message

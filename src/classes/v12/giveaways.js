@@ -8,21 +8,21 @@ const ms = require('ms');
 const merge = require('deepmerge');
 const defaultGiveawayMessages = {
 	dmWinner: true,
-	giveaway: '🎉🎉 **GIVEAWAY MOMENT** 🎉🎉',
+	giveaway: '🎉🎉 **GIVEAWAY!** 🎉🎉',
 	giveawayDescription: '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): `{winners}`\n\nRequirements: {requirements}',
 	endedGiveawayDescription : '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): {winners}',
 	giveawayFooterImage: 'https://cdn.discordapp.com/emojis/843076397345144863.png',
-	winMessage: '{winners} you won {prize} Congratulations! Hosted by {hostedBy}',
+	winMessage: 'congrats {winners}! you won `{prize}`!! Total `{totalParticipants}` members participated and your winning percentage was `{winPercentage}%`',
 	rerolledMessage: 'Rerolled! {winner} is the new winner of the giveaway!', // only {winner} placeholder
 	toParticipate: '**Click the Enter button to enter the giveaway!**',
-	newParticipant: 'You have successfully entered for this giveaway', // no placeholders | ephemeral
+	newParticipant: 'You have successfully entered for this giveaway! your win percentage is `{winPercentage}%` among `{totalParticipants}` other participants', // no placeholders | ephemeral
 	alreadyParticipated: 'you already entered this giveaway!', // no placeholders | ephemeral
 	noParticipants: 'There are not enough people in the giveaway!', // no placeholders
 	noRole: 'You do not have the required role(s)\n{requiredRoles}\n for the giveaway!', // only {requiredRoles} | ephemeral
 	dmMessage: 'You have won a giveaway in **{guildName}**!\nPrize: [{prize}]({giveawayURL})',
 	noWinner: 'Not enough people participated in this giveaway.', // no {winner} placerholder
 	alreadyEnded: 'The giveaway has already ended!', // no {winner} placeholder
-	dropWin: '{winner} Won The Drop!!', // only {winner} placeholder
+	dropWin: '{winner} Won The Drop!!',
 };
 mongoose.set('useFindAndModify', false);
 
@@ -101,7 +101,7 @@ class giveaways {
 				utils.editButtons(message.client, data);
 				return 'NO_WINNERS';
 			}
-			message.channel.send(replacePlaceholders(message.client.customMessages.giveawayMessages.winMessage, data, msg, winners));
+			message.channel.send(replacePlaceholders(message.client.customMessages.giveawayMessages.winMessage, await this.getByMessageID(data.messageID), msg, winners));
 
 
 			if (message.client.customMessages.giveawayMessages.dmWinner) {
@@ -148,25 +148,26 @@ class giveaways {
 		if (!message) throw new Error('NuggiesError: message wasnt provided in end');
 		if (!data) throw new Error('NuggiesError: data wasnt provided in end');
 		if (!giveawaymsg) throw new Error('NuggiesError: giveawaymsg wasnt provided in end');
-		if ((await this.getByMessageID(data.messageID)).ended) return 'ENDED';
+		const newData = await this.getByMessageID(data.messageID);
+		if (newData.ended) return 'ENDED';
 		const winners = await utils.choose(data.winners, message.id);
 		const msg = await message.client.guilds.cache.get(data.guildID).channels.cache.get(data.channelID).messages.fetch(data.messageID);
 
 		if (!winners) {
-			message.channel.send(replacePlaceholders(message.client.customMessages.giveawayMessages.noWinner, data, msg));
+			message.channel.send(replacePlaceholders(message.client.customMessages.giveawayMessages.noWinner, newData, msg));
 			data.ended = true;
 			data.save();
 			const embed = giveawaymsg.embeds[0];
-			embed.description = replacePlaceholders(message.client.customMessages.giveawayMessages.endedGiveawayDescription, data, msg);
+			embed.description = replacePlaceholders(message.client.customMessages.giveawayMessages.endedGiveawayDescription, newData, msg);
 			giveawaymsg.edit('', { embed: embed }).catch((err) => console.log(err));
 			utils.editButtons(message.client, data);
 			return 'NO_WINNERS';
 		}
-		message.channel.send(replacePlaceholders(message.client.customMessages.giveawayMessages.winMessage, data, msg, winners));
+		message.channel.send(replacePlaceholders(message.client.customMessages.giveawayMessages.winMessage, newData, msg, winners));
 		if (message.client.customMessages.giveawayMessages.dmWinner) {
 			const dmEmbed = new Discord.MessageEmbed()
 				.setTitle('You Won!')
-				.setDescription(replacePlaceholders(message.client.customMessages.giveawayMessages.dmMessage, data, msg, winners))
+				.setDescription(replacePlaceholders(message.client.customMessages.giveawayMessages.dmMessage, newData, msg, winners))
 				.setColor('RANDOM')
 				.setThumbnail(msg.guild.iconURL({ dynamic: true }))
 				.setFooter('GG!');
@@ -176,7 +177,7 @@ class giveaways {
 		}
 
 		const embed = giveawaymsg.embeds[0];
-		embed.description = replacePlaceholders(message.client.customMessages.giveawayMessages.endedGiveawayDescription, data, msg, winners);
+		embed.description = replacePlaceholders(message.client.customMessages.giveawayMessages.endedGiveawayDescription, newData, msg, winners);
 		giveawaymsg.edit('', { embed: embed }).catch((err) => console.log(err));
 		data.ended = true;
 		data.save().catch((err) => {
@@ -257,7 +258,7 @@ class giveaways {
 	}
 }
 function replacePlaceholders(string, data, msg, winners = []) {
-	const newString = string.replace(/{guildName}/g, msg.guild.name).replace(/{prize}/g, data.prize).replace(/{joins}/g, data.clickers.length).replace(/{giveawayURL}/g, `https://discord.com/channels/${msg.guild.id}/${msg.channel.id}/${data.messageID}`).replace(/{hostedBy}/g, msg.guild.members.cache.get(data.host).toString()).replace(/{winners}/g, winners.length > 0 ? winners.map(winner => `<@${winner}>`).join(', ') : 'none' || 'none');
+	const newString = string.replace(/{guildName}/g, msg.guild.name).replace(/{totalParticipants}g/, data.clickers.length).replace(/{prize}/g, data.prize).replace(/{winPercentage}/g, (winners.length / data.clickers.length) * 100).replace(/{giveawayURL}/g, `https://discord.com/channels/${msg.guild.id}/${msg.channel.id}/${data.messageID}`).replace(/{hostedBy}/g, msg.guild.members.cache.get(data.host).toString()).replace(/{winners}/g, winners.length > 0 ? winners.map(winner => `<@${winner}>`).join(', ') : 'none' || 'none');
 	return newString;
 }
 module.exports = giveaways;
