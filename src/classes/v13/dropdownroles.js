@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 const { MessageActionRow, MessageSelectMenu } = require('discord.js');
-const schema = require('../../models/dropdownschema');
 
 class DropdownRoles {
 	constructor() {
