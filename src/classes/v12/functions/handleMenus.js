@@ -59,7 +59,7 @@ module.exports = async (client, menu) => {
 	}
 	if (menu.id == 'dr') {
 		const doc = await schema.findOne({ ID: menu.message.id });
-		if (!doc) return
+		if (!doc) return;
 
 		let member;
 		const fetchMem = await menu.guild.members.fetch(menu.member.id, false);
@@ -71,15 +71,16 @@ module.exports = async (client, menu) => {
 				const role = menu.values[i];
 				if (menu.member.roles.cache.has(role)) {
 					menu.member.roles.remove(role);
-					msg += client.customMessages.dropdownRolesMessages.removeMessage.replace(/{role}/g, `<@&${role}>`) + '\n'
+					msg += client.customMessages.dropdownRolesMessages.removeMessage.replace(/{role}/g, `<@&${role}>`) + '\n';
 				}
 				else {
 					menu.member.roles.add(role);
-					msg += client.customMessages.dropdownRolesMessages.addMessage.replace(/{role}/g, `<@&${role}>`) + '\n'
+					msg += client.customMessages.dropdownRolesMessages.addMessage.replace(/{role}/g, `<@&${role}>`) + '\n';
 				}
 			}
-			menu.reply({ content: msg, ephemeral: true })
-		} else if (doc.type === 'single') {
+			menu.reply({ content: msg, ephemeral: true });
+		}
+		else if (doc.type === 'single') {
 			for (let i = 0; i < doc.roles.length; i++) {
 				if (menu.member.roles.cache.has(doc.roles[i])) menu.member.roles.remove(doc.roles[i]);
 			}
