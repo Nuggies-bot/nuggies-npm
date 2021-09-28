@@ -5,6 +5,7 @@ if (Discord.version.startsWith('13')) {
 	module.exports = {
 		connect: v13.connect,
 		handleInteractions: v13.handleInteractions,
+		Messages: v13.Messages,
 		giveaways: require('./classes/v13/giveaways'),
 		buttonroles: require('./classes/v13/buttonroles'),
 		dropdownroles: require('./classes/v13/dropdownroles'),
@@ -16,6 +17,7 @@ else if (Discord.version.startsWith('12')) {
 	module.exports = {
 		connect: v12.connect,
 		handleInteractions: v12.handleInteractions,
+		Messages: v12.Messages,
 		giveaways: require('./classes/v12/giveaways'),
 		buttonroles: require('./classes/v12/buttonroles'),
 		dropdownroles: require('./classes/v12/dropdownroles'),

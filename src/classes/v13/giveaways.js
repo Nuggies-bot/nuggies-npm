@@ -4,45 +4,19 @@ const schema = require('../../models/giveawayschema');
 const Discord = require('discord.js');
 const mongoose = require('mongoose');
 const ms = require('ms');
-const merge = require('deepmerge');
-const defaultManagerOptions = {
-	dmWinner: true,
-	giveaway: '🎉🎉 **GIVEAWAY!** 🎉🎉',
-	giveawayDescription: '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): `{winners}`\n\nRequirements: {requirements}',
-	endedGiveawayDescription : '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): {winners}',
-	giveawayFooterImage: 'https://cdn.discordapp.com/emojis/843076397345144863.png',
-	winMessage: 'congrats {winners}! you won `{prize}`!! Total `{totalParticipants}` members participated and your winning percentage was `{winPercentage}%`',
-	rerolledMessage: 'Rerolled! {winner} is the new winner of the giveaway!', // only {winner} placeholder
-	toParticipate: '**Click the Enter button to enter the giveaway!**',
-	newParticipant: 'You have successfully entered for this giveaway! your win percentage is `{winPercentage}%` among `{totalParticipants}` other participants', // no placeholders | ephemeral
-	alreadyParticipated: 'you already entered this giveaway!', // no placeholders | ephemeral
-	noParticipants: 'There are not enough people in the giveaway!', // no placeholders
-	noRole: 'You do not have the required role(s)\n{requiredRoles}\n for the giveaway!', // only {requiredRoles} | ephemeral
-	dmMessage: 'You have won a giveaway in **{guildName}**!\nPrize: [{prize}]({giveawayURL})',
-	noWinner: 'Not enough people participated in this giveaway.', // no {winner} placerholder
-	alreadyEnded: 'The giveaway has already ended!', // no {winner} placeholder
-	dropWin: '{winner} Won The Drop!!',
-};
 mongoose.set('useFindAndModify', false);
 
 class Giveaways {
 
 	/**
 	 * @param {Discord.Client} client
-	 * @param {defaultManagerOptions} options
+	 * @param {defaultGiveawayMessages} options
 	 */
-	static Messages(client, options = {}) {
-		this.client = client;
-		client.customMessages = {
-			giveawayMessages: merge(defaultManagerOptions, options),
-		};
-	}
 
-	static async create({
-		message, prize, host, winners, endAfter, requirements, channel,
+	static async create(client, {
+		prize, host, winners, endAfter, requirements, channelID,
 	}) {
-		if (!message.client.customMessages.giveawayMessages) message.client.customMessages.giveawayMessages = defaultManagerOptions;
-		if (!message) throw new Error('NuggiesError: message wasnt provided while creating giveaway!');
+		if (!client) throw new Error('NuggiesError: client wasnt provided while creating giveaway!');
 		if (!prize) throw new Error('NuggiesError: prize wasnt provided while creating giveaway!');
 		if (typeof prize !== 'string') throw new TypeError('NuggiesError: prize should be a string');
 		if (!host) throw new Error('NuggiesError: host wasnt provided while creating giveaway');
@@ -50,15 +24,16 @@ class Giveaways {
 		if (isNaN(winners)) throw new TypeError('NuggiesError: winners should be a Number');
 		if (!endAfter) throw new Error('NuggiesError:  time wasnt provided while creating giveaway');
 		if (typeof endAfter !== 'string') throw new TypeError('NuggiesError: endAfter should be a string');
-		if (!channel) throw new Error('NuggiesError: channel wasnt provided while creating giveaway');
-		const msg = await message.guild.channels.cache.get(channel).send({
-			content: message.client.customMessages.giveawayMessages.giveaway,
+		if (!channelID) throw new Error('NuggiesError: channel ID wasnt provided while creating giveaway');
+		const msg = await client.channels.cache.get(channelID).send({
+			content: client.customMessages.giveawayMessages.giveaway,
 			components: [new Discord.MessageActionRow().addComponents([utils.getButtons(host)])],
-			embeds: [await utils.giveawayEmbed(message.client, { host, prize, endAfter, winners, requirements })],
+			embeds: [await utils.giveawayEmbed(client, { host, prize, endAfter, winners, requirements })],
 		});
+
 		const data = await new schema({
 			messageID: msg.id,
-			channelID: channel,
+			channelID: channelID,
 			guildID: msg.guild.id,
 			host: host,
 			winners: winners,
@@ -76,7 +51,6 @@ class Giveaways {
 	 */
 
 	static async startTimer(message, data, instant = false) {
-		if (!message.client.customMessages.giveawayMessages) message.client.customMessages.giveawayMessages = defaultManagerOptions;
 		if (!message) throw new Error('NuggiesError: message not provided while starting timer.');
 		if (!data) throw new Error('NuggiesError: data not provided while starting timer');
 		const msg = await message.guild.channels.cache.get(data.channelID).messages.fetch(data.messageID);
@@ -130,7 +104,6 @@ class Giveaways {
 		return button;
 	}
 	static async endByButton(client, messageID, button) {
-		if (!client.customMessages.giveawayMessages) client.customMessages.giveawayMessages = defaultManagerOptions;
 		if (!client) throw new Error('NuggiesError: client not provided in button end');
 		if (!messageID) throw new Error('NuggiesError: ID not provided in button end');
 		if (!button) throw new Error('NuggiesError: button not provided in button end');
@@ -141,7 +114,6 @@ class Giveaways {
 	}
 
 	static async end(message, data, giveawaymsg) {
-		if (!message.client.customMessages.giveawayMessages) message.client.customMessages.giveawayMessages = defaultManagerOptions;
 		if (!message) throw new Error('NuggiesError: message wasnt provided in end');
 		if (!data) throw new Error('NuggiesError: data wasnt provided in end');
 		if (!giveawaymsg) throw new Error('NuggiesError: giveawaymsg wasnt provided in end');
@@ -183,7 +155,6 @@ class Giveaways {
 		utils.editButtons(message.client, data);
 	}
 	static async reroll(client, messageID) {
-		if (!client.customMessages.giveawayMessages) client.customMessages.giveawayMessages = defaultManagerOptions;
 		if (!client) throw new Error('NuggiesError: client wasnt provided in reroll');
 		if (!messageID) throw new Error('NuggiesError: message ID was not provided in reroll');
 		const data = await utils.getByMessageID(messageID);
@@ -224,22 +195,20 @@ class Giveaways {
 			}, 10000);
 		});
 	}
-	static async drop({ message, channel, prize, host }) {
+	static async drop(client, { channelID, prize, host }) {
 		// eslint-disable-next-line no-unused-vars
 		let ended;
-		if (!message.client.customMessages.giveawayMessages) message.client.customMessages.giveawayMessages = defaultManagerOptions;
-		if (!channel) throw new Error('NuggiesError: channel ID not provided');
-		if (!host) throw new Error('NuggiesError: host not provided');
+		if (!client) throw new Error('NuggiesError: client not provided');
+		if (!channelID) throw new Error('NuggiesError: channel ID not provided');
+		if (!host) throw new Error('NuggiesError: host id not provided');
 		if (!prize) throw new Error('NuggiesError: prize not provided');
-		if (!message) throw new Error('NuggiesError: message not provided');
-
-		const m = await message.client.channels.cache.get(channel).send({ embeds: [await utils.dropEmbed(message.client, { prize: prize, host: host })], components: [await utils.dropButtons(prize)] });
-		const filter = (button) => button.member.id === message.author.id;
+		const m = await client.channels.cache.get(channelID).send({ embeds: [await utils.dropEmbed(client, { prize: prize, host: host })], components: [await utils.dropButtons(prize)] });
+		const filter = (button) => button.member.id === host;
 		const collector = await m.createMessageComponentCollector({ filter, time: 90000, max: 1 });
 		collector.on('collect', async (b) => {
 			b.deferUpdate();
 			ended = true;
-			b.channel.send(message.client.customMessages.giveawayMessages.dropWin.replace(/{winner}/g, `<@${b.user.id}>`));
+			b.channel.send(b.client.customMessages.giveawayMessages.dropWin.replace(/{winner}/g, `<@${b.user.id}>`));
 			await utils.editDropButtons(m.client, b);
 			return collector.stop('end');
 		});

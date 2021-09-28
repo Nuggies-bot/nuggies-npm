@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const { MessageButton, MessageActionRow } = require('discord-buttons');
 const { MessageEmbed, Message, Client } = require('discord.js');
 const utils = require('../../functions/utils');
@@ -47,9 +48,8 @@ class ButtonRoles {
 	 * @param {String} channelID - the id of the channel you want to send the message to.
 	 * @returns {Message} - The message sent
 	 */
-	static async create({ message, content, role, channelID }) {
-		if (!message) throw new TypeError('Provide the Discord Message');
-		if (!(message instanceof Message)) throw Error('Provide a valid message');
+	static async create(client, { content, role, channelID }) {
+		if (!client) throw new TypeError('Provide the Discord Client');
 		if (!content) throw new Error('Provide content!');
 		if (!(content instanceof MessageEmbed) || !typeof content == 'string') throw Error('Provide valid content');
 		if (!role) throw new Error('Role not provided!');
@@ -78,8 +78,8 @@ class ButtonRoles {
 			row.addComponents(buttons.slice(0 + (i * 5), 5 + (i * 5)));
 		});
 		return await (content instanceof MessageEmbed
-			? message.client.channels.cache.get(channelID).send({ embed: content, components: rows })
-			: message.client.channels.cache.get(channelID).send(content, { components: rows }));
+			? client.channels.cache.get(channelID).send({ embed: content, components: rows })
+			: client.channels.cache.get(channelID).send(content, { components: rows }));
 	}
 
 	/**
