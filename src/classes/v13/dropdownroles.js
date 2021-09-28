@@ -58,19 +58,19 @@ class DropdownRoles {
 			if(isNaN(min) || isNaN(max)) throw new Error('min/max amount should be a valid number');
 			dropdown.setMinValues(parseInt(min)).setMaxValues(parseInt(max));
 		}
-		else {throw new Error('Type Provided In Dropdown Role Was Invalid. Available Types Are MULTIPLE & SINGLE!');}
+		else if (!['single', 'multiple'].includes(type.toLowerCase())) {
+			throw new Error('Provide a valid dropdown type');
+		}
+
+		dropdown.customId += '-' + type.toLowerCase();
 
 		dropdown.options = dropdownsOptions;
 		const row = new MessageActionRow().addComponents([dropdown]);
 		if (typeof content === 'object') {
-			client.channels.cache.get(channelID).send({ embeds: [content], components: [row] }).then(msg => {
-				new schema({ ID: msg.id, type: type.toLowerCase(), roles: roles }).save();
-			});
+			client.channels.cache.get(channelID).send({ embeds: [content], components: [row] });
 		}
 		else {
-			client.channels.cache.get(channelID).send(content, { components: [row] }).then(msg => {
-				new schema({ ID: msg.id, type: type.toLowerCase(), roles: roles }).save();
-			});
+			client.channels.cache.get(channelID).send({ content, components: [row] });
 		}
 	}
 }
