@@ -58,9 +58,6 @@ class DropdownRoles {
 			if(isNaN(min) || isNaN(max)) throw new Error('min/max amount should be a valid number');
 			dropdown.setMinValues(parseInt(min)).setMaxValues(parseInt(max));
 		}
-		else if (type.toLowerCase() === 'single') {
-			/* */
-		}
 		else {throw new Error('Type Provided In Dropdown Role Was Invalid. Available Types Are MULTIPLE & SINGLE!');}
 
 		dropdown.options = dropdownsOptions;

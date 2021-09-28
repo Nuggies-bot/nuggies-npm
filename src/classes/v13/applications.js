@@ -184,7 +184,7 @@ class Applications {
 			questions: [],
 		};
 		message.channel.send('What should be the name of the application?');
-		const filter = m => m.author.id === message.author.id;
+		const filter = m => m.author.id === (message.author?.id || message.user?.id);
 		const collector = message.channel.createMessageCollector({ filter });
 		let step = 0;
 		collector.on('collect', async (msg) => {
@@ -227,7 +227,7 @@ class Applications {
 					await this.addApplication(application);
 					message.channel.send('application added!');
 					collector.stop('DONE');
-					setTimeout(() => this.create({ guildID: message.guild.id, content: 'choose from the dropdown menu to apply!', client: message.client }), 2000);
+					return setTimeout(() => this.create({ guildID: message.guild.id, content: 'choose from the dropdown menu to apply!', client: message.client }), 2000);
 				}
 				application.questions.push(msg.content);
 				message.channel.send(`What is question #${application.questions.length + 1}?`);
