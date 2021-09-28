@@ -31,6 +31,8 @@ Nuggies.giveaways.Messages(client, {}); //only for giveaways
 
 ```
 # 💡・Features
+- Full slash command support!
+- Customizability at your fingertips!
 - [Giveaways](https://github.com/Nuggies-bot/giveaways-example)
 - [Dropdown Roles](https://github.com/Nuggies-bot/dropdown-roles-example)
 - [Button Roles](https://github.com/Nuggies-bot/buttonroles-example)
