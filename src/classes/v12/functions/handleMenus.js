@@ -57,39 +57,34 @@ module.exports = async (client, menu) => {
 		});
 		menu.reply.send({ content: `Check your DMs! Or click this link ${msg.url}`, ephemeral: true });
 	}
-	if (menu.id == 'dr') {
-		const doc = await schema.findOne({ ID: menu.message.id });
-		if (!doc) return;
-
+	if (menu.id.startsWith('dr')) {
+		const type = menu.id.split('-')[1];
 		let member;
-		const fetchMem = await menu.guild.members.fetch(menu.member.id, false);
-		if (fetchMem) member = menu.guild.members.cache.get(menu.member.id);
+		const fetchMem = await menu.guild.members.fetch(menu.clicker.id, false);
+		if (fetchMem) member = menu.guild.members.cache.get(menu.clicker.id);
 		await member.fetch(true);
-		if (doc.type === 'multiple') {
+		if (type === 'multiple') {
 			let msg = '';
-			for (let i = 0; i < menu.values.length; i++) {
+			for(let i = 0; i < menu.values.length; i++) {
 				const role = menu.values[i];
-				if (menu.member.roles.cache.has(role)) {
-					menu.member.roles.remove(role);
+				if (menu.clicker.member.roles.cache.has(role)) {
+					menu.clicker.member.roles.remove(role);
 					msg += client.customMessages.dropdownRolesMessages.removeMessage.replace(/{role}/g, `<@&${role}>`) + '\n';
 				}
 				else {
-					menu.member.roles.add(role);
+					menu.clicker.member.roles.add(role);
 					msg += client.customMessages.dropdownRolesMessages.addMessage.replace(/{role}/g, `<@&${role}>`) + '\n';
 				}
 			}
-			menu.reply({ content: msg, ephemeral: true });
+			menu.reply.send({ content: msg, ephemeral: true });
 		}
-		else if (doc.type === 'single') {
-			for (let i = 0; i < doc.roles.length; i++) {
-				if (menu.member.roles.cache.has(doc.roles[i])) menu.member.roles.remove(doc.roles[i]);
-			}
-			if (menu.member.roles.cache.has(menu.values[0])) {
-				menu.member.roles.remove(menu.values[0]);
-				menu.reply({ content: client.customMessages.dropdownRolesMessages.removeMessage.replace(/{role}/g, `<@&${menu.values[0]}>`), ephemeral: true });
+		else if (type === 'single') {
+			if (menu.clicker.member.roles.cache.has(menu.values[0])) {
+				menu.clicker.member.roles.remove(menu.values[0]);
+				menu.reply.send({ content: client.customMessages.dropdownRolesMessages.removeMessage.replace(/{role}/g, `<@&${menu.values[0]}>`), ephemeral: true });
 			}
 			else {
-				menu.member.roles.add(menu.values[0]);
+				menu.clicker.member.roles.add(menu.values[0]);
 				menu.reply.send({ content: client.customMessages.dropdownRolesMessages.addMessage.replace(/{role}/g, `<@&${menu.values[0]}>`), ephemeral: true });
 			}
 		}

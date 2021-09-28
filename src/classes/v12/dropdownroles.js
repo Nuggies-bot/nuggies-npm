@@ -49,22 +49,22 @@ class dropdownroles {
 			dropdownsOptions.push(new MessageMenuOption().setEmoji(buttonObject.emoji).setLabel(buttonObject.label).setValue(buttonObject.role).setDescription(`click this to get the ${client.channels.cache.get(channelID).guild.roles.cache.get(buttonObject.role).name} role!`.substr(0, 50)));
 			roles.push(buttonObject.role);
 		}
-		const dropdown = new MessageMenu().setID('dr');
+		const dropdown = new MessageMenu();
 
 		if (type.toLowerCase() === 'multiple') {
 			if(!min || !max) throw new Error('For type MULTIPLE you need to provide min & max amount of roles that can be selected at once');
 			if(isNaN(min) || isNaN(max)) throw new Error('min/max amount should be a valid number');
 			dropdown.setMinValues(parseInt(min)).setMaxValues(parseInt(max));
 		}
-		else if (type.toLowerCase() === 'single') {
-			/* */
+		else if (!['single', 'multiple'].includes(type.toLowerCase())) {
+			throw new Error('Provide a valid dropdown type');
 		}
-		else {throw new Error('Type Provided In Dropdown Role Was Invalid. Available Types Are MULTIPLE & SINGLE!');}
+
+		dropdown.id = 'dr-' + type.toLowerCase();
 
 		dropdown.options = dropdownsOptions;
-		// console.log(dropdown);
-		const row = new MessageActionRow().addComponent(dropdown);
-		if(typeof content === 'object') {
+		const row = new MessageActionRow().addComponents([dropdown]);
+		if (typeof content === 'object') {
 			client.channels.cache.get(channelID).send({ embed: content, components: [row] });
 		}
 		else {
