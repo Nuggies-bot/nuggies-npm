@@ -63,15 +63,14 @@ class Applications {
 	static async deleteApplication({ guildID, name }) {
 		const data = await schema.findOne({ guildID: guildID });
 		if (!data) return false;
-		if (data) {
-			// eslint-disable-next-line no-shadow
-			const index = await data.applications.findIndex((array) => {
-				return array.name === name;
-			});
-			data.applications.splice(index, 1);
-			data.save();
-			return true;
-		}
+		if (!data.applications.includes(name)) return false;
+		// eslint-disable-next-line no-shadow
+		const index = await data.applications.findIndex((array) => {
+			return array.name === name;
+		});
+		data.applications.splice(index, 1);
+		data.save();
+		return true;
 	}
 	static async getDropdownComponent({ guildID }) {
 		if (!guildID) throw new Error('NuggiesError: GuildID not provided');
@@ -178,7 +177,7 @@ class Applications {
 	 * @param {Discord.Message} message - The discord message
 	 */
 	static async setup(message) {
-		if(!message) throw new Error('NuggiesError: message not provided');
+		if (!message) throw new Error('NuggiesError: message not provided');
 		const application = {
 			guildID: message.guild.id,
 			questions: [],
@@ -235,8 +234,8 @@ class Applications {
 		});
 
 		collector.on('end', async (msg, reason) => {
-			if(reason == 'INVALID_CHANNEL') return message.channel.send('channel ID is invalid');
-			if(reason == 'INVALID_NUMBER') return message.channel.send('number is invalid');
+			if (reason == 'INVALID_CHANNEL') return message.channel.send('channel ID is invalid');
+			if (reason == 'INVALID_NUMBER') return message.channel.send('number is invalid');
 		});
 	}
 }
