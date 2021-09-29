@@ -65,7 +65,7 @@ module.exports.giveawayEmbed = async (client, { host, prize, endAfter, winners, 
 	const req = requirements.enabled ? requirements.roles.map(x => `<@&${x}>`).join(', ') : 'None!';
 	const embed = new Discord.MessageEmbed()
 		.setTitle('Giveaway! 🎉')
-		.setDescription(`${client.customMessages.giveawayMessages.toParticipate}\n${(client.customMessages.giveawayMessages.giveawayDescription).replace(/{requirements}/g, req).replace(/{hostedBy}/g, hostedBy).replace(/{prize}/g, prize).replace(/{winners}/g, winners)}`)
+		.setDescription(`${client.customMessages.giveawayMessages.toParticipate}\n${(client.customMessages.giveawayMessages.giveawayDescription).replace(/{requirements}/g, req).replace(/{hostedBy}/g, hostedBy).replace(/{prize}/g, prize).replace(/{winners}/g, winners).replace(/{totalParticipants}/g, '0')}`)
 		.setColor('RANDOM')
 		.setFooter('Ends', client.customMessages.giveawayMessages.giveawayFooterImage)
 		.setTimestamp(Date.now() + ms(endAfter));

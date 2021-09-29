@@ -10,7 +10,7 @@ const defaultGiveawayMessages = {
 	dmWinner: true,
 	giveaway: '🎉🎉 **GIVEAWAY!** 🎉🎉',
 	giveawayDescription: '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): `{winners}`\n\nRequirements: {requirements}',
-	endedGiveawayDescription : '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): {winners}',
+	endedGiveawayDescription: '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): {winners}',
 	giveawayFooterImage: 'https://cdn.discordapp.com/emojis/843076397345144863.png',
 	winMessage: 'congrats {winners}! you won `{prize}`!! Total `{totalParticipants}` members participated and your winning percentage was `{winPercentage}%`',
 	rerolledMessage: 'Rerolled! {winner} is the new winner of the giveaway!', // only {winner} placeholder
@@ -79,7 +79,7 @@ class giveaways {
 	 */
 
 	static async startTimer(message, data, instant = false) {
-		if(!message.client.customMessages.giveawayMessages) message.client.customMessages.giveawayMessages = defaultGiveawayMessages;
+		if (!message.client.customMessages.giveawayMessages) message.client.customMessages.giveawayMessages = defaultGiveawayMessages;
 		if (!message) throw new Error('NuggiesError: message not provided while starting timer.');
 		if (!data) throw new Error('NuggiesError: data not provided while starting timer');
 		const msg = await message.guild.channels.cache.get(data.channelID).messages.fetch(data.messageID);
@@ -133,7 +133,7 @@ class giveaways {
 		return button;
 	}
 	static async endByButton(client, messageID, button) {
-		if(!client.customMessages.giveawayMessages) client.customMessages.giveawayMessages = defaultGiveawayMessages;
+		if (!client.customMessages.giveawayMessages) client.customMessages.giveawayMessages = defaultGiveawayMessages;
 		if (!client) throw new Error('NuggiesError: client not provided in button end');
 		if (!messageID) throw new Error('NuggiesError: ID not provided in button end');
 		if (!button) throw new Error('NuggiesError: button not provided in button end');
@@ -144,7 +144,7 @@ class giveaways {
 	}
 
 	static async end(message, data, giveawaymsg) {
-		if(!message.client.customMessages.giveawayMessages) message.client.customMessages.giveawayMessages = defaultGiveawayMessages;
+		if (!message.client.customMessages.giveawayMessages) message.client.customMessages.giveawayMessages = defaultGiveawayMessages;
 		if (!message) throw new Error('NuggiesError: message wasnt provided in end');
 		if (!data) throw new Error('NuggiesError: data wasnt provided in end');
 		if (!giveawaymsg) throw new Error('NuggiesError: giveawaymsg wasnt provided in end');
@@ -186,7 +186,7 @@ class giveaways {
 		utils.editButtons(message.client, data);
 	}
 	static async reroll(client, messageID) {
-		if(!client.customMessages.giveawayMessages) client.customMessages.giveawayMessages = defaultGiveawayMessages;
+		if (!client.customMessages.giveawayMessages) client.customMessages.giveawayMessages = defaultGiveawayMessages;
 		if (!client) throw new Error('NuggiesError: client wasnt provided in reroll');
 		if (!messageID) throw new Error('NuggiesError: message ID was not provided in reroll');
 		const data = await utils.getByMessageID(messageID);
@@ -216,16 +216,34 @@ class giveaways {
 
 				for (let i = 0; i < data.length; i++) {
 					const guild = await client.guilds.fetch(data[i].guildID);
-					if(!guild) return data.delete();
+					if (!guild) return data.delete();
 					const channel = await guild.channels.cache.get(data[i].channelID);
-					if(!channel) return data.delete();
+					if (!channel) return data.delete();
 					const msg = await channel.messages.fetch(data[i].messageID);
-					if(!msg) return data.delete();
+					if (!msg) return data.delete();
 					this.startTimer(msg, data[i]);
 				}
 
 			}, 10000);
 		});
+
+		if (client.customMessages.giveawayMessages.editParticipants) {
+			setInterval(async () => {
+				const docs = await schema.find({ ended: false });
+				for (let i = 0; i < docs.length; i++) {
+					const guild = client.guilds.cache.get(docs[i].guildID);
+					if (!guild) return;
+					const channel = await guild.channels.fetch(docs[i].channelID, true, false);
+					if (!channel) return;
+					const msg = await channel.messages.fetch(docs[i].messageID, true, false);
+					if (!msg) return;
+					const embed = msg.embeds[0];
+					const req = docs[i].requirements.enabled ? docs[i].requirements.roles.map(x => `<@&${x}>`).join(', ') : 'None!';
+					embed.description = `${client.customMessages.giveawayMessages.toParticipate}\n${(client.customMessages.giveawayMessages.giveawayDescription).replace(/{requirements}/g, req).replace(/{hostedBy}/g, `<@!${docs[i].host}>`).replace(/{prize}/g, docs[i].prize).replace(/{winners}/g, docs[i].winners).replace(/{totalParticipants}/g, docs[i].clickers.length.toString())}`;
+					msg.edit({ embeds: [embed] });
+				}
+			}, 10 * 1000);
+		}
 	}
 	static async drop(client, { channelID, prize, host }) {
 		// eslint-disable-next-line no-unused-vars
