@@ -40,7 +40,7 @@ module.exports = async (client, button) => {
 		const tag = id.split('-');
 		if (tag[1] === 'enter') {
 			const data = await schema.findOne({ messageID: button.message.id });
-			if (data.requirements.enabled == true) {
+			if (data.requirements.enabled) {
 				if (data.clickers.includes(button.clicker.user.id)) { return button.reply.send(client.customMessages.giveawayMessages.alreadyParticipated, true); }
 				const roles = data.requirements.roles.map(x => button.message.guild.members.cache.get(button.clicker.user.id).roles.cache.get(x));
 				if (!roles[0]) {
