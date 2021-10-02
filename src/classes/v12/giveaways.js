@@ -279,7 +279,7 @@ class giveaways {
 	}
 }
 function replacePlaceholders(string, data, msg, winners = []) {
-	const newString = string.replace(/{guildName}/g, msg.guild.name).replace(/{totalParticipants}g/, data.clickers.length).replace(/{prize}/g, data.prize).replace(/{winPercentage}/g, (winners.length / data.clickers.length) * 100).replace(/{giveawayURL}/g, `https://discord.com/channels/${msg.guild.id}/${msg.channel.id}/${data.messageID}`).replace(/{hostedBy}/g, msg.guild.members.cache.get(data.host).toString()).replace(/{winners}/g, winners.length > 0 ? winners.map(winner => `<@${winner}>`).join(', ') : 'none' || 'none');
+	const newString = string.replace(/{guildName}/g, msg.guild.name).replace(/{totalParticipants}/g, data.clickers.length).replace(/{prize}/g, data.prize).replace(/{winPercentage}/g, (winners.length / data.clickers.length) * 100).replace(/{giveawayURL}/g, `https://discord.com/channels/${msg.guild.id}/${msg.channel.id}/${data.messageID}`).replace(/{hostedBy}/g, msg.guild.members.cache.get(data.host).toString()).replace(/{winners}/g, winners.length > 0 ? winners.map(winner => `<@${winner}>`).join(', ') : 'none' || 'none');
 	return newString;
 }
 module.exports = giveaways;
