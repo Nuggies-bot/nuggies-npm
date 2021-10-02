@@ -27,7 +27,7 @@ const client = new Discord.Client();
 const Nuggies = require('nuggies');
 Nuggies.connect("MONGODB_CONNECTION_URL");
 Nuggies.handleInteractions(client);
-Nuggies.giveaways.Messages(client, {}); //only for giveaways
+Nuggies.Messages(client, {}); // full customization
 
 ```
 # 💡・Features
