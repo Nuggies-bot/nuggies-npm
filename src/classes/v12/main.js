@@ -9,7 +9,7 @@ const merge = require('deepmerge');
 const defaultGiveawayMessages = {
 	dmWinner: true,
 	giveaway: '🎉🎉 **GIVEAWAY MOMENT** 🎉🎉',
-	giveawayDescription: '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): `{winners}`\n\nRequirements: {requirements}',
+	giveawayDescription: '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): `{winners}`\n\n**Requirements:** {requirements}',
 	endedGiveawayDescription: '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): {winners}',
 	giveawayFooterImage: 'https://cdn.discordapp.com/emojis/843076397345144863.png',
 	winMessage: '{winners} you won {prize} Congratulations! Hosted by {hostedBy}',
@@ -25,7 +25,7 @@ const defaultGiveawayMessages = {
 	dropWin: '{winner} Won The Drop!!', // only {winner} placeholder
 	noWeeklyExp: 'you dont have the required minimum weekly xp to join this giveaway',
 	noLevel: 'You dont have the minimum required level to join this giveaway',
-	nonoRole: 'You do not have the {requiredRoles} role(s) which are required to join this giveaway',
+	nonoRole: 'You do not have the {requiredRoles} role(s) which is required to join this giveaway',
 };
 const defaultButtonRolesMessages = {
 	addMessage: 'I have added the {role} role to you!',
