@@ -1,6 +1,6 @@
 const { version } = require('discord.js');
 const { DJS_STYLES, DISBUT_STYLES, toV13 } = require('../constants');
-const https = require('https');
+const axios = require('axios');
 const { AsyncQueue } = require('@sapphire/async-queue');
 const queue = new AsyncQueue();
 module.exports.convertButtonStyle = (style) => {
@@ -21,26 +21,19 @@ module.exports.getAmariData = async (key, userID, guildID) => {
 	try {
 		queue.wait();
 		const options = {
-			hostname: 'amaribot.com',
-			port: 443,
-			path: `https://amaribot.com/api/v1/guild/${guildID}/member/${userID}`,
+			url: `https://amaribot.com/api/v1/guild/${guildID}/member/${userID}`,
 			method: 'GET',
 			headers: {
 				Authorization: key,
+				'Content-Type': 'application/json',
 			},
 		};
 
-		const req = https.request(options, (res) => {
-			res.on('data', function(d) {
-				console.log(d.toString());
-				return { d };
-			});
-		});
-		req.end();
-
-		req.on('error', (e) => {
-			console.error(e);
-		});
+		const res = await axios.request(options);
+		if(!res.statusCode == 200) {return 'ERROR_CODE';}
+		else {
+			return res.data;
+		}
 	}
 	catch(e) {
 		console.log(e);
