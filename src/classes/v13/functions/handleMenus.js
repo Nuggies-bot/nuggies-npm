@@ -10,6 +10,7 @@ const defaultDropdownRolesMessages = {
  * @param {Discord.SelectMenuInteraction} menu
  */
 module.exports = async (client, menu) => {
+	if (!menu.guild) return;
 	if (!client.customMessages || !client.customMessages.dropdownRolesMessages) {
 		client.customMessages = {
 			dropdownRolesMessages: defaultDropdownRolesMessages,

@@ -28,6 +28,7 @@ const defaultGiveawayMessages = {
 };
 
 module.exports = async (client, button) => {
+	if (!button.guild) return;
 	if (!client.customMessages || !client.customMessages.buttonRolesMessages) {
 		client.customMessages = {
 			buttonRolesMessages: defaultButtonRolesMessages,
@@ -66,6 +67,9 @@ module.exports = async (client, button) => {
 				data.clickers.push(button.clicker.user.id);
 				data.save();
 				return button.reply.send(client.customMessages.giveawayMessages.newParticipant.replace(/{winPercentage}/g, (1 / data.clickers.length) * 100).replace(/{totalParticipants}/g, data.clickers.length), true);
+			}
+			else {
+				return button.reply.send(client.customMessages.giveawayMessages.alreadyParticipated, true);
 			}
 		}
 		if (tag[1] === 'reroll') {
