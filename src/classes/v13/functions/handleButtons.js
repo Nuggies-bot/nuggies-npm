@@ -7,6 +7,7 @@ const defaultButtonRolesMessages = {
 	addMessage: 'I have added the {role} role to you!',
 	removeMessage: 'I have removed the {role} role from you!',
 };
+const utils = require('../../../functions/utils');
 const defaultGiveawayMessages = {
 	dmWinner: true,
 	giveaway: '🎉🎉 **GIVEAWAY MOMENT** 🎉🎉',
@@ -39,21 +40,26 @@ module.exports = async (client, button) => {
 		const tag = id.split('-');
 		if (tag[1] === 'enter') {
 			const data = await schema.findOne({ messageID: button.message.id });
-			if (data.requirements.roles) {
-				if (data.clickers.includes(button.user.id)) { return button.reply({ content: client.customMessages.giveawayMessages.alreadyParticipated, ephemeral: true }); }
-				const roles = data.requirements.roles.map(x => button.guild.members.cache.get(button.user.id).roles.cache.get(x));
-				if (!roles[0]) {
-					const requiredRoles = button.guild.roles.cache.filter(x => data.requirements.roles.includes(x.id)).filter(x => !button.guild.members.cache.get(button.user.id).roles.cache.get(x.id)).array().map(x => `\`${x.name}\``).join(', ');
-					return button.reply({ content: client.customMessages.giveawayMessages.nonoRole.replace(/{requiredRoles}/g, requiredRoles), ephemeral: true });
+			if (data.requirements.enabled) {
+				if(data.requirements.roles) {
+					const roles = data.requirements.roles.map(x => button.message.guild.members.cache.get(button.user.id).roles.cache.get(x));
+					if (!roles[0]) {
+						const requiredRoles = button.message.guild.roles.cache.filter(x => data.requirements.roles.includes(x.id)).filter(x => !button.message.guild.members.cache.get(button.user.id).roles.cache.get(x.id)).array().map(x => `\`${x.name}\``).join(', ');
+						return button.reply({ content: client.customMessages.giveawayMessages.nonoRole.replace(/{requiredRoles}/g, requiredRoles), ephemeral : true });
+					}
 				}
-			}
-			if (!data.clickers.includes(button.user.id)) {
-				data.clickers.push(button.user.id);
-				data.save();
-				return button.reply({ content: client.customMessages.giveawayMessages.newParticipant.replace(/{winPercentage}/g, (1 / data.clickers.length) * 100).replace(/{totalParticipants}/g, data.clickers.length), ephemeral: true });
-			}
-			if (data.clickers.includes(button.user.id)) {
-				return button.reply({ content: client.customMessages.giveawayMessages.alreadyParticipated, ephemeral: true });
+				if(data.requirements.weeklyamari) {
+					const amaridata = await utils.getAmariData(data.requirements.key, button.user.id, button.guild.id);
+					if(parseInt(data.requirements.weeklyamari) > parseInt(amaridata.weeklyExp)) {
+						return button.reply({ content: client.customMessages.giveawayMessages.noWeeklyExp, ephemeral: true });
+					}
+				}
+				if(data.requirements.amarilevel) {
+					const amaridata = await utils.getAmariData(data.requirements.key, button.user.id, button.guild.id);
+					if(parseInt(data.requirements.level) > amaridata.level) {
+						return button.reply({ content: client.customMessages.giveawayMessages.noLevel, ephemeral: true });
+					}
+				}
 			}
 		}
 		if (tag[1] === 'reroll') {

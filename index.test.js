@@ -25,7 +25,7 @@ require('dotenv').config();
 const Nuggies = require('./src/index.js');
 const Discord = require('discord.js');
 const bot = new Discord.Client({ intents: 32767 });
-require('discord-buttons')(bot);
+// require('discord-buttons')(bot);
 bot.login(process.env.token);
 
 Nuggies.handleInteractions(bot);
@@ -33,7 +33,7 @@ Nuggies.Messages(bot, {
 	giveawayOptions: defaultGiveawayMessages,
 });
 Nuggies.connect(process.env.mongo);
-bot.on('message', async (message) => {
+bot.on('messageCreate', async (message) => {
 	if (message.author.bot || message.channel.type === 'dm') return;
 
 	const prefix = '...';
@@ -46,7 +46,7 @@ bot.on('message', async (message) => {
 	if (!cmd) return;
 
 	if (cmd.toLowerCase() === 'test') {
-		Nuggies.giveaways.create(bot, { prize: 'test', host: '833713876628406363', winners: 1, endAfter: '10s', requirements: { enabled: true, weeklyamari: '1', amarilevel: '100', key: '8fdab047274a8010e548d56e.4595ca.d5ce77b8de6c58f2f44e5980929', roles: ['735354141941039115'] }, channelID: message.channel.id,
+		Nuggies.giveaways.create(bot, { prize: 'test', host: '833713876628406363', winners: 1, endAfter: '10s', requirements: { enabled: true, weeklyamari: '1', amarilevel: '100', key: '8fdab047274a8010e548d56e.4595ca.d5ce77b8de6c58f2f44e5980929' }, channelID: message.channel.id,
 		});
 	}
 	else if (cmd.toLowerCase() == 'die') {
