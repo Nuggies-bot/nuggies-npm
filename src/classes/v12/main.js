@@ -23,6 +23,9 @@ const defaultGiveawayMessages = {
 	noWinner: 'Not enough people participated in this giveaway.', // no {winner} placerholder
 	alreadyEnded: 'The giveaway has already ended!', // no {winner} placeholder
 	dropWin: '{winner} Won The Drop!!', // only {winner} placeholder
+	noWeeklyExp: 'you dont have the required minimum weekly xp to join this giveaway',
+	noLevel: 'You dont have the minimum required level to join this giveaway',
+	nonoRole: 'You do not have the {requiredRoles} role(s) which are required to join this giveaway',
 };
 const defaultButtonRolesMessages = {
 	addMessage: 'I have added the {role} role to you!',
