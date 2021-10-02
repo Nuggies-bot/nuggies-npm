@@ -26,6 +26,7 @@ const defaultGiveawayMessages = {
 	noWeeklyExp: 'you dont have the required minimum weekly xp to join this giveaway',
 	noLevel: 'You dont have the minimum required level to join this giveaway',
 	nonoRole: 'You do not have the {requiredRoles} role(s) which is required to join this giveaway',
+	editParticipants: true,
 };
 const defaultButtonRolesMessages = {
 	addMessage: 'I have added the {role} role to you!',
