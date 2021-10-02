@@ -1,7 +1,7 @@
 const { version } = require('discord.js');
 const { DJS_STYLES, DISBUT_STYLES, toV13 } = require('../constants');
 const https = require('https');
-const AsyncQueue = require('@sapphire/async-queue');
+const { AsyncQueue } = require('@sapphire/async-queue');
 const queue = new AsyncQueue();
 module.exports.convertButtonStyle = (style) => {
 	const isv13 = version.startsWith('13');
@@ -17,30 +17,30 @@ module.exports.isDjsButtonStyle = (style) => {
 	return DJS_STYLES.includes(style);
 };
 
-module.exports.getAmariData = async (key, userID, guildID, type) => {
+module.exports.getAmariData = async (key, userID, guildID) => {
 	try {
+		queue.wait();
 		const options = {
 			hostname: 'amaribot.com',
-			path: `/api/v1/guild/${guildID}/member/${userID}`,
-			auth: key,
+			port: 443,
+			path: `https://amaribot.com/api/v1/guild/${guildID}/member/${userID}`,
 			method: 'GET',
-			port: 8000,
+			headers: {
+				Authorization: key,
+			},
 		};
-		await queue.wait();
-		const req = https.request(options, result => {
-			result.on('data', data => {
-				if(!result.statusCode == 200) {return 'ERROR_CODE';}
-				else {
-					return data.toString();
-				}
+
+		const req = https.request(options, (res) => {
+			res.on('data', function(d) {
+				console.log(d.toString());
+				return { d };
 			});
 		});
-		req.on('error', error => {
-			console.error(error);
-			return 'ERROR_CODE';
-		});
-
 		req.end();
+
+		req.on('error', (e) => {
+			console.error(e);
+		});
 	}
 	catch(e) {
 		console.log(e);
