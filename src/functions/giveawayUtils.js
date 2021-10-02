@@ -62,10 +62,13 @@ module.exports.editButtons = async (client, data) => {
 
 module.exports.giveawayEmbed = async (client, { host, prize, endAfter, winners, requirements }) => {
 	const hostedBy = client.users.cache.get(host) || await client.users.fetch(host).catch(() => null);
-	const req = requirements.enabled ? requirements.roles.map(x => `<@&${x}>`).join(', ') : 'None!';
+	let req = '';
+	if(requirements.roles) req += `\n role(s): ${requirements.roles.map(x => `<@&${x}>`).join(', ')}`;
+	if(requirements.weeklyamari) req += `\n Weekly Amari: \`${requirements.weeklyamari}\``;
+	if(requirements.amarilevel) req += `\n Amari Level: \`${requirements.amarilevel}\``;
 	const embed = new Discord.MessageEmbed()
 		.setTitle('Giveaway! 🎉')
-		.setDescription(`${client.customMessages.giveawayMessages.toParticipate}\n${(client.customMessages.giveawayMessages.giveawayDescription).replace(/{requirements}/g, req).replace(/{hostedBy}/g, hostedBy).replace(/{prize}/g, prize).replace(/{winners}/g, winners)}`)
+		.setDescription(`${client.customMessages.giveawayMessages.toParticipate}\n${(client.customMessages.giveawayMessages.giveawayDescription).replace(/{requirements}/g, req).replace(/{hostedBy}/g, hostedBy).replace(/{prize}/g, prize).replace(/{winners}/g, winners).replace(/{totalParticipants}/g, '0')}`)
 		.setColor('RANDOM')
 		.setFooter('Ends', client.customMessages.giveawayMessages.giveawayFooterImage)
 		.setTimestamp(Date.now() + ms(endAfter));

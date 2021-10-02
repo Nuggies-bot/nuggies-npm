@@ -1,6 +1,8 @@
 const { version } = require('discord.js');
 const { DJS_STYLES, DISBUT_STYLES, toV13 } = require('../constants');
-const https = require('https');
+const axios = require('axios');
+const { AsyncQueue } = require('@sapphire/async-queue');
+const queue = new AsyncQueue();
 module.exports.convertButtonStyle = (style) => {
 	const isv13 = version.startsWith('13');
 	if (this.isDjsButtonStyle(style) === null) throw new Error('Invalid style provided');
@@ -15,26 +17,28 @@ module.exports.isDjsButtonStyle = (style) => {
 	return DJS_STYLES.includes(style);
 };
 
-module.exports.getAmariData = (key, userID, guildID) => {
-	const options = {
-		hostname: 'amaribot.com',
-		path: `/api/v1/guild/${guildID}/member/${userID}`,
-		auth: key,
-		method: 'GET',
-		port: 8000,
-	};
-	const req = https.request(options, res => {
-		res.on('data', data => {
-			if(!res.statusCode == 200) {return 'ERROR_CODE';}
-			else {
-				return data.toString();
-			}
-		});
-	});
-	req.on('error', error => {
-		console.error(error);
-		return 'ERROR_CODE';
-	});
+module.exports.getAmariData = async (key, userID, guildID) => {
+	try {
+		queue.wait();
+		const options = {
+			url: `https://amaribot.com/api/v1/guild/${guildID}/member/${userID}`,
+			method: 'GET',
+			headers: {
+				Authorization: key,
+				'Content-Type': 'application/json',
+			},
+		};
 
-	req.end();
+		const res = await axios.request(options);
+		if(!res.statusCode == 200) {return 'ERROR_CODE';}
+		else {
+			return res.data;
+		}
+	}
+	catch(e) {
+		console.log(e);
+	}
+	finally {
+		queue.shift();
+	}
 };

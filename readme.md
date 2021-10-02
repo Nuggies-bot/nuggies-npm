@@ -27,10 +27,12 @@ const client = new Discord.Client();
 const Nuggies = require('nuggies');
 Nuggies.connect("MONGODB_CONNECTION_URL");
 Nuggies.handleInteractions(client);
-Nuggies.giveaways.Messages(client, {}); //only for giveaways
+Nuggies.Messages(client, {}); // full customization
 
 ```
 # 💡・Features
+- Full slash command support!
+- Customizability at your fingertips!
 - [Giveaways](https://github.com/Nuggies-bot/giveaways-example)
 - [Dropdown Roles](https://github.com/Nuggies-bot/dropdown-roles-example)
 - [Button Roles](https://github.com/Nuggies-bot/buttonroles-example)

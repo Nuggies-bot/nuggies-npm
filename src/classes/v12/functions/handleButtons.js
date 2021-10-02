@@ -3,7 +3,7 @@ let win;
 const schema = require('../../../models/giveawayschema');
 const { MessageButton } = require('discord-buttons');
 const giveaways = require('../giveaways');
-
+const utils = require('../../../functions/utils');
 const defaultButtonRolesMessages = {
 	addMessage: 'I have added the {role} role to you!',
 	removeMessage: 'I have removed the {role} role from you!',
@@ -28,6 +28,7 @@ const defaultGiveawayMessages = {
 };
 
 module.exports = async (client, button) => {
+	if (!button.guild) return;
 	if (!client.customMessages || !client.customMessages.buttonRolesMessages) {
 		client.customMessages = {
 			buttonRolesMessages: defaultButtonRolesMessages,
@@ -40,12 +41,26 @@ module.exports = async (client, button) => {
 		const tag = id.split('-');
 		if (tag[1] === 'enter') {
 			const data = await schema.findOne({ messageID: button.message.id });
-			if (data.requirements.enabled == true) {
-				if (data.clickers.includes(button.clicker.user.id)) { return button.reply.send(client.customMessages.giveawayMessages.alreadyParticipated, true); }
-				const roles = data.requirements.roles.map(x => button.message.guild.members.cache.get(button.clicker.user.id).roles.cache.get(x));
-				if (!roles[0]) {
-					const requiredRoles = button.message.guild.roles.cache.filter(x => data.requirements.roles.includes(x.id)).filter(x => !button.message.guild.members.cache.get(button.clicker.user.id).roles.cache.get(x.id)).array().map(x => `\`${x.name}\``).join(', ');
-					return button.reply.send(client.customMessages.giveawayMessages.nonoRole.replace(/{requiredRoles}/g, requiredRoles), true);
+			if (data.clickers.includes(button.clicker.user.id)) { return button.reply.send(client.customMessages.giveawayMessages.alreadyParticipated, true); }
+			if (data.requirements.enabled) {
+				if(data.requirements.roles) {
+					const roles = data.requirements.roles.map(x => button.message.guild.members.cache.get(button.clicker.user.id).roles.cache.get(x));
+					if (!roles[0]) {
+						const requiredRoles = button.message.guild.roles.cache.filter(x => data.requirements.roles.includes(x.id)).filter(x => !button.message.guild.members.cache.get(button.clicker.user.id).roles.cache.get(x.id)).array().map(x => `\`${x.name}\``).join(', ');
+						return button.reply.send(client.customMessages.giveawayMessages.nonoRole.replace(/{requiredRoles}/g, requiredRoles), true);
+					}
+				}
+				if(data.requirements.weeklyamari) {
+					const amaridata = await utils.getAmariData(data.requirements.key, button.clicker.user.id, button.guild.id);
+					if(parseInt(data.requirements.weeklyamari) > parseInt(amaridata.weeklyExp)) {
+						return button.reply.send(client.customMessages.giveawayMessages.noWeeklyExp, true);
+					}
+				}
+				if(data.requirements.amarilevel) {
+					const amaridata = await utils.getAmariData(data.requirements.key, button.clicker.user.id, button.guild.id);
+					if(parseInt(data.requirements.level) > amaridata.level) {
+						return button.reply.send(client.customMessages.giveawayMessages.noWeeklyExp, true);
+					}
 				}
 			}
 			if (!data.clickers.includes(button.clicker.user.id)) {
@@ -53,7 +68,7 @@ module.exports = async (client, button) => {
 				data.save();
 				return button.reply.send(client.customMessages.giveawayMessages.newParticipant.replace(/{winPercentage}/g, (1 / data.clickers.length) * 100).replace(/{totalParticipants}/g, data.clickers.length), true);
 			}
-			if (data.clickers.includes(button.clicker.user.id)) {
+			else {
 				return button.reply.send(client.customMessages.giveawayMessages.alreadyParticipated, true);
 			}
 		}
