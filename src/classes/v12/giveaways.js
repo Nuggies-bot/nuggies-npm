@@ -8,25 +8,27 @@ const ms = require('ms');
 const merge = require('deepmerge');
 const defaultGiveawayMessages = {
 	dmWinner: true,
-	giveaway: '🎉🎉 **GIVEAWAY MOMENT** 🎉🎉',
-	giveawayDescription: '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): `{winners}`\n\n **Requirements:** {requirements}',
-	endedGiveawayDescription: '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): {winners}',
+	giveaway: '🎉🎉 **GIVEAWAY!** 🎉🎉',
+	giveawayDescription: '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): `{winners}` \n 👨‍🦱 participants: {totalParticipants} \n\n**Requirements:** {requirements}',
+	endedGiveawayDescription : '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): {winners}',
 	giveawayFooterImage: 'https://cdn.discordapp.com/emojis/843076397345144863.png',
-	winMessage: '{winners} you won {prize} Congratulations! Hosted by {hostedBy}',
+	winMessage: 'congrats {winners}! you won `{prize}`!! Total `{totalParticipants}` members participated and your winning percentage was `{winPercentage}%`',
 	rerolledMessage: 'Rerolled! {winner} is the new winner of the giveaway!', // only {winner} placeholder
 	toParticipate: '**Click the Enter button to enter the giveaway!**',
-	newParticipant: 'You have successfully entered for this giveaway', // no placeholders | ephemeral
+	newParticipant: 'You have successfully entered for this giveaway! your win percentage is `{winPercentage}%` among `{totalParticipants}` other participants', // no placeholders | ephemeral
 	alreadyParticipated: 'you already entered this giveaway!', // no placeholders | ephemeral
 	noParticipants: 'There are not enough people in the giveaway!', // no placeholders
 	noRole: 'You do not have the required role(s)\n{requiredRoles}\n for the giveaway!', // only {requiredRoles} | ephemeral
 	dmMessage: 'You have won a giveaway in **{guildName}**!\nPrize: [{prize}]({giveawayURL})',
 	noWinner: 'Not enough people participated in this giveaway.', // no {winner} placerholder
 	alreadyEnded: 'The giveaway has already ended!', // no {winner} placeholder
-	dropWin: '{winner} Won The Drop!!', // only {winner} placeholder
+	dropWin: '{winner} Won The Drop!!',
 	noWeeklyExp: 'you dont have the required minimum weekly xp to join this giveaway',
 	noLevel: 'You dont have the minimum required level to join this giveaway',
 	nonoRole: 'You do not have the {requiredRoles} role(s) which is required to join this giveaway',
+	editParticipants: true,
 };
+
 mongoose.set('useFindAndModify', false);
 
 class giveaways {
@@ -279,7 +281,7 @@ class giveaways {
 	}
 }
 function replacePlaceholders(string, data, msg, winners = []) {
-	const newString = string.replace(/{guildName}/g, msg.guild.name).replace(/{totalParticipants}g/, data.clickers.length).replace(/{prize}/g, data.prize).replace(/{winPercentage}/g, (winners.length / data.clickers.length) * 100).replace(/{giveawayURL}/g, `https://discord.com/channels/${msg.guild.id}/${msg.channel.id}/${data.messageID}`).replace(/{hostedBy}/g, msg.guild.members.cache.get(data.host).toString()).replace(/{winners}/g, winners.length > 0 ? winners.map(winner => `<@${winner}>`).join(', ') : 'none' || 'none');
+	const newString = string.replace(/{guildName}/g, msg.guild.name).replace(/{totalParticipants}/g, data.clickers.length).replace(/{prize}/g, data.prize).replace(/{winPercentage}/g, (winners.length / data.clickers.length) * 100).replace(/{giveawayURL}/g, `https://discord.com/channels/${msg.guild.id}/${msg.channel.id}/${data.messageID}`).replace(/{hostedBy}/g, msg.guild.members.cache.get(data.host).toString()).replace(/{winners}/g, winners.length > 0 ? winners.map(winner => `<@${winner}>`).join(', ') : 'none' || 'none');
 	return newString;
 }
 module.exports = giveaways;
