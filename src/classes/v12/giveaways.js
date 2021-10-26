@@ -243,7 +243,7 @@ class giveaways {
 					const embed = msg.embeds[0];
 					const req = docs[i].requirements.enabled ? docs[i].requirements.roles.map(x => `<@&${x}>`).join(', ') : 'None!';
 					embed.description = `${client.customMessages.giveawayMessages.toParticipate}\n${(client.customMessages.giveawayMessages.giveawayDescription).replace(/{requirements}/g, req).replace(/{hostedBy}/g, `<@!${docs[i].host}>`).replace(/{prize}/g, docs[i].prize).replace(/{winners}/g, docs[i].winners).replace(/{totalParticipants}/g, docs[i].clickers.length.toString())}`;
-					msg.edit({ embeds: [embed] });
+					msg.edit({ embed: [embed] });
 				}
 			}, 10 * 1000);
 		}
