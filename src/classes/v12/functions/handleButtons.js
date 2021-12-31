@@ -50,15 +50,15 @@ module.exports = async (client, button) => {
 						return button.reply.send(client.customMessages.giveawayMessages.nonoRole.replace(/{requiredRoles}/g, requiredRoles), true);
 					}
 				}
-				if(data.requirements.weeklyamari) {
+				if(data.requirements.amariweekly) {
 					const amaridata = await utils.getAmariData(data.requirements.key, button.clicker.user.id, button.guild.id);
-					if(parseInt(data.requirements.weeklyamari) > parseInt(amaridata.weeklyExp)) {
+					if(parseInt(data.requirements.amariweekly) > parseInt(amaridata.weeklyExp)) {
 						return button.reply.send(client.customMessages.giveawayMessages.noWeeklyExp, true);
 					}
 				}
 				if(data.requirements.amarilevel) {
 					const amaridata = await utils.getAmariData(data.requirements.key, button.clicker.user.id, button.guild.id);
-					if(parseInt(data.requirements.level) > amaridata.level) {
+					if(parseInt(data.requirements.amarilevel) > amaridata.level) {
 						return button.reply.send(client.customMessages.giveawayMessages.noWeeklyExp, true);
 					}
 				}
