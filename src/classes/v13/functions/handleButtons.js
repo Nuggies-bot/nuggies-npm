@@ -42,7 +42,8 @@ module.exports = async (client, button) => {
 		if (tag[1] === 'enter') {
 			const data = await schema.findOne({ messageID: button.message.id });
 			if (data.requirements.enabled) {
-				const amaridata = await utils.getAmariData(data.requirements.key, button.user.id, button.guild.id);
+				let amaridata = null;
+				if(data.requirements.amariweekly || data.requirements.amarilevel) amaridata = await utils.getAmariData(data.requirements.key, button.user.id, button.guild.id);
 				if(data.requirements.roles) {
 					const roles = data.requirements.roles.map(x => button.message.guild.members.cache.get(button.user.id).roles.cache.get(x));
 					if (!roles[0]) {
@@ -50,8 +51,8 @@ module.exports = async (client, button) => {
 						return button.reply({ content: client.customMessages.giveawayMessages.nonoRole.replace(/{requiredRoles}/g, requiredRoles), ephemeral : true });
 					}
 				}
-				if(data.requirements.weeklyamari) {
-					if(parseInt(data.requirements.weeklyamari) > parseInt(amaridata.weeklyExp)) {
+				if(data.requirements.amariweekly) {
+					if(parseInt(data.requirements.amariweekly) > parseInt(amaridata.weeklyExp)) {
 						return button.reply({ content: client.customMessages.giveawayMessages.noWeeklyExp, ephemeral: true });
 					}
 				}

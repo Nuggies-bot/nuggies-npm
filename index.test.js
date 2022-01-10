@@ -46,7 +46,7 @@ bot.on('messageCreate', async (message) => {
 	if (!cmd) return;
 
 	if (cmd.toLowerCase() === 'test') {
-		Nuggies.giveaways.create(bot, { prize: 'test', host: '833713876628406363', winners: 1, endAfter: '10h', requirements: { enabled: true, weeklyamari: '1', amarilevel: '100', key: '' }, channelID: message.channel.id,
+		Nuggies.giveaways.create(bot, { prize: 'test', host: '833713876628406363', winners: 1, endAfter: '10h', requirements: { enabled: true, amariweekly: '1', amarilevel: '100', key: '' }, channelID: message.channel.id,
 		});
 	}
 	else if (cmd.toLowerCase() == 'die') {
