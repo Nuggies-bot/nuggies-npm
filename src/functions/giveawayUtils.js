@@ -63,7 +63,7 @@ module.exports.editButtons = async (client, data) => {
 module.exports.giveawayEmbed = async (client, { host, prize, endAfter, winners, requirements }) => {
 	const hostedBy = client.users.cache.get(host) || await client.users.fetch(host).catch(() => null);
 	let req = '';
-	if(requirements.roles) req += `\n role(s): ${requirements.roles.map(x => `<@&${x}>`).join(', ')}`;
+	if(requirements.roles) req += `\n Role(s): ${requirements.roles.map(x => `<@&${x}>`).join(', ')}`;
 	if(requirements.amariweekly) req += `\n Weekly Amari: \`${requirements.amariweekly}\``;
 	if(requirements.amarilevel) req += `\n Amari Level: \`${requirements.amarilevel}\``;
 	const embed = new Discord.MessageEmbed()
