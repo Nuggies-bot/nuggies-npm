@@ -274,7 +274,7 @@ class giveaways {
 					if(requirements.amarilevel) req += `\n Amari Level: \`${requirements.amarilevel}\``;
 					if(!req) req = 'None!';
 					embed.description = `${client.customMessages.giveawayMessages.toParticipate}\n${(client.customMessages.giveawayMessages.giveawayDescription).replace(/{requirements}/g, req).replace(/{hostedBy}/g, `<@!${docs[i].host}>`).replace(/{prize}/g, docs[i].prize).replace(/{winners}/g, docs[i].winners).replace(/{totalParticipants}/g, docs[i].clickers.length.toString())}`;
-					msg.edit({ embeds: [embed] });
+					msg.edit({ embed: [embed] });
 				}
 			}, 10 * 1000);
 		}
