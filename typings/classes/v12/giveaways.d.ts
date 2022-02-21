@@ -26,6 +26,7 @@ import mongoose = require("mongoose");
 
 declare interface GiveawayMessageOptions {
 	dmWinner: boolean,
+	dmHost: boolean,
 	giveaway: string,
 	giveawayDescription: string,
 	endedGiveawayDescription: string,

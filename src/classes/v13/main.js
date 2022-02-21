@@ -8,6 +8,7 @@ const merge = require('deepmerge');
 
 const defaultGiveawayMessages = {
 	dmWinner: true,
+	dmHost: true,
 	giveaway: '🎉🎉 **GIVEAWAY!** 🎉🎉',
 	giveawayDescription: '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): `{winners}` \n 👨‍🦱 participants: {totalParticipants} \n\n**Requirements:** {requirements}',
 	endedGiveawayDescription : '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): {winners} \n 👨‍🦱 participants: {totalParticipants}',
@@ -20,6 +21,7 @@ const defaultGiveawayMessages = {
 	noParticipants: 'There are not enough people in the giveaway!', // no placeholders
 	noRole: 'You do not have the required role(s)\n{requiredRoles}\n for the giveaway!', // only {requiredRoles} | ephemeral
 	dmMessage: 'You have won a giveaway in **{guildName}**!\nPrize: [{prize}]({giveawayURL})',
+	dmMessageHost: 'Your in **{guildName}** has ended!\nPrize: [{prize}]({giveawayURL})',
 	noWinner: 'Not enough people participated in this giveaway.', // no {winner} placerholder
 	alreadyEnded: 'The giveaway has already ended!', // no {winner} placeholder
 	dropWin: '{winner} Won The Drop!!',

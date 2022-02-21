@@ -13,6 +13,7 @@ export function handleInteractions(client: Discord.Client): Promise<void>;
 
 declare interface GiveawayMessageOptions {
 	dmWinner: boolean,
+	dmHost: boolean,
 	giveaway: string,
 	giveawayDescription: string,
 	endedGiveawayDescription: string,
