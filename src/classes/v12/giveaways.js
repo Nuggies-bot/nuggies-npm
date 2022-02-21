@@ -262,7 +262,7 @@ class giveaways {
 				for (let i = 0; i < docs.length; i++) {
 					const channel = await client.channels.cache.get(docs[i].channelID);
 					if (!channel) return;
-					const msg = await channel.messages ? .fetch(docs[i].messageID, true, false);
+					const msg = await channel.messages?.fetch(docs[i].messageID, true, false);
 					if (!msg) return;
 					const embed = msg.embeds[0];
 					let req = '';

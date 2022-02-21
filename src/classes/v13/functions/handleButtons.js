@@ -49,7 +49,7 @@ module.exports = async (client, button) => {
 				if(data.requirements.roles) {
 					const roles = data.requirements.roles.map(x => button.message.guild.members.cache.get(button.user.id).roles.cache.get(x));
 					if (!roles[0]) {
-						const requiredRoles = Array.from(button.message.guild.roles.cache.filter(x => data.requirements.roles.includes(x.id)).filter(x => !button.message.guild.members.cache.get(button.user.id).roles.cache.get(x.id))).map(x => `\`${x[1].name}\``).join(', ');
+						const requiredRoles = button.message.guild.roles.cache.filter(x => data.requirements.roles.includes(x.id)).filter(x => !button.message.guild.members.cache.get(button.user.id).roles.cache.get(x.id)).array().map(x => `\`${x.name}\``).join(', ');
 						return button.reply({ content: client.customMessages.giveawayMessages.nonoRole.replace(/{requiredRoles}/g, requiredRoles), ephemeral : true });
 					}
 				}
