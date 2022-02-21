@@ -8,6 +8,7 @@ const ms = require('ms');
 const merge = require('deepmerge');
 const defaultGiveawayMessages = {
 	dmWinner: true,
+	dmHost: true,
 	giveaway: '🎉🎉 **GIVEAWAY!** 🎉🎉',
 	giveawayDescription: '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): `{winners}` \n 👨‍🦱 participants: {totalParticipants} \n\n**Requirements:** {requirements}',
 	endedGiveawayDescription : '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): {winners}',
@@ -20,6 +21,7 @@ const defaultGiveawayMessages = {
 	noParticipants: 'There are not enough people in the giveaway!', // no placeholders
 	noRole: 'You do not have the required role(s)\n{requiredRoles}\n for the giveaway!', // only {requiredRoles} | ephemeral
 	dmMessage: 'You have won a giveaway in **{guildName}**!\nPrize: [{prize}]({giveawayURL})',
+	dmMessageHost: 'Your in **{guildName}** has ended!\nPrize: [{prize}]({giveawayURL})',
 	noWinner: 'Not enough people participated in this giveaway.', // no {winner} placerholder
 	alreadyEnded: 'The giveaway has already ended!', // no {winner} placeholder
 	dropWin: '{winner} Won The Drop!!',
@@ -117,8 +119,19 @@ class giveaways {
 					.setThumbnail(msg.guild.iconURL({ dynamic: true }))
 					.setFooter('GG!');
 				winners.forEach((user) => {
-					message.guild.members.cache.get(user).send(dmEmbed);
+					message.guild.members.cache.get(user).send(dmEmbed).catch((err) => {});
 				});
+			}
+			if (message.client.customMessages.giveawayMessages.dmHost) {
+
+				const dmEmbed = new Discord.MessageEmbed()
+					.setTitle('Your giveaway ended!')
+					.setDescription(replacePlaceholders(message.client.customMessages.giveawayMessages.dmMessageHost, data, msg, winners))
+					.setColor('RANDOM')
+					.setThumbnail(msg.guild.iconURL({
+						dynamic: true,
+					}));
+				message.guild.members.cache.get(data.host).send(dmEmbed).catch((err) => {});
 			}
 
 			const embed = msg.embeds[0];
@@ -177,8 +190,19 @@ class giveaways {
 				.setThumbnail(msg.guild.iconURL({ dynamic: true }))
 				.setFooter('GG!');
 			winners.forEach((user) => {
-				message.guild.members.cache.get(user).send(dmEmbed);
+				message.guild.members.cache.get(user).send(dmEmbed).catch((err) => {});
 			});
+		}
+		if (message.client.customMessages.giveawayMessages.dmHost) {
+
+			const dmEmbed = new Discord.MessageEmbed()
+				.setTitle('Your giveaway ended!')
+				.setDescription(replacePlaceholders(message.client.customMessages.giveawayMessages.dmMessageHost, data, msg, winners))
+				.setColor('RANDOM')
+				.setThumbnail(msg.guild.iconURL({
+					dynamic: true,
+				}));
+			message.guild.members.cache.get(data.host).send(dmEmbed).catch((err) => {});
 		}
 
 		const embed = giveawaymsg.embeds[0];
@@ -243,7 +267,12 @@ class giveaways {
 					const msg = await channel.messages.fetch(docs[i].messageID, true, false);
 					if (!msg) return;
 					const embed = msg.embeds[0];
-					const req = docs[i].requirements.enabled ? docs[i].requirements.roles.map(x => `<@&${x}>`).join(', ') : 'None!';
+					let req = '';
+					const requirements = docs[i].requirements;
+					if(requirements.roles) req += `\n Role(s): ${requirements.roles.map(x => `<@&${x}>`).join(', ')}`;
+					if(requirements.amariweekly) req += `\n Weekly Amari: \`${requirements.amariweekly}\``;
+					if(requirements.amarilevel) req += `\n Amari Level: \`${requirements.amarilevel}\``;
+					if(!req) req = 'None!';
 					embed.description = `${client.customMessages.giveawayMessages.toParticipate}\n${(client.customMessages.giveawayMessages.giveawayDescription).replace(/{requirements}/g, req).replace(/{hostedBy}/g, `<@!${docs[i].host}>`).replace(/{prize}/g, docs[i].prize).replace(/{winners}/g, docs[i].winners).replace(/{totalParticipants}/g, docs[i].clickers.length.toString())}`;
 					msg.edit({ embeds: [embed] });
 				}
