@@ -10,6 +10,7 @@ const defaultButtonRolesMessages = {
 };
 const defaultGiveawayMessages = {
 	dmWinner: true,
+	dmHost: true,
 	giveaway: '🎉🎉 **GIVEAWAY MOMENT** 🎉🎉',
 	giveawayDescription: '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): `{winners}`\n\nRequirements: {requirements}',
 	endedGiveawayDescription: '🎁 Prize: **{prize}**\n🎊 Hosted by: {hostedBy}\n⏲️ Winner(s): {winners}',
@@ -22,6 +23,7 @@ const defaultGiveawayMessages = {
 	noParticipants: 'There are not enough people in the giveaway!', // no placeholders
 	noRole: 'You do not have the required role(s)\n{requiredRoles}\n for the giveaway!', // only {requiredRoles} | ephemeral
 	dmMessage: 'You have won a giveaway in **{guildName}**!\nPrize: [{prize}]({giveawayURL})',
+	dmMessageHost: 'Your in **{guildName}** has ended!\nPrize: [{prize}]({giveawayURL})',
 	noWinner: 'Not enough people participated in this giveaway.', // no {winner} placerholder
 	alreadyEnded: 'The giveaway has already ended!', // no {winner} placeholder
 	dropWin: '{winner} Won The Drop!!', // only {winner} placeholder
@@ -50,15 +52,15 @@ module.exports = async (client, button) => {
 						return button.reply.send(client.customMessages.giveawayMessages.nonoRole.replace(/{requiredRoles}/g, requiredRoles), true);
 					}
 				}
-				if(data.requirements.weeklyamari) {
+				if(data.requirements.amariweekly) {
 					const amaridata = await utils.getAmariData(data.requirements.key, button.clicker.user.id, button.guild.id);
-					if(parseInt(data.requirements.weeklyamari) > parseInt(amaridata.weeklyExp)) {
+					if(parseInt(data.requirements.amariweekly) > parseInt(amaridata.weeklyExp)) {
 						return button.reply.send(client.customMessages.giveawayMessages.noWeeklyExp, true);
 					}
 				}
 				if(data.requirements.amarilevel) {
 					const amaridata = await utils.getAmariData(data.requirements.key, button.clicker.user.id, button.guild.id);
-					if(parseInt(data.requirements.level) > amaridata.level) {
+					if(parseInt(data.requirements.amarilevel) > amaridata.level) {
 						return button.reply.send(client.customMessages.giveawayMessages.noWeeklyExp, true);
 					}
 				}
