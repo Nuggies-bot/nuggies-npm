@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "discord-buttons": "^4.0.0",
-    "discord.js": "^13.1.0",
+    "discord.js": "^14.0.2",
     "dotenv": "^16.0.0",
     "eslint": "^8.0.1"
   }
